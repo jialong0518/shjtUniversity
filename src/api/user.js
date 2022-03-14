@@ -2,10 +2,10 @@ import request from '@/utils/request'
 
 export function login(data) {
   return request({
-    url: '/byd/web/index.php?r=reg/login',
+    url: '/expert/login',
     method: 'post',
-    // data: JSON.parse(data)
-    data: JSON.stringify(data)
+    data
+    // data: JSON.stringify(data)
   })
 }
 

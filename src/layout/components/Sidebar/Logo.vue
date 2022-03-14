@@ -24,7 +24,7 @@ export default {
   },
   data() {
     return {
-      title: '白洋淀成果展示大屏管理后台',
+      title: '上海交通大学专家管理系统',
       logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
     }
   }

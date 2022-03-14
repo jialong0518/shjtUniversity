@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: '白洋淀成果展示大屏管理后台',
+  title: '上海交通大学专家管理系统',
 
   /**
    * @type {boolean} true | false

@@ -1,27 +1,36 @@
 import request from '@/utils/request'
 
-export function login(data) {
+
+export function getCollege(data) {
   return request({
-    url: '/expert/login',
+    url: '/expert/collegelist',
     method: 'post',
     data
   })
 }
 
-export function getInfo(token) {
+export function getSubject(data) {
   return request({
-    url: '/vue-admin-template/user/info',
-    method: 'get',
-    params: { token }
+    url: '/expert/subjectlist',
+    method: 'post',
+    data
   })
 }
 
-export function userlist(data) {
-  return request({
-    url: '/byd/web/index.php?r=reg/userlist',
-    method: 'post',
-    data: JSON.stringify(data)
-  })
+export function getTitle(data) {
+    return request({
+      url: '/expert/competentlist',
+      method: 'post',
+      data
+    })
+}
+
+export function getTable(data) {
+    return request({
+      url: '/expert/expertbasiclist',
+      method: 'post',
+      data
+    })
 }
 
 export function userAdd(data) {

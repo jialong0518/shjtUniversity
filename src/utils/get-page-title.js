@@ -1,6 +1,6 @@
 import defaultSettings from '@/settings'
 
-const title = defaultSettings.title || '白洋淀成果展示大屏管理后台'
+const title = defaultSettings.title || '上海交通大学专家管理系统'
 
 export default function getPageTitle(pageTitle) {
   if (pageTitle) {

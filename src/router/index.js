@@ -53,7 +53,7 @@ let constantRoutes = [
       path: 'byd',
       name: 'byd',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: '白洋淀成果展示大屏管理后台' }
+      meta: { title: '上海交通大学专家管理系统' }
     }]
   },
 
@@ -79,352 +79,41 @@ let constantRoutes = [
     ]
   },
   {
-    path: '/topicGroupManage',
+    path: '/expertBasics',
     component: Layout,
-    redirect: '/topicGroup',
-    name: 'topicGroup',
-    meta: { title: '课题菜单管理' },
+    redirect: '/expertBasics',
+    name: 'expertBasics',
+    meta: { title: '专家基础库' },
     children: [
       {
-        path: 'topicGroupManage',
-        name: 'topicGroupManage',
-        component: () => import('@/views/topicGroupManage/index'),
-        meta: { title: '课题菜单管理' }
+        path: 'expertBasics',
+        name: 'expertBasics',
+        component: () => import('@/views/expertBasics/index'),
+        meta: { title: '专家基础库' }
       }
     ]
   },
-  {
-    path: '/water',
-    component: Layout,
-    redirect: '/water',
-    name: 'water',
-    meta: { title: '水环境' },
-    children: [
-      {
-        path: 'showModuleDeploy',
-        name: 'showModuleDeploy',
-        component: () => import('@/views/showModuleDeploy/index'),
-        meta: { title: '展示模块配置' }
-      },
-      {
-        path: 'markPointManage',
-        name: 'markPointManage',
-        component: () => import('@/views/markPointManage/index'),
-        meta: { title: '标记点配置' }
-      },
-      {
-        path: 'weatherManage',
-        name: 'weatherManage',
-        component: () => import('@/views/weatherManage/index'),
-        meta: { title: '天气动效配置' }
-      },
-      {
-        path: 'editShowModule',
-        name: 'editShowModule',
-        component: () => import('@/views/showModuleDeploy/editShowModule/index'),
-        name: '编辑',
-      },
-      {
-        path: 'editmarkPointModule',
-        name: 'editmarkPointModule',
-        component: () => import('@/views/markPointManage/editmarkPointModule/index'),
-        name: '编辑',
-      }
-    ]
-  },
-  {
-    path: '/organisms',
-    component: Layout,
-    redirect: '/organisms',
-    name: 'organisms',
-    meta: { title: '生态毒理与生物安全' },
-    children: [
-      {
-        path: 'showModuleDeploy',
-        name: 'showModuleDeploy',
-        component: () => import('@/views/showModuleDeploy/index'),
-        meta: { title: '展示模块配置' }
-      },
-      {
-        path: 'markPointManage',
-        name: 'markPointManage',
-        component: () => import('@/views/markPointManage/index'),
-        meta: { title: '标记点配置' }
-      },
-      {
-        path: 'weatherManage',
-        name: 'weatherManage',
-        component: () => import('@/views/weatherManage/index'),
-        meta: { title: '天气动效配置' }
-      },
-      {
-        path: 'editShowModule',
-        name: 'editShowModule',
-        component: () => import('@/views/showModuleDeploy/editShowModule/index'),
-        name: '编辑',
-      },
-      {
-        path: 'editmarkPointModule',
-        name: 'editmarkPointModule',
-        component: () => import('@/views/markPointManage/editmarkPointModule/index'),
-        name: '编辑',
-      }
-    ]
-  },
-  {
-    path: '/carbon',
-    component: Layout,
-    redirect: '/carbon',
-    name: 'carbon',
-    meta: { title: '碳通量数据'},
-    children: [
-      {
-        path: 'showModuleDeploy',
-        name: 'showModuleDeploy',
-        component: () => import('@/views/showModuleDeploy/index'),
-        meta: { title: '展示模块配置'}
-      },
-      {
-        path: 'markPointManage',
-        name: 'markPointManage',
-        component: () => import('@/views/markPointManage/index'),
-        meta: { title: '标记点配置' }
-      },
-      {
-        path: 'weatherManage',
-        name: 'weatherManage',
-        component: () => import('@/views/weatherManage/index'),
-        meta: { title: '天气动效配置' }
-      },
-      {
-        path: 'editShowModule',
-        name: 'editShowModule',
-        component: () => import('@/views/showModuleDeploy/editShowModule/index'),
-        name: '编辑',
-      },
-      {
-        path: 'editmarkPointModule',
-        name: 'editmarkPointModule',
-        component: () => import('@/views/markPointManage/editmarkPointModule/index'),
-        name: '编辑',
-      }
-    ]
-  },
-  {
-    path: '/sub4',
-    component: Layout,
-    redirect: '/sub4',
-    name: 'sub4',
-    meta: { title: '课题4'},
-    children: [
-      {
-        path: 'showModuleDeploy',
-        name: 'showModuleDeploy',
-        component: () => import('@/views/showModuleDeploy/index'),
-        meta: { title: '展示模块配置'}
-      },
-      {
-        path: 'markPointManage',
-        name: 'markPointManage',
-        component: () => import('@/views/markPointManage/index'),
-        meta: { title: '标记点配置' }
-      },
-      {
-        path: 'weatherManage',
-        name: 'weatherManage',
-        component: () => import('@/views/weatherManage/index'),
-        meta: { title: '天气动效配置' }
-      },
-      {
-        path: 'editShowModule',
-        name: 'editShowModule',
-        component: () => import('@/views/showModuleDeploy/editShowModule/index'),
-        name: '编辑',
-      },
-      {
-        path: 'editmarkPointModule',
-        name: 'editmarkPointModule',
-        component: () => import('@/views/markPointManage/editmarkPointModule/index'),
-        name: '编辑',
-      }
-    ]
-  },
-  {
-    path: '/sub5',
-    component: Layout,
-    redirect: '/sub5',
-    name: 'sub5',
-    meta: { title: '课题5'},
-    children: [
-      {
-        path: 'showModuleDeploy',
-        name: 'showModuleDeploy',
-        component: () => import('@/views/showModuleDeploy/index'),
-        meta: { title: '展示模块配置'}
-      },
-      {
-        path: 'markPointManage',
-        name: 'markPointManage',
-        component: () => import('@/views/markPointManage/index'),
-        meta: { title: '标记点配置' }
-      },
-      {
-        path: 'weatherManage',
-        name: 'weatherManage',
-        component: () => import('@/views/weatherManage/index'),
-        meta: { title: '天气动效配置' }
-      },
-      {
-        path: 'editShowModule',
-        name: 'editShowModule',
-        component: () => import('@/views/showModuleDeploy/editShowModule/index'),
-        name: '编辑',
-      },
-      {
-        path: 'editmarkPointModule',
-        name: 'editmarkPointModule',
-        component: () => import('@/views/markPointManage/editmarkPointModule/index'),
-        name: '编辑',
-      }
-    ]
-  },
-  {
-    path: '/sub6',
-    component: Layout,
-    redirect: '/sub6',
-    name: 'sub6',
-    meta: { title: '课题6'},
-    children: [
-      {
-        path: 'showModuleDeploy',
-        name: 'showModuleDeploy',
-        component: () => import('@/views/showModuleDeploy/index'),
-        meta: { title: '展示模块配置'}
-      },
-      {
-        path: 'markPointManage',
-        name: 'markPointManage',
-        component: () => import('@/views/markPointManage/index'),
-        meta: { title: '标记点配置' }
-      },
-      {
-        path: 'weatherManage',
-        name: 'weatherManage',
-        component: () => import('@/views/weatherManage/index'),
-        meta: { title: '天气动效配置' }
-      },
-      {
-        path: 'editShowModule',
-        name: 'editShowModule',
-        component: () => import('@/views/showModuleDeploy/editShowModule/index'),
-        name: '编辑',
-      },
-      {
-        path: 'editmarkPointModule',
-        name: 'editmarkPointModule',
-        component: () => import('@/views/markPointManage/editmarkPointModule/index'),
-        name: '编辑',
-      }
-    ]
-  },
-  {
-    path: '/sub7',
-    component: Layout,
-    redirect: '/sub7',
-    name: 'sub7',
-    meta: { title: '课题7'},
-    children: [
-      {
-        path: 'showModuleDeploy',
-        name: 'showModuleDeploy',
-        component: () => import('@/views/showModuleDeploy/index'),
-        meta: { title: '展示模块配置'}
-      },
-      {
-        path: 'markPointManage',
-        name: 'markPointManage',
-        component: () => import('@/views/markPointManage/index'),
-        meta: { title: '标记点配置' }
-      },
-      {
-        path: 'weatherManage',
-        name: 'weatherManage',
-        component: () => import('@/views/weatherManage/index'),
-        meta: { title: '天气动效配置' }
-      },
-      {
-        path: 'editShowModule',
-        name: 'editShowModule',
-        component: () => import('@/views/showModuleDeploy/editShowModule/index'),
-        name: '编辑',
-      },
-      {
-        path: 'editmarkPointModule',
-        name: 'editmarkPointModule',
-        component: () => import('@/views/markPointManage/editmarkPointModule/index'),
-        name: '编辑',
-      }
-    ]
-  },
-  {
-    path: '/sub8',
-    component: Layout,
-    redirect: '/sub8',
-    name: 'sub8',
-    meta: { title: '课题8'},
-    children: [
-      {
-        path: 'showModuleDeploy',
-        name: 'showModuleDeploy',
-        component: () => import('@/views/showModuleDeploy/index'),
-        meta: { title: '展示模块配置'}
-      },
-      {
-        path: 'markPointManage',
-        name: 'markPointManage',
-        component: () => import('@/views/markPointManage/index'),
-        meta: { title: '标记点配置' }
-      },
-      {
-        path: 'weatherManage',
-        name: 'weatherManage',
-        component: () => import('@/views/weatherManage/index'),
-        meta: { title: '天气动效配置' }
-      },
-      {
-        path: 'editShowModule',
-        name: 'editShowModule',
-        component: () => import('@/views/showModuleDeploy/editShowModule/index'),
-        name: '编辑',
-      },
-      {
-        path: 'editmarkPointModule',
-        name: 'editmarkPointModule',
-        component: () => import('@/views/markPointManage/editmarkPointModule/index'),
-        name: '编辑',
-      }
-    ]
-  },
+  
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
 console.log(Router,'this.$route.path')
-researchlist({"title": '',
-      "linkman": '',
-      "uid": '1',
-      "sort": ''
-      })
-      .then(r => {
-            console.log(r.data.data_list,'luyou')
-            console.log(constantRoutes,'constantRoutes')
-            r.data.data_list.map((item, index)=>{
-                constantRoutes[index+5].meta.title = item.title
-            })
-            // r.data.rights_list.map(item=>{
-            // this.rights_list[item.rights] = item.rights_id
-            // })  
-            localStorage.setItem('rt',JSON.stringify(constantRoutes))
-        }).catch(() => {});
+// researchlist({"title": '',
+//       "linkman": '',
+//       "uid": '1',
+//       "sort": ''
+//       })
+//       .then(r => {
+//             console.log(r.data.data_list,'luyou')
+//             console.log(constantRoutes,'constantRoutes')
+//             r.data.data_list.map((item, index)=>{
+//                 constantRoutes[index+5].meta.title = item.title
+//             })
+//             // r.data.rights_list.map(item=>{
+//             // this.rights_list[item.rights] = item.rights_id
+//             // })  
+//             localStorage.setItem('rt',JSON.stringify(constantRoutes))
+//         }).catch(() => {});
     const createRouter = () => new Router({
         // mode: 'history', // require service support
         scrollBehavior: () => ({ y: 0 }),
@@ -434,6 +123,7 @@ researchlist({"title": '',
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
+  return
     researchlist({"title": '',
       "linkman": '',
       "uid": '1',

@@ -32,8 +32,8 @@ export default {
     ]),
     routes() {
         console.log(this.$router.options.routes,'this.$router.options.routes')
-        //  this.$router.options.routes
-      return JSON.parse(localStorage.getItem('rt'))
+         return this.$router.options.routes
+      // return JSON.parse(localStorage.getItem('rt'))
     },
     activeMenu() {
       const route = this.$route

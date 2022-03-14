@@ -6,7 +6,7 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
-const name = defaultSettings.title || '白洋淀成果展示大屏管理后台' // page title
+const name = defaultSettings.title || '上海交通大学专家管理系统' // page title
 
 // If your port is set to 80,
 // use administrator privileges to execute the command line.
@@ -38,10 +38,10 @@ module.exports = {
       errors: true
     },
     proxy: {  //配置跨域
-      　　　　　　　　'/byd': {
-      　　　　　　　　　　target: 'http://mob.hexntc.com/byd',  //这里后台的地址模拟的;应该填写你们真实的后台接口
+      　　　　　　　　'/expert': {
+      　　　　　　　　　　target: 'https://mob.hexntc.com/expert',  //这里后台的地址模拟的;应该填写你们真实的后台接口
       　　　　　　　　　　pathRewrite: {
-      　　　　　　　　　　　　'^/byd': ''  //请求的时候使用这个api就可以
+      　　　　　　　　　　　　'^/expert': ''  //请求的时候使用这个api就可以
       　　　　　　　　　　}
       　　　　　　}
       　　　　}
