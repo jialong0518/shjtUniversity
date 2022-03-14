@@ -90,9 +90,16 @@ let constantRoutes = [
         name: 'expertBasics',
         component: () => import('@/views/expertBasics/index'),
         meta: { title: '专家基础库' }
-      }
+      },
+      {
+        path: 'importResults',
+        name: 'importResults',
+        component: () => import('@/views/importResults/index'),
+        meta: '导入结果',
+      },
     ]
   },
+  
   
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }

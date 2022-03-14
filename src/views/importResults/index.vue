@@ -239,16 +239,19 @@ export default {
     batchImport(data) {
       console.log(data,'批量导入')
       this.expertImportData(data)
-       this.$router.push({
-         path:'importResults',
-         query:{data: JSON.stringify(data)}
+      this.$router.push({
+        path:'importResults',
+        query:{data: JSON.stringify(data)}
         });
     },
 
     expertImportData(data) {
-      expertimport({"fileName": `${data.fileHash}/${data.name}`}).then(r => {
-        
-      }).catch(() => {});
+      // expertimport({"fileName": `${data.fileHash}/${data.name}`}).then(r => {
+      //   if(r.fail_list > 0) {
+
+      //   }
+      //   // 
+      // }).catch(() => {});
     },
 
     
@@ -425,10 +428,11 @@ export default {
   },
 //   message_
   mounted: function() {
-    this.getFacultyData()
-    this.getSubjectData()
-    this.getTitleData()
-      this.getTableData()
+    console.log(this.$route.query.data)
+    // this.getFacultyData()
+    // this.getSubjectData()
+    // this.getTitleData()
+    //   this.getTableData()
   }
 }
 </script>

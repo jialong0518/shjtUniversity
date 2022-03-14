@@ -1,201 +1,173 @@
 <template>
-  <div>
-    <el-tooltip class="item" effect="dark" :content="`支持扩展名：${acceptFiles}`" placement="bottom-start">
-      <el-button :id="`browseButton${up1}`" type="primary" icon="el-icon-upload2">
-        请选择文件  
-      </el-button>
-    </el-tooltip>
-    <em>{{ basicForm.fileName }}</em>
-    <div v-if="fileRawList.length">
-      <el-table :data="fileRawList" class="d2-mt-10 d2-mb-10">
-        <el-table-column
-          label="文件名"
-          min-width="100"
-        >
-          <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="状态"
-          min-width="100"
-        >
-          <template slot-scope="scope">
-            <span v-if="scope.row.status === -1">正在计算MD5</span>
-            <span v-if="scope.row.status === 1 && scope.row.percent === 0">MD5计算完成，准备上传</span>
-            <span v-if="scope.row.status === 4" style="color: brown">上传失败</span>
-            <span v-if="scope.row.status === 5" style="color: chartreuse">已上传</span>
-            <el-progress
-              v-if="scope.row.percent || scope.row.percent === 0"
-              :text-inside="true"
-              :stroke-width="20"
-              :percentage="scope.row.percent"
-              :v-if="scope.row.status === 2 || scope.row.status === 1 && scope.row.percent > 0"
-            />
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="操作"
-          width="70"
-        >
-          
-        </el-table-column>
-      </el-table>
-      <el-button :disabled="uploading" type="danger" @click="uploadStart()">
-        开始上传
-      </el-button>
-    </div>
+  <div class="account">
+    <el-button type="primary" style="margin-left: 15px;" @click="fileClick"><slot></slot></el-button>
+    <input type="file" style="display: none;" ref="inputFile" @change="getFile($event)" multiple="multiplt" >
   </div>
 </template>
+
 <script>
-// plupload参数文档：http://www.phpin.net/tools/plupload/
-// import plupload from 'plupload/js/plupload.full.min.js'
-import plupload from 'plupload'
-import FileMd5 from '@/utils/file-md5.js'
-// import { removeFile } from '@/api/filemgr'
+
 export default {
-  name: 'Plupload',
-  props: {
-    // 文件上传类型限制
-    acceptFiles: {
-      type: String,
-      default: '.png,.jpg,.bmp,.doc,.docx,.xls,.xlsx,.pdf,.rar,.zip'
-    },
-    bizType: {
-      type: String,
-      default: ''
-    },
-    fileList: {
-      type: Array,
-      default: () => []
-    },
-    up1: {
-      type: Number,
-      default: 0
-    },
-    limit: {
-      type: Number,
-      default: 5
-    }
-  },
+  name: 'plupload',
   data() {
     return {
-      up: {},
-      fname:'',
-      basicForm: {},
-      fileRawList: [],
-      uploading: false
+        
     }
   },
   watch: {
-    up(val) {
-      console.log('up')
-      this.fileRawList = this.fileList.concat(val.files)
-    },
-    acceptFiles(val) {
-      this[`up_${this.up1}`].refresh()
-    }
-    // fileList(val) {
-    //   console.log('fileList', val, this.up)
-    //   this.fileRawList = val.concat(this.up.files)
-    //   this.up.refresh()
-    // }
-  },
-  mounted() {
-    this.pluploadInit()
+    
   },
   methods: {
-    pluploadInit() {
-      var that = this
-      var uploader = new plupload.Uploader({
-        browse_button: `browseButton${this.up1}`,
-        url:  'https://mob.hexntc.com/byd/web/plupload/js/plupload/examples/upload.php',
-        chunk_size: '2MB',
-        headers: that.headers,
-        multipart: true, // 为true时将以multipart/form-data
-        max_retries: 1, // 当发生plupload.HTTP_ERROR错误时的重试次数，为0时表示不重试
-        multi_selection: false, // 是否可以在文件浏览对话框中选择多个文件
-        filters: {
-          mime_types: [
-            { extensions: that.acceptFiles.replace(/\./g, '') }
-          ],
-          prevent_duplicates: false, // 不允许选取重复文件
-          max_file_size: '10240mb' // 最大只能上传400kb的文件
-        },
-        init: {
-          BeforeUpload(up, file) {
-            // 上传时的附加参数，以键/值对的形式传入
-            up.setOption('multipart_params', {
-              'size': file.size,
-              'md5': file.md5,
-              'bizType': that.bizType
-            })
-          },
-          FileFiltered(up, files) {
-            // console.log('FileFiltered', up, files)
-          },
-          FilesAdded(up, files) {
-            console.log('FilesAdded', files[0].name)
-            that.fname = files[0].name
-            that.fileRawList = []
-            that.fileRawList.push(...files)
-            if (that.fileRawList.length > that.limit) {
-              // that.deleteFile(that.fileRawList[0])
-            }
-            files.forEach((f) => {
-              f.status = -1
-              FileMd5(f.getNative(), (e, md5) => {
-                f['md5'] = md5
-                f.status = 1
-              })
-            })
-          },
-          FilesRemoved(upp, files) {
-            that.uploading = false
-          },
-          FileUploaded(up, file, info) {
-            if (info.status === 200) {
-              console.log('FileUploaded', info.response)
-              console.log(that.fname,'that.fname')
-              that.$emit('onChange', that.fname)
-              that.fileRawList = []
-            //   const { path } = JSON.parse(info.response).data
-            //   file.url = path
-              that[`up_${that.up1}`].refresh()
-            //   that.$emit('onChange', that.fileRawList)
-            }
-          },
-          UploadComplete(up, files) {
-            that.uploading = false
-          },
-          Error(up, args) {
-            that.uploading = false
-          }
-        }
-      })
-      uploader.init()
-      this[`up_${this.up1}`] = uploader
-      // this.up = uploader
+    fileClick(){
+      this.$refs.inputFile.click();
     },
-    // deleteFile(row) {
-    //   console.log(this.fileRawList.indexOf(row))
-    //   this.fileRawList.splice(this.fileRawList.indexOf(row), 1)
-    //   var file = this.up.getFile(row.id)
-    //   file && this.up.removeFile(file)
-    //   row.url && removeFile({ filePath: row.url }).then(res => {
-    //     if (res.success) {
-    //       this.$emit('onChange', this.fileRawList.filter(item => {
-    //         return item.url
-    //       }))
-    //       return
-    //     }
-    //     this.$message.warning('删除文件出现异常，请与管理员联系!')
-    //   })
-    // },
-    uploadStart() {
-      this.uploading = true
-      this[`up_${this.up1}`].start()
-    }
+    getFile() {
+       const file = event.target.files[0]
+            const sliceBuffer = []
+            let sliceSize = file.size
+            while(sliceSize > 1024 * 1024) {
+                const blobPart = file.slice(sliceBuffer.length * 1024 * 1024, (sliceBuffer.length + 1) * 1024 * 1024)
+                sliceBuffer.push(
+                    blobPart
+                )
+                sliceSize -= (1024 * 1024)
+            }
+
+            if(sliceSize > 0) {
+                sliceBuffer.push(
+                    file.slice(sliceBuffer.length * 1024 * 1024, file.size)
+                )
+            }
+            
+            const fileReader = new FileReader()
+            fileReader.onload = (res)=>{
+                const result = fileReader.result
+                const fileHash = SparkMD5.hashBinary(result)
+
+                this.checkFileChunkState(fileHash)
+                .then(res => {
+                    let { chunkList, state } = res
+                    if(state === 1) {
+                        alert("已经上传完成")
+                        return 
+                    }
+
+                    chunkList = chunkList.map(e => parseInt(e))
+
+                    const chunkRequests = []
+                    sliceBuffer.forEach((buffer, i) => {
+                        if(!chunkList.includes(i)) {
+                            const blob = new File([buffer], `${i}`)
+                            chunkRequests.push(
+                                this.uploadFileChunk(fileHash, blob)
+                            )
+                        }
+                    })
+                    return Promise.all(chunkRequests)
+                })
+                .then(res => {
+                    return new Promise(resolve => {
+                        res.forEach(e => {
+                            e.json().then(({chunkList}) => {
+                                if(chunkList.length === sliceBuffer.length) {
+                                    this.megerChunkFile(fileHash, file.name).then(res => {
+                                        resolve(res)
+                                    })
+                                }
+                            })
+                        })
+                    })
+                }).then(res => {
+                    res.fileHash = fileHash;
+                    res.name = file.name;
+                    console.log(res);
+                    this.$emit('updata', res);
+                })
+            }
+            fileReader.onerror = function(err) {
+                console.log("报错了", err.target.error)
+            }
+            fileReader.readAsBinaryString(event.target.files[0])
+    },
+    uploadFileChunk(hash, file) {
+            let formData = new FormData
+            formData.append('file', file)
+            formData.append('hash', hash)
+            return fetch("https://mob.hexntc.com/expert/uploadChunk", {
+                method: "POST",
+                body: formData
+            })
+        },
+
+    checkFileChunkState(hash) {
+            return new Promise(resolve => {
+                fetch("https://mob.hexntc.com/expert/checkChunk?hash=" + hash)
+                .then(r => r.json())
+                .then(response => {
+                    resolve(response)
+                })
+            })
+        },
+
+    megerChunkFile(hash, fileName) {
+            return new Promise(resolve => {
+                fetch(`https://mob.hexntc.com/expert/megerChunk?hash=${hash}&fileName=${fileName}`)
+                .then(r => r.json())
+                .then(r => {
+                    resolve(r)
+                })
+            })
+        }
+  },
+  
+//   message_
+  mounted: function() {
+   
   }
 }
 </script>
+
+<style lang="scss">
+/* 修复input 背景不协调 和光标变色 */
+/* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
+$bg:#283443;
+$light_gray:#fff;
+$cursor: #fff;
+@supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
+  .login-container .el-input input {
+    color: $cursor;
+  }
+}
+/* reset element-ui css */
+.login-container {
+  .el-input {
+    display: inline-block;
+    height: 47px;
+    width: 85%;
+    input {
+      background: transparent;
+      border: 0px;
+      -webkit-appearance: none;
+      border-radius: 0px;
+      padding: 12px 5px 12px 15px;
+      color: $light_gray;
+      height: 47px;
+      caret-color: $cursor;
+      &:-webkit-autofill {
+        box-shadow: 0 0 0px 1000px $bg inset !important;
+        -webkit-text-fill-color: $cursor !important;
+      }
+    }
+  }
+  .el-form-item {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    color: #454545;
+  }
+}
+</style>
+
+<style lang="scss" scoped>
+
+</style>

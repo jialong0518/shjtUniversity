@@ -33,13 +33,16 @@ export function getTable(data) {
     })
 }
 
-export function userAdd(data) {
+export function expertimport(data) {
   return request({
-    url: '/byd/web/index.php?r=reg/useradd',
+    url: '/expert/expertimport',
     method: 'post',
     data
   })
 }
+
+
+
 
 export function passwordreset(data) {
     return request({
