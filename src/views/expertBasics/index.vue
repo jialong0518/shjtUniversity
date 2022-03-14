@@ -56,20 +56,42 @@
     border
     style="width: 100%;;border-radius: 10px;">
     <el-table-column
-      prop="phone"
-      label="账号">
+      type="selection"
+      width="55">
     </el-table-column>
     <el-table-column
-      prop="name"
+      prop="expertName"
       label="姓名">
     </el-table-column>
     <el-table-column
-      prop="phone"
-      label="手机号">
+      prop="expertGender"
+      label="性别">
+      <template slot-scope="scope">{{ scope.row.expertGender === 1 ? '男' : '女' }}</template>
     </el-table-column>
     <el-table-column
-      prop="date"
-      label="录入时间">
+      prop="expertCollege"
+      label="院/系">
+    </el-table-column>
+    <el-table-column
+      prop="expertTitle"
+      label="职称">
+    </el-table-column>
+    <el-table-column
+      prop="expertSubject"
+      label="学科">
+    </el-table-column>
+    <el-table-column
+      prop="expertPhone"
+      label="电话">
+    </el-table-column>
+    <el-table-column
+      prop="expertEmail"
+      label="邮箱">
+    </el-table-column>
+    <el-table-column
+      prop="inPosition"
+      label="在职">
+      <template slot-scope="scope">{{ scope.row.inPosition === 1 ? '是' : '否' }}</template>
     </el-table-column>
     <el-table-column
       label="操作">
@@ -81,13 +103,6 @@
             @onConfirm="accountDel(scope.row)" 
         >
         <el-button style="margin: 0 10px;" slot="reference"  type="text" size="small">删除</el-button>
-        </el-popconfirm>
-        <!-- <el-button v-if="rights_list['删除']" @click="handleClick(scope.row)" type="text" size="small">删除</el-button> -->
-        <el-popconfirm
-            title="确认重置密码吗？"
-            @onConfirm="resetAccount(scope.row)" 
-        >
-        <el-button  slot="reference" type="text" size="small">重置密码</el-button>
         </el-popconfirm>
       </template>
     </el-table-column>
