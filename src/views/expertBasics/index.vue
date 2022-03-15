@@ -41,11 +41,12 @@
     </el-row>
     <el-row :gutter="20" style="padding: 20px;">
       <el-col :span="6">
-        <el-button type="primary" @click="getTableData()">搜 索</el-button>
+        <el-button type="primary" @click="searchFun">搜 索</el-button>
+        <el-button type="primary" @click="exportData">导 出</el-button>
     </el-col>
     </el-row>
     <div style="padding: 15px;overflow: hidden;display: flex;justify-content: flex-end;">
-      <el-button type="primary" style="margin-left: 15px;"  @click="addAccountButt('ruleForm')">添加账号</el-button>
+      <el-button type="primary" style="margin-left: 15px;"  @click="addAccountButt('ruleForm')">添加专家</el-button>
       <plupload @updata="batchImport">批量导入</plupload>
       <el-button type="primary" style="margin-left: 15px;" @click="addAccountButt('ruleForm')">导出结果</el-button>
     </div>
@@ -122,11 +123,65 @@
   </div> 
   <el-dialog :title="titleForm" :show-close="false" :close-on-click-modal="false" :visible.sync="dialogAccountVisible">
   <el-form :model="form" :rules="rulesAccount" ref="ruleForm" label-width="100px">
+    <el-form-item label="专家工号" prop="expertNo">
+      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" @input="expertNoFun" v-model="form.expertNo" autocomplete="off"></el-input>
+    </el-form-item>
     <el-form-item label="姓名" prop="name">
       <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.name" autocomplete="off"></el-input>
     </el-form-item>
-    <el-form-item label="手机号" prop="phone">
+    <el-form-item label="性别" prop="sex">
+      <el-radio-group v-model="form.sex">
+        <el-radio label="1" :disabled="titleForm.indexOf('查看')!== -1">男</el-radio>
+        <el-radio label="2" :disabled="titleForm.indexOf('查看')!== -1">女</el-radio>
+      </el-radio-group>
+    </el-form-item>
+    <el-form-item label="院/系" prop="faculty">
+      <el-select v-model="form.faculty" @change="facultyFun" style="width: 80%" :disabled="titleForm.indexOf('查看')!== -1" placeholder="请选择">
+          <el-option
+            v-for="(item, index) in facultyData"
+            :key="index"
+            :label="item.name"
+            :value="item.code">
+          </el-option>
+        </el-select>
+    </el-form-item>
+    <el-form-item label="职称" prop="title">
+      <el-select v-model="form.title" @change="titleFun" style="width: 80%" :disabled="titleForm.indexOf('查看')!== -1" placeholder="请选择">
+          <el-option
+            v-for="(item, index) in titleData"
+            :key="index"
+            :label="item.name"
+            :value="item.code">
+          </el-option>
+        </el-select>
+    </el-form-item>
+    <el-form-item label="学科" prop="subject">
+      <el-select v-model="form.subject" @change="subjectFun" style="width: 80%" :disabled="titleForm.indexOf('查看')!== -1" placeholder="请选择">
+          <el-option
+            v-for="(item, index) in subjectData"
+            :key="index"
+            :label="item.name"
+            :value="item.code">
+          </el-option>
+        </el-select>
+    </el-form-item>
+    <el-form-item label="电话" prop="phone">
       <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.phone" autocomplete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="邮箱" prop="email">
+      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.email" autocomplete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="在职" prop="inPosition">
+      <el-radio-group v-model="form.inPosition">
+        <el-radio label="1" :disabled="titleForm.indexOf('查看')!== -1">是</el-radio>
+        <el-radio label="2" :disabled="titleForm.indexOf('查看')!== -1">否</el-radio>
+      </el-radio-group>
+    </el-form-item>
+    <el-form-item label="密码" prop="expertPwd">
+      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.expertPwd" autocomplete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="备注" prop="remark">
+      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.remark" autocomplete="off"></el-input>
     </el-form-item>
   </el-form>
   <div slot="footer" class="dialog-footer">
@@ -141,7 +196,7 @@
 import { validUsername } from '@/utils/validate'
 import { userlist, userAdd, passwordreset, userdel, useredit, userbind } from "@/api/account";
 
-import { getCollege, getSubject, getTitle, getTable, expertimport } from "@/api/expertBasics";
+import { getCollege, getSubject, getTitle, getTable, expertimport, expertbasicbind, expertbasicadd, expertbasicdel, expertbasicedit, expertbasicexport } from "@/api/expertBasics";
 import plupload from "@/components/plupload";
 
 import { roleslist } from "@/api/role";
@@ -160,6 +215,22 @@ export default {
         }
         callback();
       };
+      let validateNo = (rule, value, callback) => {
+          let myreg = /^[0-9A-Za-z]+$/;
+        if (!myreg.test(value) || value.length > 15 || value.length === 0) {
+            callback(new Error('专家工号1至15位，数组或者字母'));
+            return;
+        }
+        callback();
+      };
+      let validateEml = (rule, value, callback) => {
+          let myreg = /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/;
+        if (!myreg.test(value)) {
+            callback(new Error('邮箱格式不正确'));
+            return;
+        }
+        callback();
+      };
     return {
         searchFaculty:'',
         searchSubject: '',
@@ -174,10 +245,20 @@ export default {
       pageSize: 10,
       dialogAccountVisible: false,
       form: {
-        account: '',
+        sex: '',
         name: '',
         phone: '',
-        role: ''
+        faculty: '',
+        facultyName: '',
+        title: '',
+        titleName: '',
+        subject: '',
+        subjectName: '',
+        email: '',
+        inPosition: '',
+        expertNo: '',
+        expertPwd: '',
+        remark:''
       },
       message_: null,
       message1_:null,
@@ -188,8 +269,35 @@ export default {
         name: [
             { required: true, message: '请填写名字', trigger: 'blur' }
         ],
+        sex: [
+            { required: true, message: '请选择性别', trigger: 'change' }
+        ],
+        faculty: [
+            { required: true, message: '请选择院/系', trigger: 'change' }
+        ],
+        title: [
+            { required: true, message: '请选择职称', trigger: 'change' }
+        ],
+        subject: [
+            { required: true, message: '请选择学科', trigger: 'change' }
+        ],
+        inPosition: [
+            { required: true, message: '请选择在职状态', trigger: 'change' }
+        ],
         phone: [
-            { required: true, validator:validatePhone, trigger: 'blur' }
+            { required: true, validator: validatePhone, trigger: 'blur' }
+        ],
+        email: [
+            { required: true, validator: validateEml, trigger: 'blur' }
+        ],
+        expertNo: [
+            { required: true, validator: validateNo, trigger: 'blur' }
+        ],
+        expertPwd: [
+            { required: true, message: '请输入密码', trigger: 'blur' }
+        ],
+        remark: [
+            { required: true, message: '请输入备注', trigger: 'blur' }
         ]
       },
       loadingAccount: false,
@@ -251,9 +359,41 @@ export default {
       }).catch(() => {});
     },
 
-    
+    facultyFun(data){
+      this.facultyData.map(item=>{
+        if(item.code === data) {
+          this.form.facultyName = item.name;
+        }
+      })
+    },
 
-      sizeChange(val){
+    subjectFun(data) {
+      this.subjectData.map(item=>{
+        if(item.code === data) {
+          this.form.subjectName = item.name;
+        }
+      })
+    },
+    titleFun(data) {
+      this.titleData.map(item=>{
+        if(item.code === data) {
+          this.form.titleName = item.name;
+        }
+      })
+    },
+
+    expertNoFun(data) {
+      console.log(data)
+      this.form.expertPwd = data
+    },
+    
+    searchFun() {
+      this.currentPage = 1;
+      this.pageSize = 10;
+      this.getTableData()
+    },
+
+    sizeChange(val){
         this.currentPage = 1;
         this.pageSize = val;
         this.getTableData()
@@ -264,24 +404,25 @@ export default {
     },
     
     seeAccountButt(data) {
-      this.titleForm = '查看用户'
+      this.titleForm = '查看专家信息'
       this.accountId = data.id
       this.getuserbind()
     },
     editAccountButt(data) {
       this.accountId = data.id
-      this.titleForm = '编辑用户'
+      this.titleForm = '编辑专家信息'
       this.getuserbind()
     },
     addAccountButt(formName) {
       this.accountId = '';
-      this.titleForm = '添加用户'
+      this.titleForm = '添加专家信息'
       this.dialogAccountVisible = true
     },
     cancelSubmit(formName) {
+      console.log(formName)
       this.accountId = '';
-      this.dialogAccountVisible = false;
       this.$refs[formName].resetFields();
+      this.dialogAccountVisible = false;
     },
     submitAccount(formName) {
       this.$refs[formName].validate((valid) => {
@@ -301,25 +442,31 @@ export default {
     },
     addDataFun(formName1){
       this.loadingAccount = true
-      userAdd({
-              "name": this.form.name,
-              "phone": this.form.phone,
-              "uid": sessionStorage.getItem('uid')})
-            .then(r => {
+      expertbasicadd({
+              "expertName": this.form.name,
+              "expertGender": Number(this.form.sex),
+              "expertCollege": this.form.facultyName,
+              "expertCollegeCode": this.form.faculty,
+              "expertTitle": this.form.titleName,
+              "expertTitleCode": this.form.title,
+              "expertSubject": this.form.subjectName,
+              "expertSubjectCode": this.form.subject,
+              "expertPhone": this.form.phone,
+              "expertEmail": this.form.email,
+              "inPosition": Number(this.form.inPosition),
+              "expertNo": this.form.expertNo,
+              "expertPwd": this.form.expertPwd,
+              "remark": this.form.remark
+              }).then(r => {
+                if(r.msg === '信息重复') {
+                  this.loadingAccount = false
+                  return
+                }
               this.loadingAccount = false
               this.dialogAccountVisible = false
-              this.word = r.info
               this.account = this.form.account
               this.$refs[formName1].resetFields();
-              // this.wordVisible = true
-              console.log('123')
               this.getTableData()
-              this.openHTML(r.info)
-              setTimeout(()=>{
-                // this.wordVisible = true
-                console.log('123')
-              },500)
-              
             })
             .catch(() => {
               this.loadingAccount = false
@@ -327,12 +474,27 @@ export default {
     },
     editDataFun(formName) {
       this.loadingAccount = true
-      useredit({
-              "name": this.form.name,
+      expertbasicedit({
               "id": this.accountId,
-              "phone": this.form.phone,
-              "uid": sessionStorage.getItem('uid')})
+              "expertName": this.form.name,
+              "expertGender": Number(this.form.sex),
+              "expertCollege": this.form.facultyName,
+              "expertCollegeCode": this.form.faculty,
+              "expertTitle": this.form.titleName,
+              "expertTitleCode": this.form.title,
+              "expertSubject": this.form.subjectName,
+              "expertSubjectCode": this.form.subject,
+              "expertPhone": this.form.phone,
+              "expertEmail": this.form.email,
+              "inPosition": Number(this.form.inPosition),
+              "expertNo": this.form.expertNo,
+              "expertPwd": this.form.expertPwd,
+              "remark": this.form.remark})
             .then(r => {
+              if(r.msg === '信息重复') {
+                  this.loadingAccount = false
+                  return
+                }
               this.loadingAccount = false
               this.dialogAccountVisible = false
               this.$refs[formName].resetFields();
@@ -357,9 +519,9 @@ export default {
             });      
     },
     accountDel(data) {
-      userdel({
+      expertbasicdel({
             "id": data.id,
-            "uid": sessionStorage.getItem('uid')})
+            })
             .then(r => {
               console.log(r)
               this.getTableData()
@@ -384,14 +546,34 @@ export default {
             this.totalPage = r.data.datacount
         }).catch(() => {});
     },
-    getuserbind() {
-      userbind({
-        "id": this.accountId,
-        "uid": sessionStorage.getItem('uid')})
+    exportData() {
+      expertbasicexport({"college": this.searchFaculty,
+        "subject": this.searchSubject,
+        "competent": this.searchTitle,
+        "name": this.searchName,
+        "page":this.currentPage,
+        "pageSize":this.pageSize
+        })
       .then(r => {
-        console.log(r.data)
-      this.form.phone = r.data.phone;
-      this.form.name = r.data.name;
+        window.location.href= r.data;
+        }).catch(() => {});
+    },
+    getuserbind() {
+      expertbasicbind({
+        "id": this.accountId,
+      })
+      .then(r => {
+      this.form.sex = r.data.expertGender+'';
+      this.form.name = r.data.expertName;
+      this.form.phone = r.data.expertPhone;
+      this.form.faculty = r.data.expertCollegeCode;
+      this.form.title = r.data.expertTitleCode;
+      this.form.subject = r.data.expertSubjectCode;
+      this.form.email = r.data.expertEmail;
+      this.form.inPosition = r.data.inPosition+'';
+      this.form.expertNo = r.data.expertNo;
+      this.form.expertPwd = r.data.expertPwd;
+      this.form.remark = r.data.remark;
       this.dialogAccountVisible = true
         }).catch(() => {});
     },

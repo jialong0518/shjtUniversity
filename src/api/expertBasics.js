@@ -41,17 +41,47 @@ export function expertimport(data) {
   })
 }
 
+export function expertbasicbind(data) {
+  return request({
+    url: '/expert/expertbasicbind',
+    method: 'post',
+    data
+  })
+}
+
+export function expertbasicadd(data) {
+  return request({
+    url: '/expert/expertbasicadd',
+    method: 'post',
+    data
+  })
+}
+
+export function expertbasicdel(data) {
+  return request({
+    url: '/expert/expertbasicdel',
+    method: 'post',
+    data
+  })
+}
+
+export function expertbasicedit(data) {
+  return request({
+    url: '/expert/expertbasicedit',
+    method: 'post',
+    data
+  })
+}
+
+export function expertbasicexport(data) {
+  return request({
+    url: '/expert/expertbasicexport',
+    method: 'post',
+    data
+  })
+}
 
 
-
-export function passwordreset(data) {
-    return request({
-      url: '/byd/web/index.php?r=reg/passwordreset',
-      method: 'post',
-      // data: JSON.parse(data)
-      data: JSON.stringify(data)
-    })
-  }
 
   export function userdel(data) {
     return request({
@@ -62,22 +92,7 @@ export function passwordreset(data) {
     })
   }
 
-  export function useredit(data) {
-    return request({
-      url: '/byd/web/index.php?r=reg/useredit',
-      method: 'post',
-      data
-    })
-  }
-
-  export function userbind(data) {
-    return request({
-      url: '/byd/web/index.php?r=reg/userbind',
-      method: 'post',
-      data
-    })
-  }
-
+  
 
   
 

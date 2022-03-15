@@ -93,9 +93,8 @@ let constantRoutes = [
       },
       {
         path: 'importResults',
-        name: 'importResults',
+        name: '导入记录',
         component: () => import('@/views/importResults/index'),
-        meta: '导入结果',
       },
     ]
   },
