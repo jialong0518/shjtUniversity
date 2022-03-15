@@ -1,63 +1,18 @@
 <template>
   <div class="account">
     <el-row :gutter="20" style="padding: 20px;">
-    <el-col :span="6">
-        <div style="display: inline-block;width:20%;">院系：</div>
-        <el-select v-model="searchFaculty" style="width: 80%" placeholder="请选择">
-          <el-option
-            v-for="item in facultyData"
-            :key="item.code"
-            :label="item.name"
-            :value="item.code">
-          </el-option>
-        </el-select>
-    </el-col>
-    <el-col :span="6">
-        <div style="display: inline-block;width:20%;">学科：</div>
-        <el-select v-model="searchSubject" style="width: 80%" placeholder="请选择">
-          <el-option
-            v-for="item in subjectData"
-            :key="item.code"
-            :label="item.name"
-            :value="item.code">
-          </el-option>
-        </el-select>
-    </el-col>
-    <el-col :span="6">
-        <div style="display: inline-block;width:20%;">姓名：</div>
-        <el-input style="width: 80%" v-model="searchName" @change="getTableData()" autocomplete="off"></el-input>
-    </el-col>
-    <el-col :span="6">
-        <div style="display: inline-block;width:20%;">职称：</div>
-        <el-select v-model="searchTitle" style="width: 80%" placeholder="请选择">
-          <el-option
-            v-for="item in titleData"
-            :key="item.code"
-            :label="item.name"
-            :value="item.code">
-          </el-option>
-        </el-select>
-    </el-col>
-    </el-row>
-    <el-row :gutter="20" style="padding: 20px;">
+      <el-col :span="18" style="line-height: 30px;">
+        导入结果：成功<span style="color: green;">{{successNum}}</span>条，失败<span style="color: red;">{{failNum}}</span>条
+      </el-col>
       <el-col :span="6">
-        <el-button type="primary" @click="getTableData()">搜 索</el-button>
-    </el-col>
+        <el-button style="float: right;margin-right: 20px;" type="primary">去处理</el-button>
+      </el-col>
     </el-row>
-    <div style="padding: 15px;overflow: hidden;display: flex;justify-content: flex-end;">
-      <el-button type="primary" style="margin-left: 15px;"  @click="addAccountButt('ruleForm')">添加账号</el-button>
-      <plupload @updata="batchImport">批量导入</plupload>
-      <el-button type="primary" style="margin-left: 15px;" @click="addAccountButt('ruleForm')">导出结果</el-button>
-    </div>
-    <div style="padding: 0 20px">
+    <div style="padding: 0 20px" v-show="tableData.length > 0">
         <el-table
     :data="tableData"
     border
     style="width: 100%;;border-radius: 10px;">
-    <el-table-column
-      type="selection"
-      width="55">
-    </el-table-column>
     <el-table-column
       prop="expertName"
       label="姓名">
@@ -81,358 +36,50 @@
     </el-table-column>
     <el-table-column
       prop="expertPhone"
-      label="电话">
+      label="状态">
     </el-table-column>
     <el-table-column
       prop="expertEmail"
-      label="邮箱">
+      label="描述">
     </el-table-column>
-    <el-table-column
-      prop="inPosition"
-      label="在职">
-      <template slot-scope="scope">{{ scope.row.inPosition === 1 ? '是' : '否' }}</template>
-    </el-table-column>
-    <el-table-column
-      label="操作">
-      <template slot-scope="scope">
-        <el-button  @click="seeAccountButt(scope.row)" type="text" size="small">查看</el-button>
-        <el-button  type="text" @click="editAccountButt(scope.row)" size="small">编辑</el-button>
-        <el-popconfirm
-            title="是否确定删除该账号？"
-            @onConfirm="accountDel(scope.row)" 
-        >
-        <el-button style="margin: 0 10px;" slot="reference"  type="text" size="small">删除</el-button>
-        </el-popconfirm>
-      </template>
-    </el-table-column>
+    
   </el-table>
     </div>
-  <div style="text-align: center;
-    margin-top: 20px;">
-      <el-pagination
-      background
-      @size-change="sizeChange"
-      @current-change="currentChange"
-      :current-page="currentPage"
-      :page-sizes="[10, 20, 30]"
-      :page-size="pageSize"
-      layout="total,  prev, pager, next, sizes,jumper"
-      :total="totalPage">
-    </el-pagination>
-  </div> 
-  <el-dialog :title="titleForm" :show-close="false" :close-on-click-modal="false" :visible.sync="dialogAccountVisible">
-  <el-form :model="form" :rules="rulesAccount" ref="ruleForm" label-width="100px">
-    <el-form-item label="姓名" prop="name">
-      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.name" autocomplete="off"></el-input>
-    </el-form-item>
-    <el-form-item label="手机号" prop="phone">
-      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.phone" autocomplete="off"></el-input>
-    </el-form-item>
-  </el-form>
-  <div slot="footer" class="dialog-footer">
-    <el-button @click="cancelSubmit('ruleForm')">取 消</el-button>
-    <el-button :disabled="titleForm.indexOf('查看')!== -1" :loading="loadingAccount" type="primary" @click="submitAccount('ruleForm')">确 定</el-button>
-  </div>
-</el-dialog>
+    
+   
   </div>
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
-import { userlist, userAdd, passwordreset, userdel, useredit, userbind } from "@/api/account";
 
 import { getCollege, getSubject, getTitle, getTable, expertimport } from "@/api/expertBasics";
-import plupload from "@/components/plupload";
-
-import { roleslist } from "@/api/role";
 export default {
   name: 'Login',
-  components: {
-    plupload,
-  },
+  
   data() {
-      let validatePhone = (rule, value, callback) => {
-          console.log(rule, value)
-          let myreg = /^[1][3,4,5,6,7,8,9][0-9]{9}$/;
-        if (!myreg.test(value)) {
-            callback(new Error('手机号格式不正确'));
-            return;
-        }
-        callback();
-      };
     return {
-        searchFaculty:'',
-        searchSubject: '',
-        searchTitle: '',
-        searchName:'',
-        facultyData: [],
-        subjectData: [],
-        titleData: [],
-
-        currentPage: 1,
-      totalPage: 0,
-      pageSize: 10,
-      dialogAccountVisible: false,
-      form: {
-        account: '',
-        name: '',
-        phone: '',
-        role: ''
-      },
-      message_: null,
-      message1_:null,
-      roleList: {},
-      titleForm:'',
-      rights_list: {},
-      rulesAccount: {
-        name: [
-            { required: true, message: '请填写名字', trigger: 'blur' }
-        ],
-        phone: [
-            { required: true, validator:validatePhone, trigger: 'blur' }
-        ]
-      },
-      loadingAccount: false,
-      loginForm: {
-        username: 'admin',
-        password: '111111'
-      },
-      loading: false,
-      passwordType: 'password',
-      redirect: undefined,
-      tableData: [],
-      accountId: '',
-      wordVisible: false,
-      word:'',
-      account:''
+        failNum: '',
+        successNum: '',
+        tableData: []
     }
   },
   watch: {
-    $route: {
-      handler: function(route) {
-        this.redirect = route.query && route.query.redirect
-      },
-      immediate: true
-    }
+    
   },
   methods: {
-    getFacultyData() {
-        getCollege(
-        {"uid": sessionStorage.getItem('uid')}
-      ).then(r => {
-        this.facultyData = r.data;
-      }).catch(() => {});    
-    },
-
-    getSubjectData() {
-      getSubject({"uid": sessionStorage.getItem('uid')}).then(r => {
-        this.subjectData = r.data;
-      }).catch(() => {});
-    },
-
-    getTitleData() {
-      getTitle({"uid": sessionStorage.getItem('uid')}).then(r => {
-        this.titleData = r.data;
-      }).catch(() => {});
-    },
-
-    batchImport(data) {
-      console.log(data,'批量导入')
-      this.expertImportData(data)
-      this.$router.push({
-        path:'importResults',
-        query:{data: JSON.stringify(data)}
-        });
-    },
-
     expertImportData(data) {
-      // expertimport({"fileName": `${data.fileHash}/${data.name}`}).then(r => {
-      //   if(r.fail_list > 0) {
-
-      //   }
-      //   // 
-      // }).catch(() => {});
-    },
-
-    
-
-      sizeChange(val){
-        this.currentPage = 1;
-        this.pageSize = val;
-        this.getTableData()
-    },
-    currentChange(val){
-        this.currentPage = val;
-        this.getTableData()
-    },
-    
-    seeAccountButt(data) {
-      this.titleForm = '查看用户'
-      this.accountId = data.id
-      this.getuserbind()
-    },
-    editAccountButt(data) {
-      this.accountId = data.id
-      this.titleForm = '编辑用户'
-      this.getuserbind()
-    },
-    addAccountButt(formName) {
-      this.accountId = '';
-      this.titleForm = '添加用户'
-      this.dialogAccountVisible = true
-    },
-    cancelSubmit(formName) {
-      this.accountId = '';
-      this.dialogAccountVisible = false;
-      this.$refs[formName].resetFields();
-    },
-    submitAccount(formName) {
-      this.$refs[formName].validate((valid) => {
-          if (valid) {
-            if(this.titleForm.indexOf('添加') !== -1){
-              console.log(this.titleForm)
-              this.addDataFun(formName)
-            }else{
-              console.log(this.titleForm)
-              this.editDataFun(formName)
-            }
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
-    },
-    addDataFun(formName1){
-      this.loadingAccount = true
-      userAdd({
-              "name": this.form.name,
-              "phone": this.form.phone,
-              "uid": sessionStorage.getItem('uid')})
-            .then(r => {
-              this.loadingAccount = false
-              this.dialogAccountVisible = false
-              this.word = r.info
-              this.account = this.form.account
-              this.$refs[formName1].resetFields();
-              // this.wordVisible = true
-              console.log('123')
-              this.getTableData()
-              this.openHTML(r.info)
-              setTimeout(()=>{
-                // this.wordVisible = true
-                console.log('123')
-              },500)
-              
-            })
-            .catch(() => {
-              this.loadingAccount = false
-            });
-    },
-    editDataFun(formName) {
-      this.loadingAccount = true
-      useredit({
-              "name": this.form.name,
-              "id": this.accountId,
-              "phone": this.form.phone,
-              "uid": sessionStorage.getItem('uid')})
-            .then(r => {
-              this.loadingAccount = false
-              this.dialogAccountVisible = false
-              this.$refs[formName].resetFields();
-              this.getTableData()
-            })
-            .catch(() => {
-              this.loadingAccount = false
-            });
-    },
-    resetAccount(data) {
-        passwordreset({
-            "id": data.id,
-            "uid": sessionStorage.getItem('uid')})
-            .then(r => {
-              console.log(r)
-              this.word = r.info
-              this.account = data.username
-              this.openHTML(r.info)
-              // this.wordVisible = true
-            })
-            .catch(() => {
-            });      
-    },
-    accountDel(data) {
-      userdel({
-            "id": data.id,
-            "uid": sessionStorage.getItem('uid')})
-            .then(r => {
-              console.log(r)
-              this.getTableData()
-              this.$message({
-                message: '删除成功！',
-                type: 'success'
-                });
-            })
-            .catch(() => {
-            }); 
-    },
-    getTableData() {
-      getTable({"college": this.searchFaculty,
-        "subject": this.searchSubject,
-        "competent": this.searchTitle,
-        "name": this.searchName,
-        "page":this.currentPage,
-        "pageSize":this.pageSize
-        })
-      .then(r => {
-            this.tableData = r.data.list;
-            this.totalPage = r.data.datacount
-        }).catch(() => {});
-    },
-    getuserbind() {
-      userbind({
-        "id": this.accountId,
-        "uid": sessionStorage.getItem('uid')})
-      .then(r => {
-        console.log(r.data)
-      this.form.phone = r.data.phone;
-      this.form.name = r.data.name;
-      this.dialogAccountVisible = true
-        }).catch(() => {});
-    },
-    
-    wordSubmit(){
-        let that = this
-        let text = `账号：${that.account}，密码：${that.word}`
-        let save = function (e) {
-                //设置需要复制模板的内容账号：123，密码：rxw10m
-                e.clipboardData.setData('text/plain',text);
-                //阻止默认行为
-                e.preventDefault();
-            }
-            // h5监听copy事件，调用save函数保存到模板中
-            document.addEventListener('copy',save);
-            // 调用右键复制功能
-            document.execCommand('copy');
-            //移除copy事件
-            document.removeEventListener('copy',save);
-            this.message1_ = this.$message({
-                message: '复制成功！',
-                type: 'success'
-                });
-    },
-    wordAccount(){
-        this.wordVisible = false
+      expertimport({"fileName": `${data.fileHash}/${data.name}`}).then(r => {
+        this.tableData = r.data.fail_list;
+        this.failNum = r.data.fail;
+        this.successNum = r.data.success;
+      }).catch(() => {});
     },
   },
-  beforeDestroy(){
-      this.message1_.close()
-  },
-//   message_
   mounted: function() {
     console.log(this.$route.query.data)
-    // this.getFacultyData()
-    // this.getSubjectData()
-    // this.getTitleData()
-    //   this.getTableData()
+    let data = JSON.parse(this.$route.query.data)
+    this.expertImportData(data)
+    // {"code":200,"msg":"","data":"http://127.0.0.1:9999/uploadFile/c67a93b8756ecacdc13dda1de8661dda/Book12.xlsx","fileHash":"c67a93b8756ecacdc13dda1de8661dda","name":"Book12.xlsx"}
   }
 }
 </script>

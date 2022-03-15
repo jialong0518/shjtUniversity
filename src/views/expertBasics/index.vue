@@ -136,7 +136,7 @@
       </el-radio-group>
     </el-form-item>
     <el-form-item label="院/系" prop="faculty">
-      <el-select v-model="form.faculty" @change="facultyFun" style="width: 80%" :disabled="titleForm.indexOf('查看')!== -1" placeholder="请选择">
+      <el-select v-model="form.faculty" @change="facultyFun" style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" placeholder="请选择">
           <el-option
             v-for="(item, index) in facultyData"
             :key="index"
@@ -146,7 +146,7 @@
         </el-select>
     </el-form-item>
     <el-form-item label="职称" prop="title">
-      <el-select v-model="form.title" @change="titleFun" style="width: 80%" :disabled="titleForm.indexOf('查看')!== -1" placeholder="请选择">
+      <el-select v-model="form.title" @change="titleFun" style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" placeholder="请选择">
           <el-option
             v-for="(item, index) in titleData"
             :key="index"
@@ -156,7 +156,7 @@
         </el-select>
     </el-form-item>
     <el-form-item label="学科" prop="subject">
-      <el-select v-model="form.subject" @change="subjectFun" style="width: 80%" :disabled="titleForm.indexOf('查看')!== -1" placeholder="请选择">
+      <el-select v-model="form.subject" @change="subjectFun" style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" placeholder="请选择">
           <el-option
             v-for="(item, index) in subjectData"
             :key="index"
@@ -346,17 +346,10 @@ export default {
 
     batchImport(data) {
       console.log(data,'批量导入')
-      this.expertImportData(data)
        this.$router.push({
          path:'importResults',
          query:{data: JSON.stringify(data)}
         });
-    },
-
-    expertImportData(data) {
-      expertimport({"fileName": `${data.fileHash}/${data.name}`}).then(r => {
-        
-      }).catch(() => {});
     },
 
     facultyFun(data){
@@ -504,20 +497,6 @@ export default {
               this.loadingAccount = false
             });
     },
-    resetAccount(data) {
-        passwordreset({
-            "id": data.id,
-            "uid": sessionStorage.getItem('uid')})
-            .then(r => {
-              console.log(r)
-              this.word = r.info
-              this.account = data.username
-              this.openHTML(r.info)
-              // this.wordVisible = true
-            })
-            .catch(() => {
-            });      
-    },
     accountDel(data) {
       expertbasicdel({
             "id": data.id,
@@ -576,30 +555,6 @@ export default {
       this.form.remark = r.data.remark;
       this.dialogAccountVisible = true
         }).catch(() => {});
-    },
-    
-    wordSubmit(){
-        let that = this
-        let text = `账号：${that.account}，密码：${that.word}`
-        let save = function (e) {
-                //设置需要复制模板的内容账号：123，密码：rxw10m
-                e.clipboardData.setData('text/plain',text);
-                //阻止默认行为
-                e.preventDefault();
-            }
-            // h5监听copy事件，调用save函数保存到模板中
-            document.addEventListener('copy',save);
-            // 调用右键复制功能
-            document.execCommand('copy');
-            //移除copy事件
-            document.removeEventListener('copy',save);
-            this.message1_ = this.$message({
-                message: '复制成功！',
-                type: 'success'
-                });
-    },
-    wordAccount(){
-        this.wordVisible = false
     },
   },
   beforeDestroy(){
