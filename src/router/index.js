@@ -128,7 +128,23 @@ let constantRoutes = [
       }
     ]
   },
-  
+  {
+    path: '/expertSeniority',
+    component: Layout,
+    redirect: '/expertSeniority',
+    name: 'expertSeniority',
+    meta: { title: '专家资格库' },
+    children: [
+      {
+        path: 'expertSeniority',
+        name: 'expertSeniority',
+        component: () => import('@/views/expertSeniority/index'),
+        meta: { title: '专家资格库' }
+      }
+    ]
+  },
+
+  // expertSeniority
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
