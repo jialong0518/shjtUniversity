@@ -39,17 +39,38 @@
         </el-select>
     </el-col>
     </el-row>
+    <!-- 导入结果：成功/失败；导入类型：基础库/资格库； -->
     <el-row :gutter="20" style="padding: 20px;">
       <el-col :span="6">
+        <div style="display: inline-block;width:30%;">导入结果：</div>
+        <el-select v-model="searchResult" style="width: 70%" placeholder="请选择">
+          <el-option
+            label="成功"
+            value="成功">
+          </el-option>
+          <el-option
+            label="失败"
+            value="失败">
+          </el-option>
+        </el-select>
+    </el-col>
+    <el-col :span="6">
+        <div style="display: inline-block;width:30%;">导入类型：</div>
+        <el-select v-model="searchType" style="width: 70%" placeholder="请选择">
+          <el-option
+            label="基础库"
+            value="基础库">
+          </el-option>
+          <el-option
+            label="资格库"
+            value="资格库">
+          </el-option>
+        </el-select>
+    </el-col>
+      <el-col :span="6">
         <el-button type="primary" @click="searchFun">搜 索</el-button>
-        <el-button type="primary" @click="exportData">导 出</el-button>
     </el-col>
     </el-row>
-    <div style="padding: 15px;overflow: hidden;display: flex;justify-content: flex-end;">
-      <el-button type="primary" style="margin-left: 15px;"  @click="addAccountButt('ruleForm')">添加专家</el-button>
-      <plupload @updata="batchImport">批量导入</plupload>
-      <el-button type="primary" style="margin-left: 15px;" @click="addAccountButt('ruleForm')">导出结果</el-button>
-    </div>
     <div style="padding: 0 20px">
         <el-table
     :data="tableData"
@@ -85,25 +106,17 @@
       label="电话">
     </el-table-column>
     <el-table-column
-      prop="expertEmail"
-      label="邮箱">
+      prop="result"
+      label="状态">
     </el-table-column>
     <el-table-column
-      prop="inPosition"
-      label="在职">
-      <template slot-scope="scope">{{ scope.row.inPosition === 1 ? '是' : '否' }}</template>
+      prop="importMemo"
+      label="描述">
     </el-table-column>
     <el-table-column
       label="操作">
       <template slot-scope="scope">
-        <el-button  @click="seeAccountButt(scope.row)" type="text" size="small">查看</el-button>
-        <el-button  type="text" @click="editAccountButt(scope.row)" size="small">编辑</el-button>
-        <el-popconfirm
-            title="是否确定删除该账号？"
-            @onConfirm="accountDel(scope.row)" 
-        >
-        <el-button style="margin: 0 10px;" slot="reference"  type="text" size="small">删除</el-button>
-        </el-popconfirm>
+        <el-button  type="text" @click="editAccountButt(scope.row)" size="small">修正提交</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -193,9 +206,10 @@
 </template>
 
 <script>
-import { getCollege, getSubject, getTitle, getTable, expertimport, expertbasicbind, expertbasicadd, expertbasicdel, expertbasicedit, expertbasicexport } from "@/api/expertBasics";
+import { getCollege, getSubject, getTitle, getTable, expertbasicbind, expertbasicadd, expertbasicdel, expertbasicedit, expertbasicexport } from "@/api/uploadRecord";
 import plupload from "@/components/plupload";
 
+import { roleslist } from "@/api/role";
 export default {
   name: 'Login',
   components: {
@@ -232,6 +246,8 @@ export default {
         searchSubject: '',
         searchTitle: '',
         searchName:'',
+        searchResult: '',
+        searchType: '',
         facultyData: [],
         subjectData: [],
         titleData: [],
@@ -526,6 +542,8 @@ export default {
         "subject": this.searchSubject,
         "competent": this.searchTitle,
         "name": this.searchName,
+        "result": this.searchResult,
+        "type": this.searchType,
         "page":this.currentPage,
         "pageSize":this.pageSize
         })

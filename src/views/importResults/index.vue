@@ -35,11 +35,11 @@
       label="学科">
     </el-table-column>
     <el-table-column
-      prop="expertPhone"
+      prop="result"
       label="状态">
     </el-table-column>
     <el-table-column
-      prop="expertEmail"
+      prop="importMemo"
       label="描述">
     </el-table-column>
     

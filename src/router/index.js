@@ -57,27 +57,27 @@ let constantRoutes = [
     }]
   },
 
-  {
-    path: '/powerManage',
-    component: Layout,
-    redirect: '/powerManage',
-    name: 'powerManage',
-    meta: { title: '权限管理' },
-    children: [
-      {
-        path: 'accountManage',
-        name: 'accountManage',
-        component: () => import('@/views/powerManage/account/index'),
-        meta: { title: '账号管理' }
-      },
-      {
-        path: 'roleManage',
-        name: 'roleManage',
-        component: () => import('@/views/powerManage/role/index'),
-        meta: { title: '角色管理' }
-      }
-    ]
-  },
+  // {
+  //   path: '/powerManage',
+  //   component: Layout,
+  //   redirect: '/powerManage',
+  //   name: 'powerManage',
+  //   meta: { title: '权限管理' },
+  //   children: [
+  //     {
+  //       path: 'accountManage',
+  //       name: 'accountManage',
+  //       component: () => import('@/views/powerManage/account/index'),
+  //       meta: { title: '账号管理' }
+  //     },
+  //     {
+  //       path: 'roleManage',
+  //       name: 'roleManage',
+  //       component: () => import('@/views/powerManage/role/index'),
+  //       meta: { title: '角色管理' }
+  //     }
+  //   ]
+  // },
   {
     path: '/expertBasics',
     component: Layout,
@@ -98,7 +98,36 @@ let constantRoutes = [
       },
     ]
   },
-  
+  {
+    path: '/uploadRecord',
+    component: Layout,
+    redirect: '/uploadRecord',
+    name: 'uploadRecord',
+    meta: { title: '导入记录' },
+    children: [
+      {
+        path: 'uploadRecord',
+        name: 'uploadRecord',
+        component: () => import('@/views/uploadRecord/index'),
+        meta: { title: '导入记录' }
+      }
+    ]
+  },
+  {
+    path: '/yearManage',
+    component: Layout,
+    redirect: '/yearManage',
+    name: 'yearManage',
+    meta: { title: '年份管理' },
+    children: [
+      {
+        path: 'yearManage',
+        name: 'yearManage',
+        component: () => import('@/views/yearManage/index'),
+        meta: { title: '年份管理' }
+      }
+    ]
+  },
   
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
