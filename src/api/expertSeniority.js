@@ -51,7 +51,15 @@ export function expertimport(data) {
 
 export function expertbasicbind(data) {
   return request({
-    url: '/expert/expertbasicbind',
+    url: '/expert/expertreadybind',
+    method: 'post',
+    data
+  })
+}
+
+export function expertreadyapprove(data) {
+  return request({
+    url: '/expert/expertreadyapprove',
     method: 'post',
     data
   })
@@ -59,7 +67,7 @@ export function expertbasicbind(data) {
 
 export function expertbasicadd(data) {
   return request({
-    url: '/expert/expertbasicadd',
+    url: '/expert/expertreadyadd',
     method: 'post',
     data
   })
@@ -67,7 +75,7 @@ export function expertbasicadd(data) {
 
 export function expertbasicdel(data) {
   return request({
-    url: '/expert/expertbasicdel',
+    url: '/expert/expertreadydel',
     method: 'post',
     data
   })
@@ -75,15 +83,15 @@ export function expertbasicdel(data) {
 
 export function expertbasicedit(data) {
   return request({
-    url: '/expert/expertbasicedit',
+    url: '/expert/expertreadyedit',
     method: 'post',
     data
   })
 }
 
-export function expertbasicexport(data) {
+export function expertreadyexport(data) {
   return request({
-    url: '/expert/expertbasicexport',
+    url: '/expert/expertreadyexport',
     method: 'post',
     data
   })

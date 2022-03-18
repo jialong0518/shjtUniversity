@@ -59,7 +59,7 @@ export function expertbasicadd(data) {
 
 export function expertbasicdel(data) {
   return request({
-    url: '/expert/expertbasicdel',
+    url: '/expert/yeardel',
     method: 'post',
     data
   })

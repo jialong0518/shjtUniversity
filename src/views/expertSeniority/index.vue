@@ -52,15 +52,23 @@
         </el-select>
     </el-col>
     <el-col :span="6">
-        <div style="display: inline-block;width:30%;">在职状态：</div>
-        <el-select v-model="searchState" style="width: 70%" placeholder="请选择">
+        <div style="display: inline-block;width:20%;">状态：</div>
+        <el-select v-model="searchState" style="width: 80%" placeholder="请选择">
           <el-option
-            label="是"
-            value="1">
+            label="通过"
+            value="通过">
             </el-option>
             <el-option
-            label="否"
-            value="2">
+            label="拒绝"
+            value="拒绝">
+          </el-option>
+          <el-option
+            label="已撤回"
+            value="已撤回">
+          </el-option>
+          <el-option
+            label="审核中"
+            value="审核中">
           </el-option>
         </el-select>
     </el-col>
@@ -70,6 +78,7 @@
     </el-col>
     </el-row>
     <div style="padding: 15px;overflow: hidden;display: flex;justify-content: flex-end;">
+      <el-button type="primary" style="margin-left: 15px;"  @click="addAccountButt('ruleForm')">添加</el-button>
       <plupload @updata="batchImport">从基础库导入</plupload>
       <el-button type="primary" style="margin-left: 15px;" @click="addAccountButt('ruleForm')">导出结果</el-button>
     </div>
@@ -108,9 +117,22 @@
       label="电话">
     </el-table-column>
     <el-table-column
+      prop="status"
+      label="状态">
+    </el-table-column>
+    <el-table-column
       label="操作">
       <template slot-scope="scope">
-        <el-button  @click="seeAccountButt(scope.row)" type="text" size="small">详情</el-button>
+        <el-button  @click="seeAccountButt(scope.row)" v-show="scope.row.status === '通过'" type="text" size="small">详情</el-button>
+        <el-button  @click="seeAccountButt(scope.row)" v-show="scope.row.status === '通过'" type="text" size="small">申请撤回</el-button>
+        <el-button v-show="scope.row.status === '拒绝'" type="text" @click="editAccountButt(scope.row)" size="small">编辑</el-button>
+        <el-popconfirm
+            title="是否确定删除该账号？"
+            @onConfirm="accountDel(scope.row)" 
+        >
+        <el-button style="margin: 0 10px;" slot="reference" v-show="scope.row.status === '拒绝'" type="text" size="small">删除</el-button>
+        </el-popconfirm>
+        <el-button  type="text" v-show="scope.row.status === '审核中'" @click="examineAccountButt(scope.row)" size="small">审核</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -132,6 +154,16 @@
   <el-form :model="form" :rules="rulesAccount" ref="ruleForm" label-width="100px">
     <el-form-item label="专家工号" prop="expertNo">
       <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" @input="expertNoFun" v-model="form.expertNo" autocomplete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="年份" prop="year">
+      <el-select v-model="form.year" style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" placeholder="请选择">
+          <el-option
+            v-for="(item, index) in yearData"
+            :key="item.year"
+            :label="item.year"
+            :value="item.year">
+          </el-option>
+        </el-select>
     </el-form-item>
     <el-form-item label="姓名" prop="name">
       <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.name" autocomplete="off"></el-input>
@@ -178,12 +210,12 @@
     <el-form-item label="邮箱" prop="email">
       <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.email" autocomplete="off"></el-input>
     </el-form-item>
-    <el-form-item label="在职" prop="inPosition">
+    <!-- <el-form-item label="在职" prop="inPosition">
       <el-radio-group v-model="form.inPosition">
         <el-radio label="1" :disabled="titleForm.indexOf('查看')!== -1">是</el-radio>
         <el-radio label="2" :disabled="titleForm.indexOf('查看')!== -1">否</el-radio>
       </el-radio-group>
-    </el-form-item>
+    </el-form-item> -->
     <el-form-item label="密码" prop="expertPwd">
       <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.expertPwd" autocomplete="off"></el-input>
     </el-form-item>
@@ -191,16 +223,20 @@
       <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.remark" autocomplete="off"></el-input>
     </el-form-item>
   </el-form>
-  <div slot="footer" class="dialog-footer">
+  <div slot="footer" class="dialog-footer" v-show="titleForm.indexOf('审核')=== -1">
     <el-button @click="cancelSubmit('ruleForm')">取 消</el-button>
     <el-button :disabled="titleForm.indexOf('查看')!== -1" :loading="loadingAccount" type="primary" @click="submitAccount('ruleForm')">确 定</el-button>
+  </div>
+  <div slot="footer" class="dialog-footer" v-show="titleForm.indexOf('审核')!== -1">
+    <el-button :loading="loadingAccount" @click="refuseSubmit('ruleForm','拒绝')">拒 绝</el-button>
+    <el-button :loading="loadingAccount" type="primary" @click="refuseSubmit('ruleForm','通过')">通 过</el-button>
   </div>
 </el-dialog>
   </div>
 </template>
 
 <script>
-import { getYearlist, getCollege, getSubject, getTitle, getTable, expertimport, expertbasicbind, expertbasicadd, expertbasicdel, expertbasicedit, expertbasicexport } from "@/api/expertSeniority";
+import { getYearlist, getCollege, getSubject, getTitle, getTable, expertbasicbind, expertbasicadd, expertbasicdel, expertbasicedit, expertreadyapprove, expertreadyexport } from "@/api/expertSeniority";
 import plupload from "@/components/plupload";
 
 export default {
@@ -260,10 +296,11 @@ export default {
         subject: '',
         subjectName: '',
         email: '',
-        inPosition: '',
+        // inPosition: '',
         expertNo: '',
         expertPwd: '',
-        remark:''
+        remark:'',
+        year: ''
       },
       message_: null,
       message1_:null,
@@ -271,6 +308,9 @@ export default {
       titleForm:'',
       rights_list: {},
       rulesAccount: {
+        year: [
+            { required: true, message: '请选择年份', trigger: 'blur' }
+        ],
         name: [
             { required: true, message: '请填写名字', trigger: 'blur' }
         ],
@@ -286,9 +326,9 @@ export default {
         subject: [
             { required: true, message: '请选择学科', trigger: 'change' }
         ],
-        inPosition: [
-            { required: true, message: '请选择在职状态', trigger: 'change' }
-        ],
+        // inPosition: [
+        //     { required: true, message: '请选择在职状态', trigger: 'change' }
+        // ],
         phone: [
             { required: true, validator: validatePhone, trigger: 'blur' }
         ],
@@ -419,6 +459,11 @@ export default {
       this.titleForm = '编辑专家信息'
       this.getuserbind()
     },
+    examineAccountButt(data) {
+      this.accountId = data.id
+      this.titleForm = '审核专家信息'
+      this.getuserbind()
+    },
     addAccountButt(formName) {
       this.accountId = '';
       this.titleForm = '添加专家信息'
@@ -429,6 +474,26 @@ export default {
       this.accountId = '';
       this.$refs[formName].resetFields();
       this.dialogAccountVisible = false;
+    },
+    refuseSubmit(name,state) {
+      this.loadingAccount = true
+      expertreadyapprove({
+              "id": this.accountId,
+              "status": state
+              }).then(r => {
+                if(r.msg === '信息重复') {
+                  this.loadingAccount = false
+                  return
+                }
+              this.loadingAccount = false
+              this.dialogAccountVisible = false
+              // this.account = this.form.account
+              this.$refs[name].resetFields();
+              this.getTableData()
+            })
+            .catch(() => {
+              this.loadingAccount = false
+            });
     },
     submitAccount(formName) {
       this.$refs[formName].validate((valid) => {
@@ -459,10 +524,10 @@ export default {
               "expertSubjectCode": this.form.subject,
               "expertPhone": this.form.phone,
               "expertEmail": this.form.email,
-              "inPosition": Number(this.form.inPosition),
               "expertNo": this.form.expertNo,
               "expertPwd": this.form.expertPwd,
-              "remark": this.form.remark
+              "remark": this.form.remark,
+              "year": Number(this.form.year)
               }).then(r => {
                 if(r.msg === '信息重复') {
                   this.loadingAccount = false
@@ -470,7 +535,7 @@ export default {
                 }
               this.loadingAccount = false
               this.dialogAccountVisible = false
-              this.account = this.form.account
+              // this.account = this.form.account
               this.$refs[formName1].resetFields();
               this.getTableData()
             })
@@ -492,10 +557,11 @@ export default {
               "expertSubjectCode": this.form.subject,
               "expertPhone": this.form.phone,
               "expertEmail": this.form.email,
-              "inPosition": Number(this.form.inPosition),
               "expertNo": this.form.expertNo,
               "expertPwd": this.form.expertPwd,
-              "remark": this.form.remark})
+              "remark": this.form.remark,
+              "year": Number(this.form.year)
+              })
             .then(r => {
               if(r.msg === '信息重复') {
                   this.loadingAccount = false
@@ -533,7 +599,7 @@ export default {
         "page":this.currentPage,
         "pageSize":this.pageSize,
         "year": this.searchYear === '' ? 0 : Number(this.searchYear),
-        "inposition": this.searchState === '' ? '' : Number(this.searchState),
+        "status": this.searchState,
         })
       .then(r => {
             this.tableData = r.data.list;
@@ -541,12 +607,14 @@ export default {
         }).catch(() => {});
     },
     exportData() {
-      expertbasicexport({"college": this.searchFaculty,
+      expertreadyexport({"college": this.searchFaculty,
         "subject": this.searchSubject,
         "competent": this.searchTitle,
         "name": this.searchName,
         "page":this.currentPage,
-        "pageSize":this.pageSize
+        "pageSize":this.pageSize,
+        "year": this.searchYear === '' ? 0 : Number(this.searchYear),
+        "status": this.searchState,
         })
       .then(r => {
         window.location.href= r.data;
@@ -568,6 +636,7 @@ export default {
       this.form.expertNo = r.data.expertNo;
       this.form.expertPwd = r.data.expertPwd;
       this.form.remark = r.data.remark;
+      this.form.year = r.data.year + '';
       this.dialogAccountVisible = true
         }).catch(() => {});
     },
