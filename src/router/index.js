@@ -143,8 +143,38 @@ let constantRoutes = [
       }
     ]
   },
+  {
+    path: '/interviewManage',
+    component: Layout,
+    redirect: '/interviewManage',
+    name: 'interviewManage',
+    meta: { title: '面试管理' },
+    children: [
+      {
+        path: 'interviewManage',
+        name: 'interviewManage',
+        component: () => import('@/views/interviewManage/index'),
+        meta: { title: '面试管理' }
+      }
+    ]
+  },
+  {
+    path: '/interviewRound',
+    component: Layout,
+    redirect: '/interviewRound',
+    name: 'interviewRound',
+    meta: { title: '面试场次' },
+    children: [
+      {
+        path: 'interviewRound',
+        name: 'interviewRound',
+        component: () => import('@/views/interviewRound/index'),
+        meta: { title: '面试场次' }
+      }
+    ]
+  },
 
-  // expertSeniority
+  // expertSeniority  
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
