@@ -73,7 +73,7 @@ export function expertbasicadd(data) {
   })
 }
 
-export function expertbasicdel(data) {
+export function expertreadydel(data) {
   return request({
     url: '/expert/expertreadydel',
     method: 'post',
