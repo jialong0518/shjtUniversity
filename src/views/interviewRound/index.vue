@@ -102,9 +102,9 @@
     </el-pagination>
   </div> 
   <el-dialog :title="titleForm" :show-close="false" :close-on-click-modal="false" :visible.sync="dialogAccountVisible">
-  <el-form :model="form" :rules="rulesAccount" ref="ruleForm" label-width="100px">
+  <el-form :model="form" :rules="rulesAccount" ref="ruleForm" label-width="200px">
     <el-form-item label="年份" prop="year">
-      <el-select v-model="form.year" :disabled="titleForm.indexOf('查看')!== -1" style="width: 80%" placeholder="请选择">
+      <el-select v-model="form.year" :disabled="titleForm.indexOf('查看')!== -1" style="width: 300px" placeholder="请选择">
           <el-option
             v-for="item in yearData"
             :key="item.year"
@@ -114,34 +114,57 @@
         </el-select>
     </el-form-item>
     <el-form-item label="名称" prop="name">
-      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.name" autocomplete="off"></el-input>
+      <el-input style="width: 300px" placeholder="请填写名称" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.name" autocomplete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="场次序号" prop="round_num">
+      <el-input style="width: 300px" placeholder="请填写场次序号" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.round_num" autocomplete="off"></el-input>
     </el-form-item>
     <el-form-item label="确认开始" prop="confirmStart">
-      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.confirmStart" autocomplete="off"></el-input>
+      <el-date-picker
+      style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.confirmStart"
+      type="datetime"
+      value-format="yyyy-MM-dd HH:mm"
+      placeholder="请选择日期时间">
+    </el-date-picker>
     </el-form-item>
     <el-form-item label="确认结束" prop="confirmEnd">
-      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.confirmEnd" autocomplete="off"></el-input>
+      <el-date-picker
+        style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.confirmEnd"
+        type="datetime"
+        value-format="yyyy-MM-dd HH:mm"
+        placeholder="请选择日期时间">
+      </el-date-picker>
     </el-form-item>
     <el-form-item label="面试开始时间" prop="interviewStart">
-      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.interviewStart" autocomplete="off"></el-input>
+      <el-date-picker
+        style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.interviewStart"
+        type="datetime"
+        value-format="yyyy-MM-dd HH:mm"
+        placeholder="请选择日期时间">
+      </el-date-picker>
     </el-form-item>
     <el-form-item label="面试结束时间" prop="interviewEnd">
-      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.interviewEnd" autocomplete="off"></el-input>
+      <el-date-picker
+        style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.interviewEnd"
+        type="datetime"
+        value-format="yyyy-MM-dd HH:mm"
+        placeholder="请选择日期时间">
+      </el-date-picker>
     </el-form-item>
     <el-form-item label="限定人数" prop="num">
-      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.num" autocomplete="off"></el-input>
+      <el-input placeholder="请填写限定人数" style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.num" autocomplete="off"></el-input>
     </el-form-item>
-    <el-form-item label="负责人邮箱" prop="email">
-      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.email" autocomplete="off"></el-input>
-    </el-form-item>
+    <!-- <el-form-item label="负责人邮箱" prop="email">
+      <el-input placeholder="请填写负责人邮箱" style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.email" autocomplete="off"></el-input>
+    </el-form-item> -->
     <el-form-item label="联系人姓名" prop="linkName">
-      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.linkName" autocomplete="off"></el-input>
+      <el-input placeholder="请填写联系人姓名" style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.linkName" autocomplete="off"></el-input>
     </el-form-item>
     <el-form-item label="联系人电话" prop="linkPhone">
-      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.linkPhone" autocomplete="off"></el-input>
+      <el-input placeholder="请填写联系人电话" style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.linkPhone" autocomplete="off"></el-input>
     </el-form-item>
     <el-form-item label="场次备注" prop="remarks">
-      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.remarks" autocomplete="off"></el-input>
+      <el-input placeholder="请填写场次备注" style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.remarks" autocomplete="off"></el-input>
     </el-form-item>
   </el-form>
   <div slot="footer" class="dialog-footer">
@@ -187,6 +210,14 @@ export default {
         }
         callback();
       };
+      let validatNum = (rule, value, callback) => {
+          let myreg = /^[0-9]*$/;
+        if (!myreg.test(value)) {
+            callback(new Error('只能填写数字'));
+            return;
+        }
+        callback();
+      };
     return {
         searchYear:'',
         searchName:'',
@@ -205,7 +236,7 @@ export default {
         interviewStart: '',
         interviewEnd: '',
         num: '',
-        email: '',
+        round_num: '',
         linkName: '',
         linkPhone: '',
         remarks: ''
@@ -235,16 +266,16 @@ export default {
             { required: true, message: '请选择面试结束时间', trigger: 'blur' }
         ],
         num: [
-            { required: true, message: '请填写限定人数', trigger: 'change' }
+            { required: true, validator: validatNum, trigger: 'change' }
         ],
-        email: [
-            { required: true, message: '请填写负责人邮箱', trigger: 'change' }
+        round_num: [
+            { required: true, validator: validatNum, trigger: 'blur' }
         ],
         linkName: [
             { required: true, message: '请填写联系人姓名', trigger: 'change' }
         ],
         linkPhone: [
-            { required: true, message: '请填写联系人电话', trigger: 'change' }
+            { required: true, validator: validatePhone, trigger: 'change' }
         ],
         remarks: [
             { required: true, message: '请填写备注', trigger: 'change' }
@@ -348,9 +379,20 @@ export default {
     },
     addDataFun(formName1){
       this.loadingAccount = true
+
       expertbasicadd({
-              "audition_name": this.form.name,
-              "year": this.form.year,
+              "round_name": this.form.name,
+              "count_plan": Number(this.form.num),
+              "confirm_begin": this.form.confirmStart,
+              "confirm_end": this.form.confirmEnd,
+              "audition_begin": this.form.interviewStart,
+              "audition_end": this.form.interviewEnd,
+              "audition_id": Number(this.searchNo),
+              "phone": this.form.linkPhone,
+              "charge_man": this.form.linkName,
+              "memo": this.form.linkName,
+              "year": Number(this.form.remarks),
+              "round_num": this.form.round_num
               }).then(r => {
                 if(r.msg === '信息重复') {
                   this.loadingAccount = false

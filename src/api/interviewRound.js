@@ -51,7 +51,7 @@ export function expertimport(data) {
 
 export function expertbasicbind(data) {
   return request({
-    url: '/expert/auditionbind',
+    url: '/expert/auditionroundbind',
     method: 'post',
     data
   })
