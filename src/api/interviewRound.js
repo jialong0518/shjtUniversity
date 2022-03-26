@@ -67,7 +67,7 @@ export function expertbasicadd(data) {
 
 export function expertbasicdel(data) {
   return request({
-    url: '/expert/auditiondel',
+    url: '/expert/auditionrounddel',
     method: 'post',
     data
   })
@@ -75,7 +75,7 @@ export function expertbasicdel(data) {
 
 export function expertbasicedit(data) {
   return request({
-    url: '/expert/auditionedit',
+    url: '/expert/auditionroundedit',
     method: 'post',
     data
   })

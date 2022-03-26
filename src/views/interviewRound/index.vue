@@ -390,8 +390,8 @@ export default {
               "audition_id": Number(this.searchNo),
               "phone": this.form.linkPhone,
               "charge_man": this.form.linkName,
-              "memo": this.form.linkName,
-              "year": Number(this.form.remarks),
+              "memo": this.form.remarks,
+              "year": Number(this.form.year),
               "round_num": this.form.round_num
               }).then(r => {
                 if(r.msg === '信息重复') {
@@ -411,8 +411,18 @@ export default {
     editDataFun(formName) {
       this.loadingAccount = true
       expertbasicedit({
-              "audition_name": this.form.name,
-              "year": this.form.year,
+              "round_name": this.form.name,
+              "count_plan": Number(this.form.num),
+              "confirm_begin": this.form.confirmStart,
+              "confirm_end": this.form.confirmEnd,
+              "audition_begin": this.form.interviewStart,
+              "audition_end": this.form.interviewEnd,
+              "audition_id": Number(this.searchNo),
+              "phone": this.form.linkPhone,
+              "charge_man": this.form.linkName,
+              "memo": this.form.remarks,
+              "year": Number(this.form.year),
+              "round_num": this.form.round_num,
               "id": this.accountId,
               })
             .then(r => {
@@ -476,7 +486,17 @@ export default {
       })
       .then(r => {
       this.form.year = r.data.year+'';
-      this.form.name = r.data.audition_name;
+      this.form.name = r.data.round_name;
+      this.form.num = r.data.count_plan + '';
+      this.form.confirmStart = r.data.confirm_begin;
+      this.form.confirmEnd = r.data.confirm_end;
+      this.form.interviewStart = r.data.audition_begin;
+      this.form.interviewEnd = r.data.audition_end;
+      this.form.linkPhone = r.data.phone;
+      this.form.linkName = r.data.charge_man;
+      this.form.remarks = r.data.memo;
+      this.form.round_num = r.data.round_num;
+
       this.dialogAccountVisible = true
         }).catch(() => {});
     },
