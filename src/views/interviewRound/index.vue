@@ -506,6 +506,7 @@ export default {
   },
 //   message_
   mounted: function() {
+    this.searchNo = this.$route.query.id || '';
     this.getYearData()
       this.getTableData()
   }

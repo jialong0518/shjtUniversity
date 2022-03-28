@@ -218,7 +218,8 @@ export default {
     seeAccountButt(data) {
       this.titleForm = '查看面试'
       this.accountId = data.id
-      this.getuserbind()
+      this.$router.push({path:'/interviewRound/interviewRound',query:{id:data.id}});
+      // this.getuserbind()
     },
     editAccountButt(data) {
       this.accountId = data.id
