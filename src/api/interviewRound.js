@@ -97,6 +97,14 @@ export function expertreadytomatch(data) {
   })
 }
 
+export function expertauditionmatch(data) {
+  return request({
+    url: '/expert/auditionmatch',
+    method: 'post',
+    data
+  })
+}
+
   export function userdel(data) {
     return request({
       url: '/byd/web/index.php?r=reg/userdel',
