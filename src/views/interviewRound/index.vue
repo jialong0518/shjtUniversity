@@ -73,7 +73,7 @@
     <el-table-column
       label="操作">
       <template slot-scope="scope">
-        <el-button  @click="seeAccountButt(scope.row)" type="text" size="small">匹配确认专家</el-button>
+        <el-button  @click="mateButt(scope.row)" type="text" size="small">匹配确认专家</el-button>
         <el-button  @click="seeAccountButt(scope.row)" type="text" size="small">代确认</el-button>
         <el-button  @click="seeAccountButt(scope.row)" type="text" size="small">导出未确认人员表格</el-button>
         <el-button  @click="seeAccountButt(scope.row)" type="text" size="small">签到表</el-button>
@@ -102,9 +102,9 @@
     </el-pagination>
   </div> 
   <el-dialog :title="titleForm" :show-close="false" :close-on-click-modal="false" :visible.sync="dialogAccountVisible">
-  <el-form :model="form" :rules="rulesAccount" ref="ruleForm" label-width="100px">
+  <el-form :model="form" :rules="rulesAccount" ref="ruleForm" label-width="200px">
     <el-form-item label="年份" prop="year">
-      <el-select v-model="form.year" :disabled="titleForm.indexOf('查看')!== -1" style="width: 80%" placeholder="请选择">
+      <el-select v-model="form.year" :disabled="titleForm.indexOf('查看')!== -1" style="width: 300px" placeholder="请选择">
           <el-option
             v-for="item in yearData"
             :key="item.year"
@@ -114,34 +114,57 @@
         </el-select>
     </el-form-item>
     <el-form-item label="名称" prop="name">
-      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.name" autocomplete="off"></el-input>
+      <el-input style="width: 300px" placeholder="请填写名称" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.name" autocomplete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="场次序号" prop="round_num">
+      <el-input style="width: 300px" placeholder="请填写场次序号" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.round_num" autocomplete="off"></el-input>
     </el-form-item>
     <el-form-item label="确认开始" prop="confirmStart">
-      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.confirmStart" autocomplete="off"></el-input>
+      <el-date-picker
+      style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.confirmStart"
+      type="datetime"
+      value-format="yyyy-MM-dd HH:mm"
+      placeholder="请选择日期时间">
+    </el-date-picker>
     </el-form-item>
     <el-form-item label="确认结束" prop="confirmEnd">
-      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.confirmEnd" autocomplete="off"></el-input>
+      <el-date-picker
+        style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.confirmEnd"
+        type="datetime"
+        value-format="yyyy-MM-dd HH:mm"
+        placeholder="请选择日期时间">
+      </el-date-picker>
     </el-form-item>
     <el-form-item label="面试开始时间" prop="interviewStart">
-      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.interviewStart" autocomplete="off"></el-input>
+      <el-date-picker
+        style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.interviewStart"
+        type="datetime"
+        value-format="yyyy-MM-dd HH:mm"
+        placeholder="请选择日期时间">
+      </el-date-picker>
     </el-form-item>
     <el-form-item label="面试结束时间" prop="interviewEnd">
-      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.interviewEnd" autocomplete="off"></el-input>
+      <el-date-picker
+        style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.interviewEnd"
+        type="datetime"
+        value-format="yyyy-MM-dd HH:mm"
+        placeholder="请选择日期时间">
+      </el-date-picker>
     </el-form-item>
     <el-form-item label="限定人数" prop="num">
-      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.num" autocomplete="off"></el-input>
+      <el-input placeholder="请填写限定人数" style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.num" autocomplete="off"></el-input>
     </el-form-item>
-    <el-form-item label="负责人邮箱" prop="email">
-      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.email" autocomplete="off"></el-input>
-    </el-form-item>
+    <!-- <el-form-item label="负责人邮箱" prop="email">
+      <el-input placeholder="请填写负责人邮箱" style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.email" autocomplete="off"></el-input>
+    </el-form-item> -->
     <el-form-item label="联系人姓名" prop="linkName">
-      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.linkName" autocomplete="off"></el-input>
+      <el-input placeholder="请填写联系人姓名" style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.linkName" autocomplete="off"></el-input>
     </el-form-item>
     <el-form-item label="联系人电话" prop="linkPhone">
-      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.linkPhone" autocomplete="off"></el-input>
+      <el-input placeholder="请填写联系人电话" style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.linkPhone" autocomplete="off"></el-input>
     </el-form-item>
     <el-form-item label="场次备注" prop="remarks">
-      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.remarks" autocomplete="off"></el-input>
+      <el-input placeholder="请填写场次备注" style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.remarks" autocomplete="off"></el-input>
     </el-form-item>
   </el-form>
   <div slot="footer" class="dialog-footer">
@@ -149,11 +172,89 @@
     <el-button :disabled="titleForm.indexOf('查看')!== -1" :loading="loadingAccount" type="primary" @click="submitAccount('ruleForm')">确 定</el-button>
   </div>
 </el-dialog>
+<el-dialog title="匹配确认专家" :show-close="false" :close-on-click-modal="false" :visible.sync="dialogMateVisible">
+  <div>
+      <el-row :gutter="20" style="padding: 5px;">
+        <el-col :span="6">
+            <div style="display: inline-block;width:30%;">年份：</div>
+            {{this.form.year}}
+        </el-col>
+        <el-col :span="12">
+            <div style="display: inline-block;width:30%;">场次名称：</div>
+            {{this.form.name}}
+        </el-col>
+        <el-col :span="6">
+            <div style="display: inline-block;width:30%;">场次：</div>
+            {{this.form.num}}
+        </el-col>
+      </el-row>
+      <el-row :gutter="20" style="padding: 5px;">
+        <el-col :span="12">
+            <div style="display: inline-block;width:30%;">确认开始：</div>
+            {{this.form.confirmStart}}
+        </el-col>
+        <el-col :span="12">
+            <div style="display: inline-block;width:30%;">确认结束：</div>
+            {{this.form.confirmEnd}}
+        </el-col>
+      </el-row>
+      <el-row :gutter="20" style="padding: 5px;">
+        <el-col :span="17">
+            <div style="display: inline-block;width:30%;">面试时间段：</div>
+            {{this.form.interviewStart+'——'+this.form.interviewEnd}}
+        </el-col>
+        <el-col :span="7">
+            <div style="display: inline-block;width:50%;">限定人数：</div>
+            {{this.form.round_num}}
+        </el-col>
+      </el-row>
+  </div>
+  <div>
+      <el-table
+        :data="mateTableData"
+        @select="mateTableSelect"
+        @select-all="mateTableSelectAll"
+        border
+        style="width: 100%;border-radius: 10px;">
+        <el-table-column
+          type="selection"
+          width="55">
+        </el-table-column>
+        <el-table-column
+          prop="college"
+          label="院/系">
+        </el-table-column>
+        <el-table-column
+          prop="round_name"
+          label="学科">
+        </el-table-column>
+        <el-table-column
+          prop="sourceCount"
+          label="资格库人数">
+        </el-table-column>
+        <el-table-column
+          prop="basicCount"
+          label="基础库人数">
+        </el-table-column>
+        <el-table-column
+          prop="matchCount"
+          label="本次抽取人数">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.matchCount" @input="matchNumData(scope.$index, scope.row, $event)" autocomplete="off"></el-input>
+          </template>
+        </el-table-column>
+      </el-table>
+  </div>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="cancelSubmit('ruleForm')">取 消</el-button>
+    <el-button :disabled="titleForm.indexOf('查看')!== -1" :loading="loadingAccount" type="primary" @click="submitAccount('ruleForm')">确认抽取</el-button>
+  </div>
+</el-dialog>
   </div>
 </template>
 
 <script>
-import { getTable, expertbasicbind, expertbasicadd, expertbasicdel, expertbasicedit, expertbasicexport, getYearlist } from "@/api/interviewRound";
+import { getTable, expertbasicbind, expertbasicadd, expertbasicdel, expertbasicedit, expertbasicexport, getYearlist, expertreadytomatch } from "@/api/interviewRound";
 import plupload from "@/components/plupload";
 
 export default {
@@ -187,6 +288,14 @@ export default {
         }
         callback();
       };
+      let validatNum = (rule, value, callback) => {
+          let myreg = /^[0-9]*$/;
+        if (!myreg.test(value)) {
+            callback(new Error('只能填写数字'));
+            return;
+        }
+        callback();
+      };
     return {
         searchYear:'',
         searchName:'',
@@ -197,6 +306,7 @@ export default {
       totalPage: 0,
       pageSize: 10,
       dialogAccountVisible: false,
+      dialogMateVisible: false,
       form: {
         year: '',
         name: '',
@@ -205,7 +315,7 @@ export default {
         interviewStart: '',
         interviewEnd: '',
         num: '',
-        email: '',
+        round_num: '',
         linkName: '',
         linkPhone: '',
         remarks: ''
@@ -235,16 +345,16 @@ export default {
             { required: true, message: '请选择面试结束时间', trigger: 'blur' }
         ],
         num: [
-            { required: true, message: '请填写限定人数', trigger: 'change' }
+            { required: true, validator: validatNum, trigger: 'change' }
         ],
-        email: [
-            { required: true, message: '请填写负责人邮箱', trigger: 'change' }
+        round_num: [
+            { required: true, validator: validatNum, trigger: 'blur' }
         ],
         linkName: [
             { required: true, message: '请填写联系人姓名', trigger: 'change' }
         ],
         linkPhone: [
-            { required: true, message: '请填写联系人电话', trigger: 'change' }
+            { required: true, validator: validatePhone, trigger: 'change' }
         ],
         remarks: [
             { required: true, message: '请填写备注', trigger: 'change' }
@@ -259,10 +369,13 @@ export default {
       passwordType: 'password',
       redirect: undefined,
       tableData: [],
+      mateTableData: [],
       accountId: '',
       wordVisible: false,
       word:'',
-      account:''
+      account:'',
+      mateTableSelectData: [],
+      selectionObj: {},
     }
   },
   watch: {
@@ -312,12 +425,12 @@ export default {
     seeAccountButt(data) {
       this.titleForm = '查看面试'
       this.accountId = data.id
-      this.getuserbind()
+      this.getuserbind('Account')
     },
     editAccountButt(data) {
       this.accountId = data.id
       this.titleForm = '编辑面试'
-      this.getuserbind()
+      this.getuserbind('Account')
     },
     addAccountButt(formName) {
       this.accountId = '';
@@ -329,6 +442,7 @@ export default {
       this.accountId = '';
       this.$refs[formName].resetFields();
       this.dialogAccountVisible = false;
+      this.dialogMateVisible = false;
     },
     submitAccount(formName) {
       this.$refs[formName].validate((valid) => {
@@ -348,9 +462,20 @@ export default {
     },
     addDataFun(formName1){
       this.loadingAccount = true
+
       expertbasicadd({
-              "audition_name": this.form.name,
-              "year": this.form.year,
+              "round_name": this.form.name,
+              "count_plan": Number(this.form.num),
+              "confirm_begin": this.form.confirmStart,
+              "confirm_end": this.form.confirmEnd,
+              "audition_begin": this.form.interviewStart,
+              "audition_end": this.form.interviewEnd,
+              "audition_id": Number(this.searchNo),
+              "phone": this.form.linkPhone,
+              "charge_man": this.form.linkName,
+              "memo": this.form.remarks,
+              "year": Number(this.form.year),
+              "round_num": this.form.round_num
               }).then(r => {
                 if(r.msg === '信息重复') {
                   this.loadingAccount = false
@@ -369,8 +494,18 @@ export default {
     editDataFun(formName) {
       this.loadingAccount = true
       expertbasicedit({
-              "audition_name": this.form.name,
-              "year": this.form.year,
+              "round_name": this.form.name,
+              "count_plan": Number(this.form.num),
+              "confirm_begin": this.form.confirmStart,
+              "confirm_end": this.form.confirmEnd,
+              "audition_begin": this.form.interviewStart,
+              "audition_end": this.form.interviewEnd,
+              "audition_id": Number(this.searchNo),
+              "phone": this.form.linkPhone,
+              "charge_man": this.form.linkName,
+              "memo": this.form.remarks,
+              "year": Number(this.form.year),
+              "round_num": this.form.round_num,
               "id": this.accountId,
               })
             .then(r => {
@@ -416,6 +551,16 @@ export default {
             this.totalPage = r.data.datacount
         }).catch(() => {});
     },
+    getMateTableData() {
+      expertreadytomatch({
+        "auditionId":this.searchNo === '' ? 0 : Number(this.searchNo),
+        "auditionRoundId":this.accountId
+        })
+      .then(r => {
+            r.data.list.map((item, index)=>item.idNo = index)
+            this.mateTableData = r.data.list;
+        }).catch(() => {});
+    },
     exportData() {
       expertbasicexport({"college": this.searchFaculty,
         "subject": this.searchSubject,
@@ -428,22 +573,81 @@ export default {
         window.location.href= r.data;
         }).catch(() => {});
     },
-    getuserbind() {
+    getuserbind(data) {
       expertbasicbind({
         "id": this.accountId,
       })
       .then(r => {
       this.form.year = r.data.year+'';
-      this.form.name = r.data.audition_name;
-      this.dialogAccountVisible = true
+      this.form.name = r.data.round_name;
+      this.form.num = r.data.count_plan + '';
+      this.form.confirmStart = r.data.confirm_begin;
+      this.form.confirmEnd = r.data.confirm_end;
+      this.form.interviewStart = r.data.audition_begin;
+      this.form.interviewEnd = r.data.audition_end;
+      this.form.linkPhone = r.data.phone;
+      this.form.linkName = r.data.charge_man;
+      this.form.remarks = r.data.memo;
+      this.form.round_num = r.data.round_num;
+
+      if(data === 'Mate') {
+        this.dialogMateVisible = true;
+      } else if (data === 'Account') {
+        this.dialogAccountVisible = true
+      }
         }).catch(() => {});
     },
+    mateButt(data) {
+      this.accountId = data.id
+      this.getuserbind('Mate')
+      this.getMateTableData()
+    },
+    matchNumData(index, data, value) {
+      console.log(this.selectionObj[data.idNo])
+      if(this.selectionObj[data.idNo] == undefined) {
+        this.$alert('请先勾选此条数据', '提示', {
+          confirmButtonText: '确定',
+        });
+        this.mateTableData[index].matchCount = ''
+        return
+      }
+      if(!Number(value)&&value !== ''){
+        this.$alert('请输入数字', '提示', {
+          confirmButtonText: '确定',
+        });
+        this.mateTableData[index].matchCount = ''
+        return
+      }
+      if(Number(value) > (Number(data.basicCount)+Number(data.sourceCount))){
+        this.$alert('本次抽取人数不能大于资格库人数加基础库人数的和', '提示', {
+          confirmButtonText: '确定',
+        });
+        this.mateTableData[index].matchCount = ''
+        return
+      }
+      this.mateTableData[index].matchCount = value === '' ? value : Number(value)
+    },
+    mateTableSelect(selection, row) {
+      this.selectionObj = {};
+      this.mateTableSelectData =  selection;
+      this.mateTableSelectData.map(item=>{
+        this.selectionObj[item.idNo+''] = item;
+      })
+    },
+    mateTableSelectAll(selection) {
+      this.selectionObj = {};
+      this.mateTableSelectData = selection;
+      this.mateTableSelectData.map(item=>{
+        this.selectionObj[item.idNo+''] = item;
+      })
+    }
   },
   beforeDestroy(){
       this.message1_.close()
   },
 //   message_
   mounted: function() {
+    this.searchNo = this.$route.query.id || '';
     this.getYearData()
       this.getTableData()
   }

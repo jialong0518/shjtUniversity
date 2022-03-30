@@ -236,7 +236,7 @@
 </template>
 
 <script>
-import { getYearlist, getCollege, getSubject, getTitle, getTable, expertbasicbind, expertbasicadd, expertbasicdel, expertbasicedit, expertreadyapprove, expertreadyexport } from "@/api/expertSeniority";
+import { getYearlist, getCollege, getSubject, getTitle, getTable, expertbasicbind, expertbasicadd, expertreadydel, expertbasicedit, expertreadyapprove, expertreadyexport } from "@/api/expertSeniority";
 import plupload from "@/components/plupload";
 
 export default {
@@ -577,7 +577,7 @@ export default {
             });
     },
     accountDel(data) {
-      expertbasicdel({
+      expertreadydel({
             "id": data.id,
             })
             .then(r => {
