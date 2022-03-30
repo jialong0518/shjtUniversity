@@ -74,7 +74,7 @@
       label="操作">
       <template slot-scope="scope">
         <el-button  @click="mateButt(scope.row)" type="text" size="small">匹配确认专家</el-button>
-        <el-button  @click="seeAccountButt(scope.row)" type="text" size="small">代确认</el-button>
+        <el-button  @click="seeAccountButt(scope.row)" type="text" size="small">人员详情</el-button>
         <el-button  @click="seeAccountButt(scope.row)" type="text" size="small">导出未确认人员表格</el-button>
         <el-button  @click="seeAccountButt(scope.row)" type="text" size="small">签到表</el-button>
         <el-button  type="text" @click="editAccountButt(scope.row)" size="small">编辑</el-button>
@@ -246,15 +246,15 @@
       </el-table>
   </div>
   <div slot="footer" class="dialog-footer">
-    <el-button @click="cancelSubmit('ruleForm')">取 消</el-button>
-    <el-button :disabled="titleForm.indexOf('查看')!== -1" :loading="loadingAccount" type="primary" @click="submitAccount('ruleForm')">确认抽取</el-button>
+    <el-button @click="cancelSubmit('')">取 消</el-button>
+    <el-button :disabled="titleForm.indexOf('查看')!== -1" :loading="loadingAccount" type="primary" @click="submitExtract()">确认抽取</el-button>
   </div>
 </el-dialog>
   </div>
 </template>
 
 <script>
-import { getTable, expertbasicbind, expertbasicadd, expertbasicdel, expertbasicedit, expertbasicexport, getYearlist, expertreadytomatch } from "@/api/interviewRound";
+import { getTable, expertbasicbind, expertbasicadd, expertbasicdel, expertbasicedit, expertbasicexport, getYearlist, expertreadytomatch, expertauditionmatch } from "@/api/interviewRound";
 import plupload from "@/components/plupload";
 
 export default {
@@ -440,7 +440,9 @@ export default {
     cancelSubmit(formName) {
       console.log(formName)
       this.accountId = '';
-      this.$refs[formName].resetFields();
+      if(formName !== '') {
+        this.$refs[formName].resetFields();
+      }
       this.dialogAccountVisible = false;
       this.dialogMateVisible = false;
     },
@@ -552,6 +554,7 @@ export default {
         }).catch(() => {});
     },
     getMateTableData() {
+      console.log(this.searchNo,this.accountId)
       expertreadytomatch({
         "auditionId":this.searchNo === '' ? 0 : Number(this.searchNo),
         "auditionRoundId":this.accountId
@@ -625,7 +628,8 @@ export default {
         this.mateTableData[index].matchCount = ''
         return
       }
-      this.mateTableData[index].matchCount = value === '' ? value : Number(value)
+      this.selectionObj[data.idNo].matchCount = value === '' ? value : Number(value);
+      this.mateTableData[index].matchCount = value === '' ? value : Number(value);
     },
     mateTableSelect(selection, row) {
       this.selectionObj = {};
@@ -640,6 +644,41 @@ export default {
       this.mateTableSelectData.map(item=>{
         this.selectionObj[item.idNo+''] = item;
       })
+    },
+    submitExtract() {
+      let state = true;
+      let arr = [];
+      for(let i in this.selectionObj) {
+        if(!Number(this.selectionObj[i].matchCount)||this.selectionObj[i].matchCount === ''){
+          state = false;
+          this.$alert('本次抽取人数不合法', '提示', {
+            confirmButtonText: '确定',
+          });
+          break;
+        }
+        if(Number(this.selectionObj[i].matchCount) > (Number(this.selectionObj[i].basicCount)+Number(this.selectionObj[i].sourceCount))){
+          state = false;
+          this.$alert('本次抽取人数不能大于资格库人数加基础库人数的和', '提示', {
+            confirmButtonText: '确定',
+          });
+          break;
+        }
+        arr.push({
+          "college": this.selectionObj[i].college,
+          "collegeCode": this.selectionObj[i].collegeCode,
+          "matchCount": this.selectionObj[i].matchCount,
+          "auditionId": this.selectionObj[i].auditionId,
+          "auditionRoundId": this.selectionObj[i].auditionRoundId,
+          "year": this.selectionObj[i].year
+        })
+      }
+      if(!state) return
+      expertauditionmatch(arr)
+      .then(r => {
+        if(r.code === 0){
+          this.dialogMateVisible = false;
+        }
+      }).catch(() => {});
     }
   },
   beforeDestroy(){
