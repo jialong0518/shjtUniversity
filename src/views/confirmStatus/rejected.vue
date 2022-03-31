@@ -17,7 +17,7 @@
       label="年份">
     </el-table-column>
     <el-table-column
-      prop="year"
+      prop="round_name"
       label="场次名称">
     </el-table-column>
     <el-table-column
@@ -45,7 +45,7 @@
       label="电话">
     </el-table-column>
     <el-table-column
-      prop="audition_name"
+      prop="ctime"
       label="确认时间">
     </el-table-column>
     <el-table-column
@@ -69,7 +69,7 @@ export default {
   },
   props: {
       "tableData":{
-        type:Boolean,
+        type:Array,
         default:{}
       }
   },

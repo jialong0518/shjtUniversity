@@ -166,8 +166,12 @@ export default {
         "status": this.status,
         })
       .then(r => {
+        r.data.list.map(item=>{
+          item.year = JSON.parse(this.$route.query.data).year;
+          item.round_name = JSON.parse(this.$route.query.data).round_name;
+        })
             this.tableData = r.data.list;
-            this.totalPage = r.data.datacount
+            // this.totalPage = r.data.datacount
         }).catch(() => {});
     }
   },
@@ -176,6 +180,7 @@ export default {
     this.getFacultyData()
     this.getSubjectData()
     this.getTitleData()
+    console.log(JSON.parse(this.$route.query.data))
     this.auditionId = JSON.parse(this.$route.query.data).audition_id || '';
     this.auditionRoundId = JSON.parse(this.$route.query.data).id || '';
     this.getTableData()
