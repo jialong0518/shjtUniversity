@@ -155,26 +155,22 @@ let constantRoutes = [
         name: 'interviewManage',
         component: () => import('@/views/interviewManage/index'),
         meta: { title: '面试管理' }
-      }
-    ]
-  },
-  {
-    path: '/interviewRound',
-    component: Layout,
-    redirect: '/interviewRound',
-    name: 'interviewRound',
-    meta: { title: '面试场次' },
-    children: [
+      },
       {
         path: 'interviewRound',
-        name: 'interviewRound',
+        name: '面试场次',
         component: () => import('@/views/interviewRound/index'),
-        meta: { title: '面试场次' }
-      }
+      },
+      {
+        path: 'confirmStatus',
+        name: '面试确认情况',
+        component: () => import('@/views/confirmStatus/index'),
+      },
     ]
   },
+  
 
-  // expertSeniority  
+  // confirmStatus  
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

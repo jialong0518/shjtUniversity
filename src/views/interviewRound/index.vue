@@ -53,6 +53,9 @@
     <el-table-column
       prop="audition_name"
       label="计划/实际">
+      <template slot-scope="scope">
+        <span @click="planNum(scope.row)">{{scope.row.count_plan+'/'+scope.row.count_act}}</span>
+      </template>
     </el-table-column>
     <el-table-column
       prop="confirm_begin"
@@ -215,6 +218,7 @@
         @select="mateTableSelect"
         @select-all="mateTableSelectAll"
         border
+        height="250"
         style="width: 100%;border-radius: 10px;">
         <el-table-column
           type="selection"
@@ -679,6 +683,14 @@ export default {
           this.dialogMateVisible = false;
         }
       }).catch(() => {});
+    },
+    planNum(data) {
+      // scope.row.count_plan+'/'+scope.row.count_act
+      // this.searchNo
+      this.$router.push({
+         path:'confirmStatus',
+         query:{data: JSON.stringify(data)}
+      });
     }
   },
   beforeDestroy(){
