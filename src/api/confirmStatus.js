@@ -81,7 +81,13 @@ export function expertbasicexport(data) {
   })
 }
 
-
+export function expertconfirmadmin(data) {
+  return request({
+    url: '/expert/expertconfirmadmin',
+    method: 'post',
+    data
+  })
+}
 
   export function userdel(data) {
     return request({

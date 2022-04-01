@@ -78,8 +78,8 @@
       <template slot-scope="scope">
         <el-button  @click="mateButt(scope.row)" type="text" size="small">匹配确认专家</el-button>
         <el-button  @click="seeAccountButt(scope.row)" type="text" size="small">人员详情</el-button>
-        <el-button  @click="seeAccountButt(scope.row)" type="text" size="small">导出未确认人员表格</el-button>
-        <el-button  @click="seeAccountButt(scope.row)" type="text" size="small">签到表</el-button>
+        <el-button  @click="exportButt(scope.row, '0')" type="text" size="small">导出未确认人员表格</el-button>
+        <el-button  @click="exportButt(scope.row, '1')" type="text" size="small">签到表</el-button>
         <el-button  type="text" @click="editAccountButt(scope.row)" size="small">编辑</el-button>
         <el-popconfirm
             title="是否确定删除该账号？"
@@ -258,7 +258,7 @@
 </template>
 
 <script>
-import { getTable, expertbasicbind, expertbasicadd, expertbasicdel, expertbasicedit, expertbasicexport, getYearlist, expertreadytomatch, expertauditionmatch } from "@/api/interviewRound";
+import { getTable, expertbasicbind, expertbasicadd, expertbasicdel, expertbasicedit, expertbasicexport, getYearlist, expertreadytomatch, expertauditionmatch, exportFile } from "@/api/interviewRound";
 import plupload from "@/components/plupload";
 
 export default {
@@ -685,12 +685,22 @@ export default {
       }).catch(() => {});
     },
     planNum(data) {
-      // scope.row.count_plan+'/'+scope.row.count_act
-      // this.searchNo
+      data.auditionName = this.$route.query.auditionName;
       this.$router.push({
          path:'confirmStatus',
          query:{data: JSON.stringify(data)}
       });
+    },
+    exportButt(data, state) {
+      exportFile({
+        "status": state === '0'? '未确认' : '已确认',
+        "auditionRoundId": data.audition_id,
+        "page":this.currentPage,
+        "pageSize":this.pageSize
+        })
+      .then(r => {
+        window.location.href= r.data;
+        }).catch(() => {});
     }
   },
   beforeDestroy(){

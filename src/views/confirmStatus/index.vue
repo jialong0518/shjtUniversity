@@ -46,11 +46,11 @@
     </el-row>
     <div style="padding: 0 20px">
       <el-tabs v-model="status" type="border-card" @tab-click="tabsClick">
-        <el-tab-pane label="已确认" name="已确认"><Confirmed :tableData="tableData"/></el-tab-pane>
-        <el-tab-pane label="递补名单" name="递补已确认"><Alternate :tableData="tableData"/></el-tab-pane>
-        <el-tab-pane label="未确认" name="未确认"><Unconfirmed :tableData="tableData"/></el-tab-pane>
+        <el-tab-pane label="已确认" name="已确认"><Confirmed @updata="moduleUp" :roundObj="roundObj" :tableData="tableData"/></el-tab-pane>
+        <el-tab-pane label="递补名单" name="递补已确认"><Alternate @updata="moduleUp" :roundObj="roundObj" :tableData="tableData"/></el-tab-pane>
+        <el-tab-pane label="未确认" name="未确认"><Unconfirmed @updata="moduleUp" :roundObj="roundObj" :tableData="tableData"/></el-tab-pane>
         <el-tab-pane label="已取消" name="已取消"><Cancelled :tableData="tableData"/></el-tab-pane>
-        <el-tab-pane label="审核中" name="审核中"><UnderReview :tableData="tableData"/></el-tab-pane>
+        <el-tab-pane label="审核中" name="审核中"><UnderReview @updata="moduleUp" :roundObj="roundObj" :tableData="tableData"/></el-tab-pane>
         <el-tab-pane label="已拒绝" name="已拒绝"><Rejected :tableData="tableData"/></el-tab-pane>
       </el-tabs>
     </div>
@@ -108,7 +108,8 @@ export default {
       tableData: [],
       status: '已确认', //已取消;已确认；未确认；递补已确认；已拒绝；审核中
       auditionId: '',
-      auditionRoundId: ''
+      auditionRoundId: '',
+      roundObj: {}
     }
   },
   watch: {},
@@ -173,6 +174,9 @@ export default {
             this.tableData = r.data.list;
             // this.totalPage = r.data.datacount
         }).catch(() => {});
+    },
+    moduleUp(data){
+      this.getTableData();
     }
   },
   
@@ -183,6 +187,7 @@ export default {
     console.log(JSON.parse(this.$route.query.data))
     this.auditionId = JSON.parse(this.$route.query.data).audition_id || '';
     this.auditionRoundId = JSON.parse(this.$route.query.data).id || '';
+    this.roundObj = JSON.parse(this.$route.query.data);
     this.getTableData()
   }
 }

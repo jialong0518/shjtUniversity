@@ -1,11 +1,13 @@
 <template>
   <div class="account">
     <div style="padding: 15px;overflow: hidden;display: flex;justify-content: flex-end;">
-      <el-button type="primary" style="margin-left: 15px;"  @click="addAccountButt('ruleForm')">添加面试</el-button>
+      <el-button type="primary" style="margin-left: 15px;"  @click="addAccountButt()">批量待确认</el-button>
     </div>
     <div style="padding: 0 0">
         <el-table
     :data="tableData"
+    @select="tableSelect"
+    @select-all="tableSelectAll"
     border
     style="width: 100%;border-radius: 10px;">
     <el-table-column
@@ -56,16 +58,22 @@
       label="操作">
       <template slot-scope="scope">
         <el-popconfirm
-            title="是否确定转为确认？"
+            title="是否确定待确认？"
             @onConfirm="accountDel(scope.row)" 
         >
-        <el-button style="margin: 0 10px;" slot="reference"  type="text" size="small">转为确认</el-button>
+        <el-button style="margin: 0 10px;" slot="reference"  type="text" size="small">待确认</el-button>
         </el-popconfirm>
       </template>
     </el-table-column>
   </el-table>
     </div>
-  
+    <el-dialog title="提示" :show-close="false" :close-on-click-modal="false" :visible.sync="dialogAccountVisible">
+      <div>是否确定转为确认？</div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancelSubmit()">取 消</el-button>
+        <el-button :loading="loadingAccount" type="primary" @click="submitAccount()">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -81,11 +89,18 @@ export default {
   props: {
       "tableData":{
         type:Array,
-        default:{}
+        default:{},
+      },
+      "roundObj": {
+        type: Object,
+        default: {}
       }
   },
   data() {
     return {
+      ids:[],
+      loadingAccount: false,
+      dialogAccountVisible: false,
     }
   },
   watch: {
@@ -98,22 +113,79 @@ export default {
   },
   methods: {
     accountDel(data) {
-        return
-      expertbasicdel({
-            "id": data.id,
+      expertconfirmadmin({
+            "ids": [data.id],
+            "status": '已确认',
+            "fid": this.roundObj.id
             })
             .then(r => {
-              console.log(r)
-              this.getTableData()
+              if(r.code === 1){
+                this.$message({
+                message: r.msg,
+                type: 'error'
+                });
+                return
+              }
+              this.$emit('updata','已确认')
               this.$message({
-                message: '删除成功！',
+                message: '操作成功！',
                 type: 'success'
                 });
             })
             .catch(() => {
             }); 
     },
-    
+    tableSelect(selection, row) {
+      this.ids = []
+      selection.map(item=>{
+        this.ids.push(item.id);
+      })
+    },
+    tableSelectAll(selection) {
+      this.ids = []
+      selection.map(item=>{
+        this.ids.push(item.id);
+      })
+    },
+    addAccountButt() {
+      if(this.ids.length === 0){
+        this.$message({
+                message: '请勾选数据',
+                type: 'warning'
+                });
+      }
+      this.dialogAccountVisible = true;
+    },
+    submitAccount() {
+      this.loadingAccount = true
+      expertconfirmadmin({
+            "ids": this.ids,
+            "status": '已确认',
+            "fid": this.roundObj.id
+            })
+            .then(r => {
+              if(r.code === 1){
+                this.$message({
+                message: r.msg,
+                type: 'error'
+                });
+                return
+              }
+              this.ids = [];
+              this.loadingAccount = false;
+              this.dialogAccountVisible = false;
+              this.$emit('updata','已确认')
+              this.$message({
+                message: '操作成功！',
+                type: 'success'
+                });
+            })
+            .catch(() => {
+            }); 
+    },
+    cancelSubmit() {
+      this.dialogAccountVisible = false;
+    }
   },
   beforeDestroy(){
   },

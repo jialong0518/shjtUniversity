@@ -105,6 +105,15 @@ export function expertauditionmatch(data) {
   })
 }
 
+export function exportFile(data) {
+  return request({
+    url: '/expert/auditionroundunconfirmexport',
+    method: 'post',
+    data
+  })
+}
+
+
   export function userdel(data) {
     return request({
       url: '/byd/web/index.php?r=reg/userdel',
