@@ -168,9 +168,54 @@ let constantRoutes = [
       },
     ]
   },
+  {
+    path: '/operationLog',
+    component: Layout,
+    redirect: '/operationLog',
+    name: 'operationLog',
+    meta: { title: '操作日志' },
+    children: [
+      {
+        path: 'operationLog',
+        name: 'operationLog',
+        component: () => import('@/views/operationLog/index'),
+        meta: { title: '操作日志' }
+      }
+    ]
+  },
+  {
+    path: '/smsLog',
+    component: Layout,
+    redirect: '/smsLog',
+    name: 'smsLog',
+    meta: { title: '短信日志' },
+    children: [
+      {
+        path: 'smsLog',
+        name: 'smsLog',
+        component: () => import('@/views/smsLog/index'),
+        meta: { title: '短信日志' }
+      }
+    ]
+  },
+  {
+    path: '/emailLog',
+    component: Layout,
+    redirect: '/emailLog',
+    name: 'emailLog',
+    meta: { title: '邮件日志' },
+    children: [
+      {
+        path: 'emailLog',
+        name: 'emailLog',
+        component: () => import('@/views/emailLog/index'),
+        meta: { title: '邮件日志' }
+      }
+    ]
+  },
   
 
-  // confirmStatus  
+  // emailLog  
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
