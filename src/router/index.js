@@ -213,8 +213,22 @@ let constantRoutes = [
       }
     ]
   },
+  {
+    path: '/statistics',
+    component: Layout,
+    redirect: '/statistics',
+    name: 'statistics',
+    meta: { title: '数据统计' },
+    children: [
+      {
+        path: 'statistics',
+        name: 'statistics',
+        component: () => import('@/views/statistics/index'),
+        meta: { title: '数据统计' }
+      }
+    ]
+  },
   
-
   // emailLog  
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
