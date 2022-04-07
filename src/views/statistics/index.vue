@@ -1,7 +1,7 @@
 <template>
   <div class="account">
     <el-row :gutter="20" style="padding: 20px;">
-    <el-col :span="6">
+    <!-- <el-col :span="6">
         <div style="display: inline-block;width:20%;">年份：</div>
         <el-select v-model="searchYear" style="width: 80%" placeholder="请选择">
           <el-option
@@ -22,15 +22,15 @@
             :value="item.id">
           </el-option>
         </el-select>
-    </el-col>
+    </el-col> -->
     <el-col :span="6">
         <div style="display: inline-block;width:20%;">面试：</div>
-        <el-select v-model="searchSubject" style="width: 80%" placeholder="请选择">
+        <el-select v-model="searchInterview" style="width: 80%" placeholder="请选择">
           <el-option
             v-for="item in interviewData"
-            :key="item.code"
+            :key="item.audition_name"
             :label="item.audition_name"
-            :value="item.code">
+            :value="item.audition_name">
           </el-option>
         </el-select>
     </el-col>
@@ -52,24 +52,32 @@
       label="年份">
     </el-table-column>
     <el-table-column
-      prop="expertName"
-      label="院/系">
+      prop="auditionName"
+      label="面试名称">
     </el-table-column>
     <el-table-column
-      prop="expertGender"
+      prop="countPlan"
       label="应抽取人数">
     </el-table-column>
     <el-table-column
-      prop="expertCollege"
+      prop="countAct"
       label="确认人数">
     </el-table-column>
     <el-table-column
-      prop="expertTitle"
+      prop="rateRefuse"
       label="拒绝率">
     </el-table-column>
     <el-table-column
-      prop="expertSubject"
+      prop="countCancle"
       label="取消人数">
+    </el-table-column>
+    <el-table-column
+      prop="countUnconfirm"
+      label="未确认人数">
+    </el-table-column>
+    <el-table-column
+      prop="countRefuse"
+      label="拒绝人数">
     </el-table-column>
     <el-table-column
       label="操作">
@@ -174,11 +182,17 @@
     <el-button :loading="loadingAccount" type="primary" @click="refuseSubmit('ruleForm','通过')">通 过</el-button>
   </div>
 </el-dialog>
+    <div style="display: flex;justify-content: space-around;">
+      <div style="height: 400px;width: 400px;display:inline-block;" id="mainBing"></div>
+      <div style="height: 400px;width: 400px;display:inline-block;" id="mainZhe"></div>
+    </div>
   </div>
 </template>
 
 <script>
 import { getTable, getCollege, getYearlist, expertauditionlist } from "@/api/statistics";
+
+import * as echarts from 'echarts';
 
 export default {
   name: 'Login',
@@ -217,6 +231,7 @@ export default {
         searchName:'',
         searchYear: '',
         searchState:'',
+        searchInterview: '',
         facultyData: [],
         subjectData: [],
         titleData: [],
@@ -397,7 +412,9 @@ export default {
     seeAccountButt(data) {
       this.titleForm = '查看专家信息'
       this.accountId = data.id
-      this.getuserbind()
+      console.log(data)
+      this.$router.push({path:'sessions',query:{auditionRoundName:data.auditionRoundName, auditionName: data.auditionName}});
+      // this.getuserbind()
     },
     editAccountButt(data) {
       this.accountId = data.id
@@ -537,15 +554,14 @@ export default {
             }); 
     },
     getTableData() {
-      getTable({"college": this.searchFaculty,
-        "collegeCode": this.searchSubject,
-        "page":this.currentPage,
-        "pageSize":this.pageSize,
-        "year": this.searchYear === '' ? 0 : Number(this.searchYear),
+      getTable({"auditionName": this.searchInterview,
+        "auditionRoundName": '',
+        "auditionId": 0,
+        "statsType": 0,
         })
       .then(r => {
-            this.tableData = r.data.list;
-            this.totalPage = r.data.datacount
+            this.tableData = r.data;
+            this.chartInit(r.data);
         }).catch(() => {});
     },
     exportData() {
@@ -582,6 +598,70 @@ export default {
       this.dialogAccountVisible = true
         }).catch(() => {});
     },
+    chartInit(data) {
+      console.log(data)
+      let bingData = [];
+      let zheData = [];
+      let zheName = [];
+      data.map(item=>{
+        bingData.push({
+          value: item.countPlan,
+          name: item.auditionName
+        })
+        zheName.push(item.auditionName)
+        zheData.push(item.countPlan)
+      })
+      var chartDom = document.getElementById('mainBing');
+      var myChart = echarts.init(chartDom);
+      let option = {
+        tooltip: {
+          trigger: 'item'
+        },
+        series: [
+          {
+            type: 'pie',
+            radius: '50%',
+            data: bingData,
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            }
+          }
+        ]
+      };
+      myChart.setOption(option);
+      
+      var chartDom1 = document.getElementById('mainZhe');
+      var myChart1 = echarts.init(chartDom1);
+      let option1 = {
+        xAxis: {
+          type: 'category',
+          data: zheName
+        },
+        yAxis: {
+          type: 'value',
+        },
+        tooltip: {
+              valueFormatter: function (value) {
+                return value;
+              }
+            },
+        series: [
+          {
+            data: zheData,
+            type: 'bar',
+            showBackground: true,
+            backgroundStyle: {
+              color: 'rgba(180, 180, 180, 0.2)'
+            },
+          }
+        ]
+      };
+      myChart1.setOption(option1);
+    }
   },
   beforeDestroy(){
       this.message1_.close()

@@ -225,7 +225,12 @@ let constantRoutes = [
         name: 'statistics',
         component: () => import('@/views/statistics/index'),
         meta: { title: '数据统计' }
-      }
+      },
+      {
+        path: 'sessions',
+        name: '场次',
+        component: () => import('@/views/statistics/sessions'),
+      },
     ]
   },
   
