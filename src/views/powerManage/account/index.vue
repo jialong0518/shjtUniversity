@@ -2,26 +2,35 @@
   <div class="account">
       <el-row :gutter="20" style="padding: 20px;">
     <el-col :span="6">
-        <div style="display: inline-block;width:20%;">账号：</div>
-        <el-input style="width: 80%" v-model="searchusername" autocomplete="off"></el-input>
+        <div style="display: inline-block;width:30%;">用户名ID：</div>
+        <el-input style="width: 70%" v-model="searchID" autocomplete="off"></el-input>
     </el-col>
     <el-col :span="6">
-        <div style="display: inline-block;width:20%;">手机号：</div>
-        <el-input style="width: 80%" v-model="searchphone" autocomplete="off"></el-input>
+        <div style="display: inline-block;width:30%;">用户名：</div>
+        <el-input style="width: 70%" v-model="searchusername" autocomplete="off"></el-input>
     </el-col>
     <el-col :span="6">
-        <div style="display: inline-block;width:20%;">账号角色:</div>
-         <el-select style="width: 80%" v-model="searchrolename" placeholder="请选择账号角色">
-            <el-option  label="全部" value=""></el-option>
-            <el-option v-for="item in roleList" :label="item.rolename" :value="item.rolename"></el-option>
-        </el-select>
+        <div style="display: inline-block;width:30%;">院系：</div>
+        <el-input style="width: 70%" v-model="searchcollege" autocomplete="off"></el-input>
+    </el-col>
+    <el-col :span="6">
+        <div style="display: inline-block;width:30%;">院系编码：</div>
+        <el-input style="width: 70%" v-model="searchcollegecode" autocomplete="off"></el-input>
+    </el-col>
+    <el-col :span="6">
+        <div style="display: inline-block;width:30%;">手机号：</div>
+        <el-input style="width: 70%" v-model="searchphone" autocomplete="off"></el-input>
+    </el-col>
+    <el-col :span="6">
+        <div style="display: inline-block;width:30%;">email:</div>
+         <el-input style="width: 70%" v-model="searchemail" autocomplete="off"></el-input>
     </el-col>
     <el-col :span="6">
         <el-button type="primary" @click="getTableData()">搜索</el-button>
     </el-col>
     </el-row>
     <div style="padding: 15px;overflow: hidden;">
-      <el-button type="primary"  v-if="rights_list['添加']" style="float:right;" @click="addAccountButt('ruleForm')">添加账号</el-button>
+      <el-button type="primary" style="float:right;" @click="addAccountButt('ruleForm')">添加账号</el-button>
     </div>
     <el-table
     :data="tableData"
@@ -34,39 +43,51 @@
     </el-table-column>
     <el-table-column
       prop="username"
-      label="账号"
+      label="用户名"
       width="180">
     </el-table-column>
     <el-table-column
-      prop="name"
-      label="姓名"
+      prop="password"
+      label="密码"
       width="180">
+    </el-table-column>
+    <el-table-column
+      prop="type_name"
+      label="类型">
+    </el-table-column>
+    <el-table-column
+      prop="college"
+      label="院/系">
     </el-table-column>
     <el-table-column
       prop="phone"
-      label="手机号">
+      label="电话">
     </el-table-column>
     <el-table-column
-      prop="rolename"
-      label="账号角色">
+      prop="email"
+      label="邮箱">
+    </el-table-column>
+    <el-table-column
+      prop="status"
+      label="状态">
     </el-table-column>
     <el-table-column
       label="操作">
       <template slot-scope="scope">
-        <el-button v-if="rights_list['查看']" @click="seeAccountButt(scope.row)" type="text" size="small">查看</el-button>
-        <el-button v-if="rights_list['编辑']" type="text" @click="editAccountButt(scope.row)" size="small">编辑</el-button>
+        <el-button @click="seeAccountButt(scope.row)" type="text" size="small">查看</el-button>
+        <el-button type="text" @click="editAccountButt(scope.row)" size="small">编辑</el-button>
         <el-popconfirm
             title="是否确定删除该账号？"
             @onConfirm="accountDel(scope.row)" 
         >
-        <el-button style="margin: 0 10px;" v-if="rights_list['删除']" slot="reference"  type="text" size="small">删除</el-button>
+        <el-button style="margin: 0 10px;" slot="reference"  type="text" size="small">删除</el-button>
         </el-popconfirm>
         <!-- <el-button v-if="rights_list['删除']" @click="handleClick(scope.row)" type="text" size="small">删除</el-button> -->
         <el-popconfirm
             title="确认重置密码吗？"
             @onConfirm="resetAccount(scope.row)" 
         >
-        <el-button v-if="rights_list['重置密码']"  slot="reference" type="text" size="small">重置密码</el-button>
+        <el-button  slot="reference" type="text" size="small">重置密码</el-button>
         </el-popconfirm>
       </template>
     </el-table-column>
@@ -86,19 +107,24 @@
   </div> 
   <el-dialog :title="titleForm" :show-close="false" :visible.sync="dialogAccountVisible">
   <el-form :model="form" :rules="rulesAccount" ref="ruleForm" label-width="100px">
-    <el-form-item label="账号" prop="account">
-      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.account" autocomplete="off"></el-input>
-    </el-form-item>
-    <el-form-item label="姓名" prop="name">
+    <el-form-item label="用户名" prop="name">
       <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.name" autocomplete="off"></el-input>
     </el-form-item>
-    <el-form-item label="手机号" prop="phone">
+    <el-form-item label="角色" prop="role">
+      <el-select style="width: 300px" @change="roleFun" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.role" placeholder="请选择角色">
+        <el-option v-for="item in roleList" :key="item.code" :label="item.name" :value="item.code"></el-option>
+      </el-select>
+    </el-form-item>
+    <el-form-item label="院系" prop="faculty">
+      <el-select style="width: 300px" @change="facultyFun" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.faculty" placeholder="请选择院系">
+        <el-option v-for="item in facultyData" :key="item.code" :label="item.name" :value="item.code"></el-option>
+      </el-select>
+    </el-form-item>
+    <el-form-item label="手机" prop="phone">
       <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.phone" autocomplete="off"></el-input>
     </el-form-item>
-    <el-form-item label="账号角色" prop="role">
-      <el-select style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.role" placeholder="请选择活动区域">
-        <el-option v-for="item in roleList" :label="item.rolename" :value="item.id"></el-option>
-      </el-select>
+    <el-form-item label="email" prop="email">
+      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.email" autocomplete="off"></el-input>
     </el-form-item>
   </el-form>
   <div slot="footer" class="dialog-footer">
@@ -119,7 +145,7 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
-import { userlist, userAdd, passwordreset, userdel, useredit, userbind } from "@/api/account";
+import { userlist, userAdd, passwordreset, userdel, useredit, userbind, getCollege } from "@/api/account";
 import { roleslist } from "@/api/role";
 
 
@@ -127,18 +153,24 @@ export default {
   name: 'Login',
   data() {
     return {
+        searchemail: '',
+        searchphone: '',
+        searchcollegecode: '',
+        searchcollege: '',         
+        searchID: '',
         searchusername:'',
-        searchphone:'',
-        searchrolename:'',
         currentPage: 1,
       totalPage: 0,
       pageSize: 10,
       dialogAccountVisible: false,
       form: {
-        account: '',
+        email:'',
+        faculty: '',
+        facultyCode:'',
         name: '',
         phone: '',
-        role: ''
+        role: '',
+        roleCode: ''
       },
       message_: null,
       message1_:null,
@@ -146,9 +178,6 @@ export default {
       titleForm:'',
       rights_list: {},
       rulesAccount: {
-        account: [
-            { required: true, message: '请填写账号', trigger: 'blur' }
-        ],
         name: [
             { required: true, message: '请填写名字', trigger: 'blur' }
         ],
@@ -157,6 +186,12 @@ export default {
         ],
         role: [
             { required: true, message: '请填选择角色', trigger: 'change' }
+        ],
+        faculty: [
+            { required: true, message: '请填选择院系', trigger: 'change' }
+        ],
+        email: [
+            { required: true, message: '请填写email', trigger: 'blur' }
         ]
       },
       loadingAccount: false,
@@ -168,6 +203,8 @@ export default {
       passwordType: 'password',
       redirect: undefined,
       tableData: [],
+      roleList: [{name:'超级管理员',code:1}, {name:'院系教学秘书', code: 2}, {name:'教学院长', code: 3}, {name:'院系管理员', code: 4}],
+      facultyData: [],
       accountId: '',
       wordVisible: false,
       word:'',
@@ -183,6 +220,29 @@ export default {
     }
   },
   methods: {
+    roleFun(data) {
+      this.roleList.map(item=>{
+        if(item.code === data) {
+          this.form.roleCode = item.name;
+          console.log(item.name)
+        }
+      })
+    },
+    facultyFun(data) {
+      this.facultyData.map(item=>{
+        if(item.code === data) {
+          this.form.facultyCode = item.name;
+          console.log(item.name)
+        }
+      })
+    },
+    getFacultyData() {
+        getCollege(
+        {"uid": sessionStorage.getItem('uid')}
+      ).then(r => {
+        this.facultyData = r.data;
+      }).catch(() => {});    
+    },
       sizeChange(val){
         this.currentPage = 1;
         this.pageSize = val;
@@ -258,27 +318,20 @@ export default {
     addDataFun(formName1){
       this.loadingAccount = true
       userAdd({
-              "username": this.form.account,
-              "name": this.form.name,
+              "username": this.form.name,
+              "type": Number(this.form.role),
+              "type_name": this.form.roleCode,
+              "college": this.form.facultyCode,
+              "college_code": Number(this.form.faculty),
               "phone": this.form.phone,
-              "roleid": this.form.role,
-              "uid": sessionStorage.getItem('uid')})
+              "email": this.form.email,
+              })
             .then(r => {
               this.loadingAccount = false
               this.dialogAccountVisible = false
-              this.word = r.info
               this.account = this.form.account
               this.$refs[formName1].resetFields();
-              console.log(formName1)
-              this.wordVisible = true
-              console.log('123')
               this.getTableData()
-              this.openHTML(r.info)
-              setTimeout(()=>{
-                this.wordVisible = true
-                console.log('123')
-              },500)
-              
             })
             .catch(() => {
               this.loadingAccount = false
@@ -333,19 +386,21 @@ export default {
             }); 
     },
     getTableData() {
-      userlist({"username": this.searchusername,
+      userlist({"id": this.searchID === '' ? 0 : this.searchID,
+        "username": this.searchusername,
+        "college": this.searchcollege,
+        "college_code": this.searchcollegecode,
         "phone": this.searchphone,
-        "rolename": this.searchrolename,
-        "uid": sessionStorage.getItem('uid'),
+        "email": this.searchemail,
         "pages":this.currentPage,
         "pagesize":this.pageSize
         })
       .then(r => {
-            this.tableData = r.data.data_list;
+            this.tableData = r.data.list;
             this.totalPage = r.data.datacount
-            r.data.rights_list.map(item=>{
-            this.rights_list[item.rights] = item.rights_id
-            })
+            // r.data.rights_list.map(item=>{
+            // this.rights_list[item.rights] = item.rights_id
+            // })
         }).catch(() => {});
     },
     getuserbind() {
@@ -393,14 +448,15 @@ export default {
   },
 //   message_
   mounted: function() {
+    this.getFacultyData()
       this.getTableData()
-      roleslist({"rolename": "",
-    "memo": "",
-    "uid": sessionStorage.getItem('uid')})
-      .then(r => {
-          this.roleList = r.data.data_list
-            console.log(r)            
-        }).catch(() => {});
+    //   roleslist({"rolename": "",
+    // "memo": "",
+    // "uid": sessionStorage.getItem('uid')})
+    //   .then(r => {
+    //       this.roleList = r.data.data_list
+    //         console.log(r)            
+    //     }).catch(() => {});
   }
 }
 </script>

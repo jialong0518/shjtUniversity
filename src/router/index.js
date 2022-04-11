@@ -57,27 +57,47 @@ let constantRoutes = [
     }]
   },
 
-  // {
-  //   path: '/powerManage',
-  //   component: Layout,
-  //   redirect: '/powerManage',
-  //   name: 'powerManage',
-  //   meta: { title: '权限管理' },
-  //   children: [
-  //     {
-  //       path: 'accountManage',
-  //       name: 'accountManage',
-  //       component: () => import('@/views/powerManage/account/index'),
-  //       meta: { title: '账号管理' }
-  //     },
-  //     {
-  //       path: 'roleManage',
-  //       name: 'roleManage',
-  //       component: () => import('@/views/powerManage/role/index'),
-  //       meta: { title: '角色管理' }
-  //     }
-  //   ]
-  // },
+  {
+    path: '/powerManage',
+    component: Layout,
+    redirect: '/powerManage',
+    name: 'powerManage',
+    meta: { title: '权限管理' },
+    children: [
+      {
+        path: 'accountManage',
+        name: 'accountManage',
+        component: () => import('@/views/powerManage/account/index'),
+        meta: { title: '用户管理' }
+      },
+      {
+        path: 'roleManage',
+        name: 'roleManage',
+        component: () => import('@/views/powerManage/role/index'),
+        meta: { title: '角色管理' }
+      }
+    ]
+  },
+  {
+    path: '/expertBasics',
+    component: Layout,
+    redirect: '/expertBasics',
+    name: 'expertBasics',
+    meta: { title: '专家基础库' },
+    children: [
+      {
+        path: 'expertBasics',
+        name: 'expertBasics',
+        component: () => import('@/views/expertBasics/index'),
+        meta: { title: '专家基础库' }
+      },
+      {
+        path: 'importResults',
+        name: '导入记录',
+        component: () => import('@/views/importResults/index'),
+      },
+    ]
+  },
   {
     path: '/expertBasics',
     component: Layout,

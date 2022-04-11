@@ -18,7 +18,15 @@ export function getInfo(token) {
 
 export function userlist(data) {
   return request({
-    url: '/byd/web/index.php?r=reg/userlist',
+    url: '/expert/userlist',
+    method: 'post',
+    data: JSON.stringify(data)
+  })
+}
+
+export function getCollege(data) {
+  return request({
+    url: '/expert/collegelist',
     method: 'post',
     data: JSON.stringify(data)
   })
@@ -26,7 +34,7 @@ export function userlist(data) {
 
 export function userAdd(data) {
   return request({
-    url: '/byd/web/index.php?r=reg/useradd',
+    url: '/expert/useradd',
     method: 'post',
     data
   })
