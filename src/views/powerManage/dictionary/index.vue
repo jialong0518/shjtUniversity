@@ -2,8 +2,8 @@
   <div class="account">
     <el-row :gutter="20" style="padding: 20px;">
     <el-col :span="6">
-        <div style="display: inline-block;width:20%;">字典类型：</div>
-        <el-select v-model="searchType" style="width: 80%" placeholder="请选择">
+        <div style="display: inline-block;width:30%;">字典类型：</div>
+        <el-select v-model="searchType" style="width: 70%" placeholder="请选择">
           <el-option
             v-for="item in typeData"
             :key="item.code"
@@ -13,21 +13,19 @@
         </el-select>
     </el-col>
     <el-col :span="6">
-        <div style="display: inline-block;width:20%;">关键字：</div>
-        <el-input style="width: 80%" v-model="searchName" @change="getTableData()" autocomplete="off"></el-input>
+        <div style="display: inline-block;width:30%;">关键字：</div>
+        <el-input style="width: 70%" v-model="searchName" @change="getTableData()" autocomplete="off"></el-input>
     </el-col>
     <el-col :span="6">
-        <div style="display: inline-block;width:20%;">编码：</div>
-        <el-input style="width: 80%" v-model="searchCode" @change="getTableData()" autocomplete="off"></el-input>
+        <div style="display: inline-block;width:30%;">编码：</div>
+        <el-input style="width: 70%" v-model="searchCode" @change="getTableData()" autocomplete="off"></el-input>
     </el-col>
-    </el-row>
-    <el-row :gutter="20" style="padding: 20px;">
-      <el-col :span="6">
+    <el-col :span="6">
         <el-button type="primary" @click="searchFun">搜 索</el-button>
     </el-col>
     </el-row>
     <div style="padding: 15px;overflow: hidden;display: flex;justify-content: flex-end;">
-      <el-button type="primary" style="margin-left: 15px;"  @click="addAccountButt('ruleForm')">添加面试</el-button>
+      <el-button type="primary" style="margin-left: 15px;"  @click="addAccountButt('ruleForm')">添加字典</el-button>
     </div>
     <div style="padding: 0 20px">
         <el-table
@@ -35,16 +33,22 @@
     border
     style="width: 100%;;border-radius: 10px;">
     <el-table-column
-      prop="year"
+      prop="name"
       label="关键字">
     </el-table-column>
     <el-table-column
-      prop="audition_name"
+      prop="code"
       label="编码">
     </el-table-column>
     <el-table-column
-      prop="status"
+      prop="unionType"
       label="字典类型">
+      <template slot-scope="scope">
+        <div v-show="scope.row.unionType === 1">学科</div>
+        <div v-show="scope.row.unionType === 2">院系</div>
+        <div v-show="scope.row.unionType === 3">职称</div>
+        <div v-show="scope.row.unionType === 4">学历</div>
+      </template>
     </el-table-column>
     <el-table-column
       label="操作">
@@ -75,18 +79,21 @@
   </div> 
   <el-dialog :title="titleForm" :show-close="false" :close-on-click-modal="false" :visible.sync="dialogAccountVisible">
   <el-form :model="form" :rules="rulesAccount" ref="ruleForm" label-width="100px">
-    <el-form-item label="年份" prop="year">
-      <el-select v-model="form.year" :disabled="titleForm.indexOf('查看')!== -1" style="width: 80%" placeholder="请选择">
+    <el-form-item label="关键字" prop="name">
+      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.name" autocomplete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="编码" prop="code">
+      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.code" autocomplete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="字典类型" prop="type">
+      <el-select v-model="form.type" :disabled="titleForm.indexOf('查看')!== -1" style="width: 300px" placeholder="请选择">
           <el-option
-            v-for="item in yearData"
-            :key="item.year"
-            :label="item.year"
-            :value="item.year">
+            v-for="item in typeData"
+            :key="item.code"
+            :label="item.name"
+            :value="item.code">
           </el-option>
         </el-select>
-    </el-form-item>
-    <el-form-item label="名称" prop="name">
-      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.name" autocomplete="off"></el-input>
     </el-form-item>
   </el-form>
   <div slot="footer" class="dialog-footer">
@@ -98,7 +105,7 @@
 </template>
 
 <script>
-import { getTable, expertbasicbind, expertbasicadd, expertbasicdel, expertbasicedit, expertbasicexport, getYearlist } from "@/api/interviewManage";
+import { getTable, expertbasicbind, expertbasicadd, expertbasicdel, expertbasicedit, expertbasicexport, getYearlist } from "@/api/dictionary";
 import plupload from "@/components/plupload";
 
 export default {
@@ -160,9 +167,9 @@ export default {
       pageSize: 10,
       dialogAccountVisible: false,
       form: {
-        year: '',
+        type: '',
         name: '',
-        
+        code: ''
       },
       message_: null,
       message1_:null,
@@ -170,11 +177,14 @@ export default {
       titleForm:'',
       rights_list: {},
       rulesAccount: {
-        year: [
-            { required: true, message: '请选择年份', trigger: 'blur' }
+        type: [
+            { required: true, message: '请选择类型', trigger: 'blur' }
+        ],
+        code: [
+            { required: true, message: '请填写编码', trigger: 'change' }
         ],
         name: [
-            { required: true, message: '请填写名称', trigger: 'change' }
+            { required: true, message: '请填写关键字', trigger: 'change' }
         ]
       },
       loadingAccount: false,
@@ -237,19 +247,22 @@ export default {
     },
     
     seeAccountButt(data) {
-      this.titleForm = '查看面试';
+      this.titleForm = '查看字典';
       this.accountId = data.id;
       this.$router.push({path:'interviewRound',query:{id:data.id, auditionName: data.audition_name}});
       // this.getuserbind()
     },
     editAccountButt(data) {
       this.accountId = data.id
-      this.titleForm = '编辑面试'
-      this.getuserbind()
+      this.titleForm = '编辑字典'
+      this.form.type = data.unionType + ''
+      this.form.name = data.name
+      this.form.code = data.code
+      this.dialogAccountVisible = true
     },
     addAccountButt(formName) {
       this.accountId = '';
-      this.titleForm = '添加面试'
+      this.titleForm = '添加字典'
       this.dialogAccountVisible = true
     },
     cancelSubmit(formName) {
@@ -277,8 +290,9 @@ export default {
     addDataFun(formName1){
       this.loadingAccount = true
       expertbasicadd({
-              "audition_name": this.form.name,
-              "year": this.form.year,
+              "code": this.form.code,
+              "name": this.form.name,
+              "unionType": Number(this.form.type),
               }).then(r => {
                 if(r.msg === '信息重复') {
                   this.loadingAccount = false
@@ -288,6 +302,8 @@ export default {
               this.dialogAccountVisible = false
               this.account = this.form.account
               this.$refs[formName1].resetFields();
+              this.currentPage = 1
+              this.pageSize = 10
               this.getTableData()
             })
             .catch(() => {
@@ -297,8 +313,9 @@ export default {
     editDataFun(formName) {
       this.loadingAccount = true
       expertbasicedit({
-              "audition_name": this.form.name,
-              "year": this.form.year,
+              "code": this.form.code,
+              "name": this.form.name,
+              "unionType": Number(this.form.type),
               "id": this.accountId,
               })
             .then(r => {
@@ -309,6 +326,8 @@ export default {
               this.loadingAccount = false
               this.dialogAccountVisible = false
               this.$refs[formName].resetFields();
+              this.currentPage = 1
+              this.pageSize = 10
               this.getTableData()
             })
             .catch(() => {
@@ -321,6 +340,8 @@ export default {
             })
             .then(r => {
               console.log(r)
+              this.currentPage = 1
+              this.pageSize = 10
               this.getTableData()
               this.$message({
                 message: '删除成功！',
@@ -331,15 +352,10 @@ export default {
             }); 
     },
     getTableData() {
-    //   searchType searchName 
-    //   "code": "",
-    // "name": "副教授",
-    // "unionType": 3,
-    //  === '' ? 0 : this.searchYear
       getTable({
         "code": this.searchCode,
         "name": this.searchName,
-        "unionType": this.searchType,
+        "unionType": this.searchType === '' ? 0 : this.searchType,
         "page":this.currentPage,
         "pageSize":this.pageSize
         })

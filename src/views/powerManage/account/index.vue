@@ -1,36 +1,36 @@
 <template>
   <div class="account">
       <el-row :gutter="20" style="padding: 20px;">
-    <el-col :span="6">
+    <el-col :span="6" style="margin-bottom: 10px;">
         <div style="display: inline-block;width:30%;">用户名ID：</div>
         <el-input style="width: 70%" v-model="searchID" autocomplete="off"></el-input>
     </el-col>
-    <el-col :span="6">
+    <el-col :span="6" style="margin-bottom: 10px;">
         <div style="display: inline-block;width:30%;">用户名：</div>
         <el-input style="width: 70%" v-model="searchusername" autocomplete="off"></el-input>
     </el-col>
-    <el-col :span="6">
+    <el-col :span="6" style="margin-bottom: 10px;">
         <div style="display: inline-block;width:30%;">院系：</div>
         <el-input style="width: 70%" v-model="searchcollege" autocomplete="off"></el-input>
     </el-col>
-    <el-col :span="6">
+    <el-col :span="6" style="margin-bottom: 10px;">
         <div style="display: inline-block;width:30%;">院系编码：</div>
         <el-input style="width: 70%" v-model="searchcollegecode" autocomplete="off"></el-input>
     </el-col>
-    <el-col :span="6">
+    <el-col :span="6" style="margin-bottom: 10px;">
         <div style="display: inline-block;width:30%;">手机号：</div>
         <el-input style="width: 70%" v-model="searchphone" autocomplete="off"></el-input>
     </el-col>
-    <el-col :span="6">
+    <el-col :span="6" style="margin-bottom: 10px;">
         <div style="display: inline-block;width:30%;">email:</div>
          <el-input style="width: 70%" v-model="searchemail" autocomplete="off"></el-input>
     </el-col>
-    <el-col :span="6">
+    <el-col :span="6" style="margin-bottom: 10px;">
         <el-button type="primary" @click="getTableData()">搜索</el-button>
     </el-col>
     </el-row>
     <div style="padding: 15px;overflow: hidden;">
-      <el-button type="primary" style="float:right;" @click="addAccountButt('ruleForm')">添加账号</el-button>
+      <el-button type="primary" style="float:right;" @click="addAccountButt('ruleForm')">添加用户</el-button>
     </div>
     <el-table
     :data="tableData"
@@ -81,7 +81,7 @@
         <el-button @click="seeAccountButt(scope.row)" type="text" size="small">查看</el-button>
         <el-button type="text" @click="editAccountButt(scope.row)" size="small">编辑</el-button>
         <el-popconfirm
-            title="是否确定删除该账号？"
+            title="是否确定删除该用户？"
             @onConfirm="accountDel(scope.row)" 
         >
         <el-button style="margin: 0 10px;" slot="reference"  type="text" size="small">删除</el-button>
