@@ -8,6 +8,22 @@ export function login(data) {
   })
 }
 
+export function userstartstop(data) {
+  return request({
+    url: '/expert/userstartstop',
+    method: 'post',
+    data
+  })
+}
+
+export function passwordreset(data) {
+  return request({
+    url: '/expert/passwordreset',
+    method: 'post',
+    data
+  })
+}
+
 export function getInfo(token) {
   return request({
     url: '/vue-admin-template/user/info',
@@ -40,14 +56,6 @@ export function userAdd(data) {
   })
 }
 
-export function passwordreset(data) {
-    return request({
-      url: '/byd/web/index.php?r=reg/passwordreset',
-      method: 'post',
-      // data: JSON.parse(data)
-      data: JSON.stringify(data)
-    })
-  }
 
   export function userdel(data) {
     return request({

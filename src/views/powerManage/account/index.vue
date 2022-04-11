@@ -70,10 +70,14 @@
     <el-table-column
       prop="status"
       label="状态">
+      <template slot-scope="scope">
+        {{scope.row.status === 1 ? '启用' : '停用'}}
+      </template>
     </el-table-column>
     <el-table-column
       label="操作">
       <template slot-scope="scope">
+        <el-button @click="enableButt(scope.row)" type="text" size="small">{{scope.row.status === 0 ? '启用' : '停用'}}</el-button>
         <el-button @click="seeAccountButt(scope.row)" type="text" size="small">查看</el-button>
         <el-button type="text" @click="editAccountButt(scope.row)" size="small">编辑</el-button>
         <el-popconfirm
@@ -145,7 +149,7 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
-import { userlist, userAdd, passwordreset, userdel, useredit, userbind, getCollege } from "@/api/account";
+import { userlist, userAdd, passwordreset, userdel, useredit, userbind, getCollege, userstartstop } from "@/api/account";
 import { roleslist } from "@/api/role";
 
 
@@ -220,6 +224,15 @@ export default {
     }
   },
   methods: {
+    enableButt(data) {
+      console.log(data.status)
+      userstartstop(
+        {"id": data.id}
+      ).then(r => {
+        this.getTableData()
+      }).catch(() => {});    
+      // userstartstop
+    },
     roleFun(data) {
       this.roleList.map(item=>{
         if(item.code === data) {
@@ -358,14 +371,19 @@ export default {
     },
     resetAccount(data) {
         passwordreset({
-            "id": data.id,
-            "uid": sessionStorage.getItem('uid')})
+            "id": data.id})
             .then(r => {
-              console.log(r)
-              this.word = r.info
-              this.account = data.username
-              this.openHTML(r.info)
-              this.wordVisible = true
+              if(r.code === 0){
+                this.$message({
+                message: '密码重置成功！',
+                type: 'success'
+                });
+              }
+              this.getTableData()
+              // this.word = r.info
+              // this.account = data.username
+              // this.openHTML(r.info)
+              // this.wordVisible = true
             })
             .catch(() => {
             });      
