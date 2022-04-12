@@ -24,7 +24,7 @@ module.exports = {
    * In most cases please use '/' !!!
    * Detail: https://cli.vuejs.org/config/#publicpath
    */
-//   publicPath: '/bydbackend',
+  //   publicPath: '/bydbackend',
   publicPath: '/',
   outputDir: 'dist',
   assetsDir: 'static',
@@ -38,13 +38,19 @@ module.exports = {
       errors: true
     },
     proxy: {  //配置跨域
-      　　　　　　　　'/expert': {
-      　　　　　　　　　　target: 'http://mob.hexntc.com/expert',  //这里后台的地址模拟的;应该填写你们真实的后台接口
-      　　　　　　　　　　pathRewrite: {
-      　　　　　　　　　　　　'^/expert': ''  //请求的时候使用这个api就可以
-      　　　　　　　　　　}
-      　　　　　　}
-      　　　　}
+      '/expert': {
+        target: 'http://mob.hexntc.com/expert',  //这里后台的地址模拟的;应该填写你们真实的后台接口
+        pathRewrite: {
+          '^/expert': ''  //请求的时候使用这个api就可以
+        }
+      },
+      '/oauth2': {
+        target: 'https://jaccount.sjtu.edu.cn/oauth2',  //这里后台的地址模拟的;应该填写你们真实的后台接口
+        pathRewrite: {
+          '^/oauth2': ''  //请求的时候使用这个api就可以
+        }
+      }
+    }
     // before: require('./mock/mock-server.js')
   },
   configureWebpack: {
@@ -96,7 +102,7 @@ module.exports = {
             .plugin('ScriptExtHtmlWebpackPlugin')
             .after('html')
             .use('script-ext-html-webpack-plugin', [{
-            // `runtime` must same as runtimeChunk name. default is `runtime`
+              // `runtime` must same as runtimeChunk name. default is `runtime`
               inline: /runtime\..*\.js$/
             }])
             .end()

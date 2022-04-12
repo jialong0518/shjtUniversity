@@ -42,6 +42,7 @@
       </el-form-item>
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
+      <el-button style="width:100%;margin-bottom:30px;margin-left:0;" @click.native.prevent="goEmpower">上海交通大学统一身份认证</el-button>
 
       
 
@@ -51,7 +52,7 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
-import { login } from "@/api/user";
+import { login, goEmpower } from "@/api/user";
 import { resetRouter } from '@/router'
 
 export default {
@@ -94,6 +95,10 @@ export default {
     }
   },
   methods: {
+    goEmpower() {
+      // ?code=6118ae9a113d44f892bfd15b877adef8
+      window.location.href ='https://jaccount.sjtu.edu.cn/oauth2/authorize?response_type=code&scope=essential&client_id=HTjYQXuT3U1QqTp8h0ug&redirect_uri=https://mob.hexntc.com/expert/oauthlogin';
+    },
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
@@ -131,6 +136,15 @@ export default {
       //     return false
       //   }
       // })
+    }
+  },
+  mounted() {
+    console.log(this.$route.query.code)
+    if(this.$route.query.code){
+      goEmpower({code: this.$route.query.code})
+      .then(r => {
+      })
+      .catch(() => {});
     }
   }
 }

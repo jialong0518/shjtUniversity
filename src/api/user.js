@@ -2,12 +2,23 @@ import request from '@/utils/request'
 
 export function login(data) {
   return request({
-    url: '/expert/login',
+    url: '/expert/loginnormal',
     method: 'post',
-    data
+    data: {
+      expertNo: data.username,
+      expertPwd: data.password,
+      type: '后台'
+    }
     // data: JSON.stringify(data)
   })
 }
+export function goEmpower(data) {
+  return request({
+    url: `/expert/getlogininfo?code=${data.code}`,
+    method: 'get',
+  })
+}
+
 
 export function getInfo(token) {
   return request({
