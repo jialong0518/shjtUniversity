@@ -23,7 +23,9 @@
           placeholder="请选择日期时间">
         </el-date-picker>
     </el-col>
-    <el-col :span="6">
+    </el-row>
+    <el-row :gutter="20" style="padding: 20px;">
+      <el-col :span="6">
         <div style="display: inline-block;width:30%;">结束时间：</div>
         <el-date-picker
           style="width: 70%" v-model="searchEnd"
@@ -33,8 +35,6 @@
           placeholder="请选择日期时间">
         </el-date-picker>
     </el-col>
-    </el-row>
-    <el-row :gutter="20" style="padding: 20px;">
       <el-col :span="6">
         <el-button type="primary" @click="searchFun">搜 索</el-button>
     </el-col>

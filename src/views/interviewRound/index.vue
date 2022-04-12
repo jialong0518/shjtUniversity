@@ -20,9 +20,7 @@
         <div style="display: inline-block;width:30%;">名称：</div>
         <el-input style="width: 70%" v-model="searchName" @change="getTableData()" autocomplete="off"></el-input>
     </el-col>
-    </el-row>
-    <el-row :gutter="20" style="padding: 20px;">
-      <el-col :span="6">
+    <el-col :span="6">
         <el-button type="primary" @click="searchFun">搜 索</el-button>
     </el-col>
     </el-row>
