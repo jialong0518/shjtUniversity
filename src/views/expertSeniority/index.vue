@@ -400,7 +400,7 @@ export default {
     batchImport(data) {
       console.log(data,'批量导入')
        this.$router.push({
-         path:'importResults',
+         path:'/importResults',
          query:{data: JSON.stringify(data)}
         });
     },

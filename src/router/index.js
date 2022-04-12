@@ -104,11 +104,7 @@ let constantRoutes = [
         component: () => import('@/views/expertBasics/index'),
         meta: { title: '专家基础库' }
       },
-      {
-        path: 'importResults',
-        name: '导入记录',
-        component: () => import('@/views/importResults/index'),
-      },
+      
     ]
   },
   {
@@ -169,16 +165,7 @@ let constantRoutes = [
         component: () => import('@/views/interviewManage/index'),
         meta: { title: '面试管理' }
       },
-      {
-        path: 'interviewRound',
-        name: '面试场次',
-        component: () => import('@/views/interviewRound/index'),
-      },
-      {
-        path: 'confirmStatus',
-        name: '面试确认情况',
-        component: () => import('@/views/confirmStatus/index'),
-      },
+      
     ]
   },
   {
@@ -239,14 +226,62 @@ let constantRoutes = [
         component: () => import('@/views/statistics/index'),
         meta: { title: '数据统计' }
       },
+      
+    ]
+  },
+  {
+    path: '/sessions',
+    component: Layout,
+    redirect: '/sessions',
+    name: 'sessions',
+    meta: { title: '场次' },
+    children: [
       {
-        path: 'sessions',
-        name: '场次',
+        path: '/sessions',
         component: () => import('@/views/statistics/sessions'),
       },
     ]
   },
-  
+  {
+    path: '/importResults',
+    component: Layout,
+    redirect: '/importResults',
+    name: 'importResults',
+    meta: { title: '导入记录' },
+    children: [
+      {
+        path: '/importResults',
+        component: () => import('@/views/importResults/index'),
+      },
+    ]
+  },
+  {
+    path: '/interviewRound',
+    component: Layout,
+    redirect: '/interviewRound',
+    name: 'interviewRound',
+    meta: { title: '面试场次' },
+    children: [
+      {
+        path: '/interviewRound',
+        component: () => import('@/views/interviewRound/index'),
+      },
+    ]
+  },
+  {
+    path: '/confirmStatus',
+    component: Layout,
+    redirect: '/confirmStatus',
+    name: 'confirmStatus',
+    meta: { title: '面试确认情况' },
+    children: [
+      {
+        path: '/confirmStatus',
+        component: () => import('@/views/confirmStatus/index'),
+      },
+    ]
+  },
+
   // emailLog  
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }

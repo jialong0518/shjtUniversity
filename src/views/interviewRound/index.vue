@@ -398,7 +398,7 @@ export default {
     batchImport(data) {
       console.log(data,'批量导入')
        this.$router.push({
-         path:'importResults',
+         path:'/importResults',
          query:{data: JSON.stringify(data)}
         });
     },
@@ -685,7 +685,7 @@ export default {
     planNum(data) {
       data.auditionName = this.$route.query.auditionName;
       this.$router.push({
-         path:'confirmStatus',
+         path:'/confirmStatus',
          query:{data: JSON.stringify(data)}
       });
     },

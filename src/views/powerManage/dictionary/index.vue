@@ -220,7 +220,7 @@ export default {
     batchImport(data) {
       console.log(data,'批量导入')
        this.$router.push({
-         path:'importResults',
+         path:'/importResults',
          query:{data: JSON.stringify(data)}
         });
     },
@@ -249,7 +249,7 @@ export default {
     seeAccountButt(data) {
       this.titleForm = '查看字典';
       this.accountId = data.id;
-      this.$router.push({path:'interviewRound',query:{id:data.id, auditionName: data.audition_name}});
+      this.$router.push({path:'/interviewRound',query:{id:data.id, auditionName: data.audition_name}});
       // this.getuserbind()
     },
     editAccountButt(data) {

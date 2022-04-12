@@ -413,7 +413,7 @@ export default {
       this.titleForm = '查看专家信息'
       this.accountId = data.id
       console.log(data)
-      this.$router.push({path:'sessions',query:{auditionRoundName:data.auditionRoundName, auditionName: data.auditionName}});
+      this.$router.push({path:'/sessions',query:{auditionRoundName:data.auditionRoundName, auditionName: data.auditionName}});
       // this.getuserbind()
     },
     editAccountButt(data) {
