@@ -114,11 +114,14 @@ export default {
       
       login(Object.assign({},this.loginForm))
       .then(r => {
+        if(r.code === 1){
+          this.$message.error(r.msg);
+          return
+        }
         resetRouter()
         sessionStorage.setItem("uid",r.data.uid)
         sessionStorage.setItem("phone",r.data.phone)
         sessionStorage.setItem("name",r.data.name)
-        sessionStorage.setItem("upd",r.data.upd)
         this.$router.push({ path:  '/' })
       })
       .catch(() => {});
@@ -143,6 +146,15 @@ export default {
     if(this.$route.query.code){
       goEmpower({code: this.$route.query.code})
       .then(r => {
+        if(r.code === 1){
+          this.$message.error(r.msg);
+          return
+        }
+        resetRouter()
+        sessionStorage.setItem("uid",r.data.uid)
+        sessionStorage.setItem("phone",r.data.phone)
+        sessionStorage.setItem("name",r.data.name)
+        this.$router.push({ path:  '/' })
       })
       .catch(() => {});
     }
