@@ -97,7 +97,7 @@ export default {
   methods: {
     goEmpower() {
       // ?code=6118ae9a113d44f892bfd15b877adef8
-      window.location.href ='https://jaccount.sjtu.edu.cn/oauth2/authorize?response_type=code&scope=essential&client_id=HTjYQXuT3U1QqTp8h0ug&redirect_uri=https://mob.hexntc.com/expert/oauthlogin';
+      window.location.href ='https://jaccount.sjtu.edu.cn/oauth2/authorize?response_type=code&scope=essential&client_id=HTjYQXuT3U1QqTp8h0ug&redirect_uri=https://mob.hexntc.com/jdexpert/admin/index.html/login';
     },
     showPwd() {
       if (this.passwordType === 'password') {
