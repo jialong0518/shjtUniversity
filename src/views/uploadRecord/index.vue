@@ -300,7 +300,7 @@ export default {
             { required: true, validator: validatePhone, trigger: 'blur' }
         ],
         email: [
-            { required: true, validator: validateEml, trigger: 'blur' }
+            { required: true, message: '请填写邮箱', trigger: 'blur' }
         ],
         expertNo: [
             { required: true, validator: validateNo, trigger: 'blur' }
@@ -556,6 +556,9 @@ export default {
         "id": this.accountId,
       })
       .then(r => {
+      this.form.subjectName = r.data.expertSubject;        
+      this.form.titleName = r.data.expertTitle;
+      this.form.facultyName = r.data.expertCollege;       
       this.form.sex = r.data.expertGender+'';
       this.form.name = r.data.expertName;
       this.form.phone = r.data.expertPhone;

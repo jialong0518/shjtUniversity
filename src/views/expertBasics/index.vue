@@ -6,9 +6,9 @@
         <el-select v-model="searchFaculty" style="width: 80%" placeholder="请选择">
           <el-option
             v-for="item in facultyData"
-            :key="item.code"
+            :key="item.name"
             :label="item.name"
-            :value="item.code">
+            :value="item.name">
           </el-option>
         </el-select>
     </el-col>
@@ -42,13 +42,13 @@
     <el-row :gutter="20" style="padding: 20px;">
       <el-col :span="6">
         <el-button type="primary" @click="searchFun">搜 索</el-button>
-        <el-button type="primary" @click="exportData">导 出</el-button>
+        <!-- <el-button type="primary" @click="exportData">导 出</el-button> -->
     </el-col>
     </el-row>
     <div style="padding: 15px;overflow: hidden;display: flex;justify-content: flex-end;">
+      <el-button type="primary" style="margin-left: 15px;" @click="exportData">导出查询结果</el-button>
       <el-button type="primary" style="margin-left: 15px;"  @click="addAccountButt('ruleForm')">添加专家</el-button>
       <plupload @updata="batchImport">批量导入</plupload>
-      <el-button type="primary" style="margin-left: 15px;" @click="addAccountButt('ruleForm')">导出结果</el-button>
     </div>
     <div style="padding: 0 20px">
         <el-table
@@ -284,7 +284,7 @@ export default {
             { required: true, validator: validatePhone, trigger: 'blur' }
         ],
         email: [
-            { required: true, validator: validateEml, trigger: 'blur' }
+            { required: true, message: '请填写邮箱', trigger: 'blur' }
         ],
         expertNo: [
             { required: true, validator: validateNo, trigger: 'blur' }
@@ -342,6 +342,10 @@ export default {
 
     batchImport(data) {
       console.log(data,'批量导入')
+      let time = new Date();//time为现在的时间
+      let year_ = time.getFullYear();//获取现在的年份
+      data.year = year_
+      data.source = '基础库'
        this.$router.push({
          path:'/importResults',
          query:{data: JSON.stringify(data)}
@@ -538,18 +542,21 @@ export default {
         "id": this.accountId,
       })
       .then(r => {
-      this.form.sex = r.data.expertGender+'';
-      this.form.name = r.data.expertName;
-      this.form.phone = r.data.expertPhone;
-      this.form.faculty = r.data.expertCollegeCode;
-      this.form.title = r.data.expertTitleCode;
-      this.form.subject = r.data.expertSubjectCode;
-      this.form.email = r.data.expertEmail;
-      this.form.inPosition = r.data.inPosition+'';
-      this.form.expertNo = r.data.expertNo;
-      this.form.expertPwd = r.data.expertPwd;
-      this.form.remark = r.data.remark;
-      this.dialogAccountVisible = true
+        this.form.facultyName = r.data.expertCollege;
+        this.form.titleName = r.data.expertTitle;
+        this.form.subjectName = r.data.expertSubject;
+        this.form.sex = r.data.expertGender+'';
+        this.form.name = r.data.expertName;
+        this.form.phone = r.data.expertPhone;
+        this.form.faculty = r.data.expertCollegeCode;
+        this.form.title = r.data.expertTitleCode;
+        this.form.subject = r.data.expertSubjectCode;
+        this.form.email = r.data.expertEmail;
+        this.form.inPosition = r.data.inPosition+'';
+        this.form.expertNo = r.data.expertNo;
+        this.form.expertPwd = r.data.expertPwd;
+        this.form.remark = r.data.remark;
+        this.dialogAccountVisible = true
         }).catch(() => {});
     },
   },

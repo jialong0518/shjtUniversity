@@ -79,13 +79,13 @@
       <template slot-scope="scope">
         <el-button @click="enableButt(scope.row)" type="text" size="small">{{scope.row.status === 0 ? '启用' : '停用'}}</el-button>
         <el-button @click="seeAccountButt(scope.row)" type="text" size="small">查看</el-button>
-        <el-button type="text" @click="editAccountButt(scope.row)" size="small">编辑</el-button>
-        <el-popconfirm
+        <!-- <el-button type="text" @click="editAccountButt(scope.row)" size="small">编辑</el-button> -->
+        <!-- <el-popconfirm
             title="是否确定删除该用户？"
             @onConfirm="accountDel(scope.row)" 
         >
         <el-button style="margin: 0 10px;" slot="reference"  type="text" size="small">删除</el-button>
-        </el-popconfirm>
+        </el-popconfirm> -->
         <!-- <el-button v-if="rights_list['删除']" @click="handleClick(scope.row)" type="text" size="small">删除</el-button> -->
         <el-popconfirm
             title="确认重置密码吗？"
@@ -170,11 +170,11 @@ export default {
       form: {
         email:'',
         faculty: '',
-        facultyCode:'',
+        facultyName:'',
         name: '',
         phone: '',
         role: '',
-        roleCode: ''
+        roleName: ''
       },
       message_: null,
       message1_:null,
@@ -192,7 +192,7 @@ export default {
             { required: true, message: '请填选择角色', trigger: 'change' }
         ],
         faculty: [
-            { required: true, message: '请填选择院系', trigger: 'change' }
+            { required: false, message: '请填选择院系', trigger: 'change' }
         ],
         email: [
             { required: true, message: '请填写email', trigger: 'blur' }
@@ -236,7 +236,7 @@ export default {
     roleFun(data) {
       this.roleList.map(item=>{
         if(item.code === data) {
-          this.form.roleCode = item.name;
+          this.form.roleName = item.name;
           console.log(item.name)
         }
       })
@@ -244,7 +244,7 @@ export default {
     facultyFun(data) {
       this.facultyData.map(item=>{
         if(item.code === data) {
-          this.form.facultyCode = item.name;
+          this.form.facultyName = item.name;
           console.log(item.name)
         }
       })
@@ -294,23 +294,32 @@ export default {
     // this.$refs[formName].resetFields();
     seeAccountButt(data) {
       this.titleForm = '查看用户'
+      console.log(data)
+        this.form.email = data.email
+        this.form.faculty = data.college_code
+        this.form.facultyName = data.college
+        this.form.name = data.username
+        this.form.phone = data.phone
+        this.form.role = data.type
+        this.form.roleName = data.type_name
       this.accountId = data.id
-      this.getuserbind()
+      this.dialogAccountVisible = true
+      // this.getuserbind()
     },
     editAccountButt(data) {
       this.accountId = data.id
       this.titleForm = '编辑用户'
-      this.getuserbind()
+      // this.getuserbind()
     },
     addAccountButt(formName) {
       this.accountId = '';
       this.titleForm = '添加用户'
       this.dialogAccountVisible = true
     },
-    cancelSubmit() {
+    cancelSubmit(formName) {
       this.accountId = '';
-      this.dialogAccountVisible = false;
       this.$refs[formName].resetFields();
+      this.dialogAccountVisible = false;
     },
     submitAccount(formName) {
       this.$refs[formName].validate((valid) => {
@@ -329,17 +338,23 @@ export default {
         });
     },
     addDataFun(formName1){
+      console.log(this.form)
       this.loadingAccount = true
       userAdd({
               "username": this.form.name,
               "type": Number(this.form.role),
-              "type_name": this.form.roleCode,
-              "college": this.form.facultyCode,
-              "college_code": Number(this.form.faculty),
+              "type_name": this.form.roleName,
+              "college": this.form.facultyName,
+              "college_code": this.form.faculty,
               "phone": this.form.phone,
               "email": this.form.email,
               })
             .then(r => {
+              if(r.code === 1) {
+                this.$message.error(r.msg);
+                this.loadingAccount = false
+                return
+              }
               this.loadingAccount = false
               this.dialogAccountVisible = false
               this.account = this.form.account

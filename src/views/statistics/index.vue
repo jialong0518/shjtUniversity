@@ -87,7 +87,7 @@
     </el-table-column>
   </el-table>
     </div>
-  <div style="text-align: center;
+  <!-- <div style="text-align: center;
     margin-top: 20px;">
       <el-pagination
       background
@@ -99,7 +99,7 @@
       layout="total,  prev, pager, next, sizes,jumper"
       :total="totalPage">
     </el-pagination>
-  </div> 
+  </div>  -->
   <el-dialog :title="titleForm" :show-close="false" :close-on-click-modal="false" :visible.sync="dialogAccountVisible">
   <el-form :model="form" :rules="rulesAccount" ref="ruleForm" label-width="100px">
     <el-form-item label="专家工号" prop="expertNo">
@@ -289,7 +289,7 @@ export default {
             { required: true, validator: validatePhone, trigger: 'blur' }
         ],
         email: [
-            { required: true, validator: validateEml, trigger: 'blur' }
+            { required: true, message: '请填写邮箱', trigger: 'blur' }
         ],
         expertNo: [
             { required: true, validator: validateNo, trigger: 'blur' }

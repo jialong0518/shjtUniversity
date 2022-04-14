@@ -6,8 +6,8 @@ import { getToken } from '@/utils/auth'
 
 // create an axios instance
 const service = axios.create({
-//   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  baseURL: 'https://mob.hexntc.com',
+  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+  // baseURL: 'https://mob.hexntc.com',
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000, // request timeout
   headers: {
@@ -58,7 +58,7 @@ service.interceptors.response.use(
 
     // if the custom code is not 20000, it is judged as an error.
     console.log(response)
-    if (res.status === 1) {
+    if (res.state === 1) {
         if(res.info.indexOf('无权限进行此操作') === -1){
             Message({
                 message: res.info || 'Error',

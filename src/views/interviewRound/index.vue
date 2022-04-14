@@ -186,7 +186,7 @@
         </el-col>
         <el-col :span="6">
             <div style="display: inline-block;width:30%;">场次：</div>
-            {{this.form.num}}
+            {{this.form.round_num}}
         </el-col>
       </el-row>
       <el-row :gutter="20" style="padding: 5px;">
@@ -206,7 +206,7 @@
         </el-col>
         <el-col :span="7">
             <div style="display: inline-block;width:50%;">限定人数：</div>
-            {{this.form.round_num}}
+            {{this.form.num}}
         </el-col>
       </el-row>
   </div>
@@ -225,10 +225,6 @@
         <el-table-column
           prop="college"
           label="院/系">
-        </el-table-column>
-        <el-table-column
-          prop="round_name"
-          label="学科">
         </el-table-column>
         <el-table-column
           prop="sourceCount"
@@ -690,9 +686,10 @@ export default {
       });
     },
     exportButt(data, state) {
+      console.log(data)
       exportFile({
         "status": state === '0'? '未确认' : '已确认',
-        "auditionRoundId": data.audition_id,
+        "auditionRoundId": data.id,
         "page":this.currentPage,
         "pageSize":this.pageSize
         })

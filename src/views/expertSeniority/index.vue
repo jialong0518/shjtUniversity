@@ -45,9 +45,9 @@
         <el-select v-model="searchTitle" style="width: 80%" placeholder="请选择">
           <el-option
             v-for="item in titleData"
-            :key="item.code"
+            :key="item.name"
             :label="item.name"
-            :value="item.code">
+            :value="item.name">
           </el-option>
         </el-select>
     </el-col>
@@ -74,19 +74,28 @@
     </el-col>
       <el-col :span="6">
         <el-button type="primary" @click="searchFun">搜 索</el-button>
-        <el-button type="primary" @click="exportData">导 出</el-button>
+        <!-- <el-button type="primary" @click="exportData">导 出</el-button> -->
     </el-col>
     </el-row>
     <div style="padding: 15px;overflow: hidden;display: flex;justify-content: flex-end;">
+      <el-button type="primary" style="margin-left: 15px;" @click="exportData('ruleForm')">导 出</el-button>
       <el-button type="primary" style="margin-left: 15px;"  @click="addAccountButt('ruleForm')">添加</el-button>
-      <plupload @updata="batchImport">从基础库导入</plupload>
-      <el-button type="primary" style="margin-left: 15px;" @click="addAccountButt('ruleForm')">导出结果</el-button>
+      <plupload @updata="batchImport">批量导入</plupload>
+      <el-button type="primary" style="margin-left: 15px;" @click="batchRefuse('通过')">批量通过</el-button>
+      <el-button type="primary" style="margin-left: 15px;" @click="batchRefuse('拒绝')">批量拒绝</el-button>
     </div>
     <div style="padding: 0 20px">
         <el-table
     :data="tableData"
     border
+     @select="tableSelect"
+    @select-all="tableSelectAll"
     style="width: 100%;;border-radius: 10px;">
+     <el-table-column
+      type="selection"
+      :selectable="selected"
+      width="55">
+    </el-table-column> 
      <el-table-column
       prop="year"
       label="年份">
@@ -232,6 +241,13 @@
     <el-button :loading="loadingAccount" type="primary" @click="refuseSubmit('ruleForm','通过')">通 过</el-button>
   </div>
 </el-dialog>
+<el-dialog title="提示" :show-close="false" :close-on-click-modal="false" :visible.sync="batchAccountVisible">
+  <div>您确定批量审批{{batchState}}数据吗？</div>
+  <div slot="footer" class="dialog-footer">
+    <el-button :loading="loadingAccount" @click="refuseSubmit('ruleForm',batchState)">取 消</el-button>
+    <el-button :loading="loadingAccount" type="primary" @click="refuseSubmit('ruleForm',batchState)">确 定</el-button>
+  </div>
+</el-dialog>
   </div>
 </template>
 
@@ -285,6 +301,7 @@ export default {
       totalPage: 0,
       pageSize: 10,
       dialogAccountVisible: false,
+      batchAccountVisible: false,
       form: {
         sex: '',
         name: '',
@@ -333,7 +350,7 @@ export default {
             { required: true, validator: validatePhone, trigger: 'blur' }
         ],
         email: [
-            { required: true, validator: validateEml, trigger: 'blur' }
+            { required: true, message: '请填写邮箱', trigger: 'blur' }
         ],
         expertNo: [
             { required: true, validator: validateNo, trigger: 'blur' }
@@ -357,7 +374,8 @@ export default {
       accountId: '',
       wordVisible: false,
       word:'',
-      account:''
+      account:'',
+      batchState:''
     }
   },
   watch: {
@@ -369,6 +387,29 @@ export default {
     }
   },
   methods: {
+    selected(row, index) {
+      if (row.status !== '审核中') {
+        return false //不可勾选
+      } else {
+        return true; //可勾选
+      }
+    },
+    batchRefuse(name) {
+      this.batchState = name;
+      this.batchAccountVisible = true;
+    },
+    tableSelect(selection, row) {
+      this.accountId = []
+      selection.map(item=>{
+        this.accountId.push(item.id);
+      })
+    },
+    tableSelectAll(selection) {
+      this.accountId = []
+      selection.map(item=>{
+        this.accountId.push(item.id);
+      })
+    },
     getYearData() {
         getYearlist(
         {}
@@ -399,6 +440,10 @@ export default {
 
     batchImport(data) {
       console.log(data,'批量导入')
+      let time = new Date();//time为现在的时间
+      let year_ = time.getFullYear();//获取现在的年份
+      data.year = year_
+      data.source = '资格库'
        this.$router.push({
          path:'/importResults',
          query:{data: JSON.stringify(data)}
@@ -476,9 +521,12 @@ export default {
       this.dialogAccountVisible = false;
     },
     refuseSubmit(name,state) {
+      if(typeof this.accountId !== 'object'){
+        this.accountId = [this.accountId]
+      }
       this.loadingAccount = true
       expertreadyapprove({
-              "id": this.accountId,
+              "ids": this.accountId,
               "status": state
               }).then(r => {
                 if(r.msg === '信息重复') {
@@ -487,6 +535,7 @@ export default {
                 }
               this.loadingAccount = false
               this.dialogAccountVisible = false
+              this.batchAccountVisible = false
               // this.account = this.form.account
               this.$refs[name].resetFields();
               this.getTableData()
@@ -625,6 +674,9 @@ export default {
         "id": this.accountId,
       })
       .then(r => {
+      this.form.subjectName = r.data.expertSubject;
+      this.form.titleName = r.data.expertTitle;
+      this.form.facultyName = r.data.expertCollege;
       this.form.sex = r.data.expertGender+'';
       this.form.name = r.data.expertName;
       this.form.phone = r.data.expertPhone;

@@ -81,7 +81,7 @@
     </el-table-column>
   </el-table>
     </div>
-  <div style="text-align: center;
+  <!-- <div style="text-align: center;
     margin-top: 20px;">
       <el-pagination
       background
@@ -93,7 +93,7 @@
       layout="total,  prev, pager, next, sizes,jumper"
       :total="totalPage">
     </el-pagination>
-  </div> 
+  </div>  -->
   <el-dialog :title="titleForm" :show-close="false" :close-on-click-modal="false" :visible.sync="dialogAccountVisible">
   <el-form :model="form" :rules="rulesAccount" ref="ruleForm" label-width="100px">
     <el-form-item label="专家工号" prop="expertNo">
@@ -176,12 +176,16 @@
     <el-button :loading="loadingAccount" type="primary" @click="refuseSubmit('ruleForm','通过')">通 过</el-button>
   </div>
 </el-dialog>
+<div style="display: flex;justify-content: space-around;">
+      <div style="height: 400px;width: 400px;display:inline-block;" id="mainBing"></div>
+      <div style="height: 400px;width: 400px;display:inline-block;" id="mainZhe"></div>
+    </div>
   </div>
 </template>
 
 <script>
 import { getTable, getCollege, getYearlist, expertauditionlist } from "@/api/statistics";
-
+import * as echarts from 'echarts';
 export default {
   name: 'Login',
   components: {
@@ -277,7 +281,7 @@ export default {
             { required: true, validator: validatePhone, trigger: 'blur' }
         ],
         email: [
-            { required: true, validator: validateEml, trigger: 'blur' }
+            { required: true, message: '请填写邮箱', trigger: 'blur' }
         ],
         expertNo: [
             { required: true, validator: validateNo, trigger: 'blur' }
@@ -547,6 +551,7 @@ export default {
         })
       .then(r => {
             this.tableData = r.data;
+            this.chartInit(r.data);
         }).catch(() => {});
     },
     exportData() {
@@ -583,6 +588,70 @@ export default {
       this.dialogAccountVisible = true
         }).catch(() => {});
     },
+    chartInit(data) {
+      console.log(data)
+      let bingData = [];
+      let zheData = [];
+      let zheName = [];
+      data.map(item=>{
+        bingData.push({
+          value: item.countPlan,
+          name: item.auditionName
+        })
+        zheName.push(item.auditionName)
+        zheData.push(item.countPlan)
+      })
+      var chartDom = document.getElementById('mainBing');
+      var myChart = echarts.init(chartDom);
+      let option = {
+        tooltip: {
+          trigger: 'item'
+        },
+        series: [
+          {
+            type: 'pie',
+            radius: '50%',
+            data: bingData,
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            }
+          }
+        ]
+      };
+      myChart.setOption(option);
+      
+      var chartDom1 = document.getElementById('mainZhe');
+      var myChart1 = echarts.init(chartDom1);
+      let option1 = {
+        xAxis: {
+          type: 'category',
+          data: zheName
+        },
+        yAxis: {
+          type: 'value',
+        },
+        tooltip: {
+              valueFormatter: function (value) {
+                return value;
+              }
+            },
+        series: [
+          {
+            data: zheData,
+            type: 'bar',
+            showBackground: true,
+            backgroundStyle: {
+              color: 'rgba(180, 180, 180, 0.2)'
+            },
+          }
+        ]
+      };
+      myChart1.setOption(option1);
+    }
   },
   beforeDestroy(){
       this.message1_.close()

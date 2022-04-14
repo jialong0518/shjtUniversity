@@ -5,7 +5,7 @@
         导入结果：成功<span style="color: green;">{{successNum}}</span>条，失败<span style="color: red;">{{failNum}}</span>条
       </el-col>
       <el-col :span="6">
-        <el-button style="float: right;margin-right: 20px;" type="primary">去处理</el-button>
+        <el-button style="float: right;margin-right: 20px;" @click="goHandle" type="primary">去处理</el-button>
       </el-col>
     </el-row>
     <div style="padding: 0 20px" v-show="tableData.length > 0">
@@ -67,8 +67,17 @@ export default {
     
   },
   methods: {
+    goHandle() {
+      this.$router.push({
+         path:'/uploadRecord/uploadRecord'
+        });
+    },
     expertImportData(data) {
-      expertimport({"fileName": `${data.fileHash}/${data.name}`}).then(r => {
+      expertimport({
+        "fileName": `${data.fileHash}/${data.name}`,
+        "year": data.year,
+        "source": data.source
+        }).then(r => {
         this.tableData = r.data.fail_list;
         this.failNum = r.data.fail;
         this.successNum = r.data.success;
