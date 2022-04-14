@@ -78,9 +78,9 @@ export default {
         "year": data.year,
         "source": data.source
         }).then(r => {
-        this.tableData = r.data.fail_list;
-        this.failNum = r.data.fail;
-        this.successNum = r.data.success;
+          this.failNum = r.data.fail;
+          this.successNum = r.data.success;
+          this.tableData = r.data['fail_list']||[];
       }).catch(() => {});
     },
   },

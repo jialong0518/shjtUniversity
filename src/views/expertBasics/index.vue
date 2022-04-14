@@ -17,9 +17,9 @@
         <el-select v-model="searchSubject" style="width: 80%" placeholder="请选择">
           <el-option
             v-for="item in subjectData"
-            :key="item.code"
+            :key="item.name"
             :label="item.name"
-            :value="item.code">
+            :value="item.name">
           </el-option>
         </el-select>
     </el-col>
@@ -32,9 +32,9 @@
         <el-select v-model="searchTitle" style="width: 80%" placeholder="请选择">
           <el-option
             v-for="item in titleData"
-            :key="item.code"
+            :key="item.name"
             :label="item.name"
-            :value="item.code">
+            :value="item.name">
           </el-option>
         </el-select>
     </el-col>
@@ -46,19 +46,15 @@
     </el-col>
     </el-row>
     <div style="padding: 15px;overflow: hidden;display: flex;justify-content: flex-end;">
-      <el-button type="primary" style="margin-left: 15px;" @click="exportData">导出查询结果</el-button>
       <el-button type="primary" style="margin-left: 15px;"  @click="addAccountButt('ruleForm')">添加专家</el-button>
       <plupload @updata="batchImport">批量导入</plupload>
+      <el-button type="primary" style="margin-left: 15px;" @click="exportData">导出查询结果</el-button>
     </div>
     <div style="padding: 0 20px">
         <el-table
     :data="tableData"
     border
     style="width: 100%;;border-radius: 10px;">
-    <el-table-column
-      type="selection"
-      width="55">
-    </el-table-column>
     <el-table-column
       prop="expertName"
       label="姓名">
