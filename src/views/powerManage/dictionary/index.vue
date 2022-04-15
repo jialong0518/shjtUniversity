@@ -22,6 +22,7 @@
     </el-col>
     <el-col :span="6">
         <el-button type="primary" @click="searchFun">搜 索</el-button>
+        <el-button type="primary" plain @click="resetSearch()">重置</el-button>
     </el-col>
     </el-row>
     <div style="padding: 15px;overflow: hidden;display: flex;justify-content: flex-end;">
@@ -350,6 +351,14 @@ export default {
             })
             .catch(() => {
             }); 
+    },
+    resetSearch() {
+        this.searchCode = '';
+        this.searchName = '';
+        this.searchType = '';
+        this.currentPage = 1;
+        this.pageSize = 10;
+        this.getTableData()
     },
     getTableData() {
       getTable({

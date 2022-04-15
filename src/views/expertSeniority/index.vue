@@ -17,9 +17,9 @@
         <el-select v-model="searchFaculty" style="width: 80%" placeholder="请选择">
           <el-option
             v-for="item in facultyData"
-            :key="item.code"
+            :key="item.name"
             :label="item.name"
-            :value="item.code">
+            :value="item.name">
           </el-option>
         </el-select>
     </el-col>
@@ -28,9 +28,9 @@
         <el-select v-model="searchSubject" style="width: 80%" placeholder="请选择">
           <el-option
             v-for="item in subjectData"
-            :key="item.code"
+            :key="item.name"
             :label="item.name"
-            :value="item.code">
+            :value="item.name">
           </el-option>
         </el-select>
     </el-col>
@@ -74,13 +74,14 @@
     </el-col>
       <el-col :span="6">
         <el-button type="primary" @click="searchFun">搜 索</el-button>
+        <el-button type="primary" plain @click="resetSearch()">重置</el-button>
         <!-- <el-button type="primary" @click="exportData">导 出</el-button> -->
     </el-col>
     </el-row>
     <div style="padding: 15px;overflow: hidden;display: flex;justify-content: flex-end;">
-      <el-button type="primary" style="margin-left: 15px;" @click="exportData('ruleForm')">导 出</el-button>
-      <el-button type="primary" style="margin-left: 15px;"  @click="addAccountButt('ruleForm')">添加</el-button>
+      <el-button type="primary" style="margin-left: 15px;"  @click="addAccountButt('form')">添加</el-button>
       <plupload @updata="batchImport">批量导入</plupload>
+      <el-button type="primary" style="margin-left: 15px;" @click="exportData('form')">导 出</el-button>
       <el-button type="primary" style="margin-left: 15px;" @click="batchRefuse('通过')">批量通过</el-button>
       <el-button type="primary" style="margin-left: 15px;" @click="batchRefuse('拒绝')">批量拒绝</el-button>
     </div>
@@ -160,7 +161,7 @@
     </el-pagination>
   </div> 
   <el-dialog :title="titleForm" :show-close="false" :close-on-click-modal="false" :visible.sync="dialogAccountVisible">
-  <el-form :model="form" :rules="rulesAccount" ref="ruleForm" label-width="100px">
+  <el-form :model="form" :rules="rulesAccount" ref="form" label-width="100px">
     <el-form-item label="专家工号" prop="expertNo">
       <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" @input="expertNoFun" v-model="form.expertNo" autocomplete="off"></el-input>
     </el-form-item>
@@ -233,19 +234,19 @@
     </el-form-item>
   </el-form>
   <div slot="footer" class="dialog-footer" v-show="titleForm.indexOf('审核')=== -1">
-    <el-button @click="cancelSubmit('ruleForm')">取 消</el-button>
+    <el-button @click="cancelSubmit('form')">取 消</el-button>
     <el-button :disabled="titleForm.indexOf('查看')!== -1" :loading="loadingAccount" type="primary" @click="submitAccount('ruleForm')">确 定</el-button>
   </div>
   <div slot="footer" class="dialog-footer" v-show="titleForm.indexOf('审核')!== -1">
-    <el-button :loading="loadingAccount" @click="refuseSubmit('ruleForm','拒绝')">拒 绝</el-button>
-    <el-button :loading="loadingAccount" type="primary" @click="refuseSubmit('ruleForm','通过')">通 过</el-button>
+    <el-button :loading="loadingAccount" @click="refuseSubmit('form','拒绝')">拒 绝</el-button>
+    <el-button :loading="loadingAccount" type="primary" @click="refuseSubmit('form','通过')">通 过</el-button>
   </div>
 </el-dialog>
 <el-dialog title="提示" :show-close="false" :close-on-click-modal="false" :visible.sync="batchAccountVisible">
   <div>您确定批量审批{{batchState}}数据吗？</div>
   <div slot="footer" class="dialog-footer">
-    <el-button :loading="loadingAccount" @click="refuseSubmit('ruleForm',batchState)">取 消</el-button>
-    <el-button :loading="loadingAccount" type="primary" @click="refuseSubmit('ruleForm',batchState)">确 定</el-button>
+    <el-button :loading="loadingAccount" @click="refuseSubmit('form',batchState)">取 消</el-button>
+    <el-button :loading="loadingAccount" type="primary" @click="refuseSubmit('form',batchState)">确 定</el-button>
   </div>
 </el-dialog>
   </div>
@@ -332,16 +333,16 @@ export default {
             { required: true, message: '请填写名字', trigger: 'blur' }
         ],
         sex: [
-            { required: true, message: '请选择性别', trigger: 'change' }
+            { required: true, message: '请选择性别', trigger: 'blur' }
         ],
         faculty: [
-            { required: true, message: '请选择院/系', trigger: 'change' }
+            { required: true, message: '请选择院/系', trigger: 'blur' }
         ],
         title: [
-            { required: true, message: '请选择职称', trigger: 'change' }
+            { required: true, message: '请选择职称', trigger: 'blur' }
         ],
         subject: [
-            { required: true, message: '请选择学科', trigger: 'change' }
+            { required: true, message: '请选择学科', trigger: 'blur' }
         ],
         // inPosition: [
         //     { required: true, message: '请选择在职状态', trigger: 'change' }
@@ -510,6 +511,20 @@ export default {
       this.getuserbind()
     },
     addAccountButt(formName) {
+        this.form.sex = ''
+        this.form.name = ''
+        this.form.phone = ''
+        this.form.faculty = ''
+        this.form.facultyName = ''
+        this.form.title = ''
+        this.form.titleName = ''
+        this.form.subject = ''
+        this.form.subjectName = ''
+        this.form.email = ''
+        this.form.expertNo = ''
+        this.form.expertPwd = ''
+        this.form.remark = ''
+        this.form.year = ''
       this.accountId = '';
       this.titleForm = '添加专家信息'
       this.dialogAccountVisible = true
@@ -639,6 +654,17 @@ export default {
             })
             .catch(() => {
             }); 
+    },
+    resetSearch() {
+      this.searchFaculty = '';
+      this.searchSubject = '';
+      this.searchTitle = '';
+      this.searchName = '';
+      this.currentPage = 1;
+      this.pageSize = 10;
+      this.searchYear = '';
+      this.searchState = '';
+      this.getTableData()
     },
     getTableData() {
       getTable({"college": this.searchFaculty,

@@ -22,6 +22,7 @@
     </el-col>
     <el-col :span="6">
         <el-button type="primary" @click="searchFun">搜 索</el-button>
+        <el-button type="primary" plain @click="resetSearch()">重置</el-button>
     </el-col>
     </el-row>
     <div style="padding: 15px;overflow: hidden;display: flex;justify-content: flex-end;">
@@ -52,7 +53,7 @@
       prop="audition_name"
       label="计划/实际">
       <template slot-scope="scope">
-        <span @click="planNum(scope.row)">{{scope.row.count_plan+'/'+scope.row.count_act}}</span>
+        <span style="color: #409EFF;cursor: pointer;" @click="planNum(scope.row)">{{scope.row.count_plan+'/'+scope.row.count_act}}</span>
       </template>
     </el-table-column>
     <el-table-column
@@ -75,7 +76,7 @@
       label="操作">
       <template slot-scope="scope">
         <el-button  @click="mateButt(scope.row)" type="text" size="small">匹配确认专家</el-button>
-        <el-button  @click="seeAccountButt(scope.row)" type="text" size="small">人员详情</el-button>
+        <!-- <el-button  @click="seeAccountButt(scope.row)" type="text" size="small">人员详情</el-button> -->
         <el-button  @click="exportButt(scope.row, '0')" type="text" size="small">导出未确认人员表格</el-button>
         <el-button  @click="exportButt(scope.row, '1')" type="text" size="small">签到表</el-button>
         <el-button  type="text" @click="editAccountButt(scope.row)" size="small">编辑</el-button>
@@ -245,7 +246,7 @@
   </div>
   <div slot="footer" class="dialog-footer">
     <el-button @click="cancelSubmit('')">取 消</el-button>
-    <el-button :disabled="titleForm.indexOf('查看')!== -1" :loading="loadingAccount" type="primary" @click="submitExtract()">确认抽取</el-button>
+    <el-button  :loading="loadingAccount" type="primary" @click="submitExtract()">确认抽取</el-button>
   </div>
 </el-dialog>
   </div>
@@ -537,6 +538,13 @@ export default {
             .catch(() => {
             }); 
     },
+    resetSearch() {
+      this.searchYear = '';
+      this.searchName = '';
+      this.currentPage = 1;
+      this.pageSize = 10;
+      this.getTableData()
+    },
     getTableData() {
       getTable({"year": this.searchYear === '' ? 0 : this.searchYear,
         "audition_name": this.searchName,
@@ -646,6 +654,7 @@ export default {
     submitExtract() {
       let state = true;
       let arr = [];
+      let matchCountNum = 0;
       for(let i in this.selectionObj) {
         if(!Number(this.selectionObj[i].matchCount)||this.selectionObj[i].matchCount === ''){
           state = false;
@@ -661,6 +670,7 @@ export default {
           });
           break;
         }
+        matchCountNum = Number(matchCountNum) + Number(this.selectionObj[i].matchCount);
         arr.push({
           "college": this.selectionObj[i].college,
           "collegeCode": this.selectionObj[i].collegeCode,
@@ -669,6 +679,12 @@ export default {
           "auditionRoundId": this.selectionObj[i].auditionRoundId,
           "year": this.selectionObj[i].year
         })
+      }
+      if(matchCountNum > Number(this.form.num)) {
+        this.$alert('本次抽取人数不能大于限定人数', '提示', {
+            confirmButtonText: '确定',
+          });
+        return
       }
       if(!state) return
       expertauditionmatch(arr)

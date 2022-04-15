@@ -629,7 +629,17 @@ export default {
       let option1 = {
         xAxis: {
           type: 'category',
-          data: zheName
+          data: zheName,
+          axisLabel:{
+                    interval:0,
+                   rotate:-45,//倾斜度 -90 至 90 默认为0
+                    margin:2,
+                   textStyle:{
+                     
+                  fontSize: 9,//横轴字体大小
+                      color:"#000000"
+                    }
+                  }
         },
         yAxis: {
           type: 'value',

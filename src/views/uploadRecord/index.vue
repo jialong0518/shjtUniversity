@@ -2,24 +2,63 @@
   <div class="account">
     <el-row :gutter="20" style="padding: 20px;">
     <el-col :span="6">
+        <div style="display: inline-block;width:20%;">年份：</div>
+        <el-select v-model="searchYear" style="width: 80%" placeholder="请选择">
+          <el-option
+            v-for="item in yearData"
+            :key="item.year"
+            :label="item.year"
+            :value="item.year">
+          </el-option>
+        </el-select>
+    </el-col>
+    <el-col :span="6">
+        <div style="display: inline-block;width:20%;">性别：</div>
+        <el-select v-model="searchGender" style="width: 80%" placeholder="请选择">
+          <el-option
+            label="男"
+            value="1">
+          </el-option>
+          <el-option
+            label="女"
+            value="2">
+          </el-option>
+        </el-select>
+    </el-col>
+    <el-col :span="6">
+        <div style="display: inline-block;width:20%;">在职：</div>
+        <el-select v-model="searchInPosition" style="width: 80%" placeholder="请选择">
+          <el-option
+            label="是"
+            value="1">
+          </el-option>
+          <el-option
+            label="否"
+            value="2">
+          </el-option>
+        </el-select>
+    </el-col>
+    <el-col :span="6">
         <div style="display: inline-block;width:20%;">院系：</div>
         <el-select v-model="searchFaculty" style="width: 80%" placeholder="请选择">
           <el-option
             v-for="item in facultyData"
-            :key="item.code"
+            :key="item.name"
             :label="item.name"
-            :value="item.code">
+            :value="item.name">
           </el-option>
         </el-select>
     </el-col>
+    </el-row>
+    <el-row :gutter="20" style="padding: 20px;">
     <el-col :span="6">
         <div style="display: inline-block;width:20%;">学科：</div>
         <el-select v-model="searchSubject" style="width: 80%" placeholder="请选择">
           <el-option
             v-for="item in subjectData"
-            :key="item.code"
+            :key="item.name"
             :label="item.name"
-            :value="item.code">
+            :value="item.name">
           </el-option>
         </el-select>
     </el-col>
@@ -28,13 +67,17 @@
         <el-input style="width: 80%" v-model="searchName" @change="getTableData()" autocomplete="off"></el-input>
     </el-col>
     <el-col :span="6">
+        <div style="display: inline-block;width:20%;">电话：</div>
+        <el-input style="width: 80%" v-model="searchPhone" @change="getTableData()" autocomplete="off"></el-input>
+    </el-col>
+    <el-col :span="6">
         <div style="display: inline-block;width:20%;">职称：</div>
         <el-select v-model="searchTitle" style="width: 80%" placeholder="请选择">
           <el-option
             v-for="item in titleData"
-            :key="item.code"
+            :key="item.name"
             :label="item.name"
-            :value="item.code">
+            :value="item.name">
           </el-option>
         </el-select>
     </el-col>
@@ -44,6 +87,10 @@
       <el-col :span="6">
         <div style="display: inline-block;width:30%;">导入结果：</div>
         <el-select v-model="searchResult" style="width: 70%" placeholder="请选择">
+          <el-option
+            label="全部"
+            value="全部">
+          </el-option>
           <el-option
             label="成功"
             value="成功">
@@ -58,6 +105,10 @@
         <div style="display: inline-block;width:30%;">导入类型：</div>
         <el-select v-model="searchType" style="width: 70%" placeholder="请选择">
           <el-option
+            label="全部"
+            value="全部">
+          </el-option>
+          <el-option
             label="基础库"
             value="基础库">
           </el-option>
@@ -69,6 +120,7 @@
     </el-col>
       <el-col :span="6">
         <el-button type="primary" @click="searchFun">搜 索</el-button>
+        <el-button type="primary" plain @click="resetSearch()">重置</el-button>
     </el-col>
     </el-row>
     <div style="padding: 0 20px">
@@ -206,7 +258,7 @@
 </template>
 
 <script>
-import { getCollege, getSubject, getTitle, getTable, expertbasicbind, expertbasicadd, expertbasicdel, expertbasicedit, expertbasicexport } from "@/api/uploadRecord";
+import { getCollege, getSubject, getTitle, getTable, expertbasicbind, expertbasicadd, expertbasicdel, expertbasicedit, expertbasicexport, getYearlist } from "@/api/uploadRecord";
 import plupload from "@/components/plupload";
 
 import { roleslist } from "@/api/role";
@@ -248,6 +300,10 @@ export default {
         searchName:'',
         searchResult: '',
         searchType: '',
+        searchYear: '',
+        searchInPosition: '',
+        searchGender: '',
+        searchPhone:'',
         facultyData: [],
         subjectData: [],
         titleData: [],
@@ -336,6 +392,13 @@ export default {
     }
   },
   methods: {
+    getYearData() {
+        getYearlist(
+        {}
+      ).then(r => {
+        this.yearData = r.data;
+      }).catch(() => {});    
+    },
     getFacultyData() {
         getCollege(
         {"uid": sessionStorage.getItem('uid')}
@@ -524,13 +587,35 @@ export default {
             .catch(() => {
             }); 
     },
+    resetSearch(){
+      this.searchYear = '';
+      this.searchGender = '';
+      this.searchInPosition = '';
+      this.searchPhone = '';
+      this.searchFaculty = '';
+      this.searchSubject = '';
+      this.searchTitle = '';
+      this.searchName = '';
+      this.currentPage = 1;
+      this.pageSize = 10;
+      this.searchType = '';
+      this.searchResult = '';
+      this.getTableData();
+    },
     getTableData() {
-      getTable({"college": this.searchFaculty,
+      getTable({
+        "year": this.searchYear === '' ? 0 : Number(this.searchYear),
+        "gender": this.searchGender === '' ? 0 : Number(this.searchGender),
+        "inposition": this.searchInPosition === '' ? 0 : Number(this.searchInPosition),
+        "phone": this.searchPhone,
+        "college": this.searchFaculty,
         "subject": this.searchSubject,
         "competent": this.searchTitle,
         "name": this.searchName,
         "page":this.currentPage,
-        "pageSize":this.pageSize
+        "pageSize":this.pageSize,
+        "type": this.searchType,
+        "result": this.searchResult
         })
       .then(r => {
             this.tableData = r.data.list;
@@ -582,6 +667,7 @@ export default {
     this.getFacultyData()
     this.getSubjectData()
     this.getTitleData()
+    this.getYearData()
       this.getTableData()
   }
 }

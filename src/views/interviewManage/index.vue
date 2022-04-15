@@ -18,6 +18,7 @@
     </el-col>
     <el-col :span="6">
         <el-button type="primary" @click="searchFun">搜 索</el-button>
+        <el-button type="primary" plain @click="resetSearch()">重置</el-button>
     </el-col>
     </el-row>
     <div style="padding: 15px;overflow: hidden;display: flex;justify-content: flex-end;">
@@ -306,6 +307,13 @@ export default {
             })
             .catch(() => {
             }); 
+    },
+    resetSearch() {
+      this.searchYear = '';
+      this.searchName = '';
+      this.currentPage = 1;
+      this.pageSize = 10;
+      this.getTableData();
     },
     getTableData() {
       getTable({"year": this.searchYear === '' ? 0 : this.searchYear,

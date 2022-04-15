@@ -42,6 +42,7 @@
     <el-row :gutter="20" style="padding: 20px;">
       <el-col :span="6">
         <el-button type="primary" @click="searchFun">搜 索</el-button>
+        <el-button type="primary" plain @click="resetSearch()">重置</el-button>
         <!-- <el-button type="primary" @click="exportData">导 出</el-button> -->
     </el-col>
     </el-row>
@@ -507,6 +508,15 @@ export default {
             })
             .catch(() => {
             }); 
+    },
+    resetSearch() {
+      this.searchFaculty = '';
+      this.searchSubject = '';
+      this.searchTitle = '';
+      this.searchName = '';
+      this.currentPage = 1;
+      this.pageSize = 10;
+      this.getTableData()
     },
     getTableData() {
       getTable({"college": this.searchFaculty,

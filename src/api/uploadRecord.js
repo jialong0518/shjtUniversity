@@ -9,6 +9,14 @@ export function getCollege(data) {
   })
 }
 
+export function getYearlist(data) {
+  return request({
+    url: '/expert/yearlist',
+    method: 'post',
+    data
+  })
+}
+
 export function getSubject(data) {
   return request({
     url: '/expert/subjectlist',

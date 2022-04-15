@@ -37,6 +37,7 @@
     </el-col>
       <el-col :span="6">
         <el-button type="primary" @click="searchFun">搜 索</el-button>
+        <el-button type="primary" plain @click="resetSearch()">重置</el-button>
     </el-col>
     </el-row>
     <div style="padding: 0 20px">
@@ -112,7 +113,16 @@ export default {
         this.currentPage = val;
         this.getTableData()
     },
-   
+   resetSearch() {
+     this.searchName = '';
+     this.searchIP = '';
+     this.searchKey = '';
+     this.searchEnd = '';
+     this.searchBegin = '';
+     this.currentPage = 1;
+     this.pageSize = 10;
+     this.getTableData()
+   },
     getTableData() {
       getlogrecordlist({"name": this.searchName,
         "ip": this.searchIP,
