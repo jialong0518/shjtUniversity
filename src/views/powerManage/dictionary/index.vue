@@ -364,7 +364,7 @@ export default {
       getTable({
         "code": this.searchCode,
         "name": this.searchName,
-        "unionType": this.searchType === '' ? 0 : this.searchType,
+        "unionType": this.searchType === '' ? 0 : Number(this.searchType),
         "page":this.currentPage,
         "pageSize":this.pageSize
         })

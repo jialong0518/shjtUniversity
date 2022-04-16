@@ -26,7 +26,7 @@
     </el-col>
     </el-row>
     <div style="padding: 15px;overflow: hidden;display: flex;justify-content: flex-end;">
-      <el-button type="primary" style="margin-left: 15px;"  @click="addAccountButt('ruleForm')">添加面试</el-button>
+      <el-button type="primary" style="margin-left: 15px;"  @click="addAccountButt('ruleForm')">添加场次</el-button>
     </div>
     <div style="padding: 0 20px">
         <el-table
@@ -356,7 +356,7 @@ export default {
             { required: true, validator: validatePhone, trigger: 'change' }
         ],
         remarks: [
-            { required: true, message: '请填写备注', trigger: 'change' }
+            { required: false, message: '请填写备注', trigger: 'change' }
         ]
       },
       loadingAccount: false,
@@ -375,6 +375,7 @@ export default {
       account:'',
       mateTableSelectData: [],
       selectionObj: {},
+      checkData: {}
     }
   },
   watch: {
@@ -422,18 +423,18 @@ export default {
     },
     
     seeAccountButt(data) {
-      this.titleForm = '查看面试'
+      this.titleForm = '查看面试场次'
       this.accountId = data.id
       this.getuserbind('Account')
     },
     editAccountButt(data) {
       this.accountId = data.id
-      this.titleForm = '编辑面试'
+      this.titleForm = '编辑面试场次'
       this.getuserbind('Account')
     },
     addAccountButt(formName) {
       this.accountId = '';
-      this.titleForm = '添加面试'
+      this.titleForm = '添加面试场次'
       this.dialogAccountVisible = true
     },
     cancelSubmit(formName) {
@@ -546,7 +547,7 @@ export default {
       this.getTableData()
     },
     getTableData() {
-      getTable({"year": this.searchYear === '' ? 0 : this.searchYear,
+      getTable({"year": this.searchYear === '' ? 0 : Number(this.searchYear),
         "audition_name": this.searchName,
         "audition_id": this.searchNo === '' ? 0 : Number(this.searchNo),
         // "competent": this.searchTitle,
@@ -608,6 +609,7 @@ export default {
     },
     mateButt(data) {
       this.accountId = data.id
+      this.checkData = data
       this.getuserbind('Mate')
       this.getMateTableData()
     },
@@ -675,17 +677,18 @@ export default {
           "college": this.selectionObj[i].college,
           "collegeCode": this.selectionObj[i].collegeCode,
           "matchCount": this.selectionObj[i].matchCount,
-          "auditionId": this.selectionObj[i].auditionId,
-          "auditionRoundId": this.selectionObj[i].auditionRoundId,
-          "year": this.selectionObj[i].year
+          "auditionId": this.checkData.audition_id,
+          "auditionRoundId": this.checkData.id,
+          "year": Number(this.form.year),
+          "uid":  Number(sessionStorage.getItem("uid"))
         })
       }
-      if(matchCountNum > Number(this.form.num)) {
-        this.$alert('本次抽取人数不能大于限定人数', '提示', {
-            confirmButtonText: '确定',
-          });
-        return
-      }
+      // if(matchCountNum > Number(this.form.num)) {
+      //   this.$alert('本次抽取人数不能大于限定人数', '提示', {
+      //       confirmButtonText: '确定',
+      //     });
+      //   return
+      // }
       if(!state) return
       expertauditionmatch(arr)
       .then(r => {
@@ -696,6 +699,7 @@ export default {
     },
     planNum(data) {
       data.auditionName = this.$route.query.auditionName;
+      data.searchNo = this.searchNo;
       this.$router.push({
          path:'/confirmStatus',
          query:{data: JSON.stringify(data)}

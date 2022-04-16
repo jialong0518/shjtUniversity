@@ -39,9 +39,9 @@
         <el-button type="primary" @click="exportData">导 出</el-button>
     </el-col> -->
     </el-row>
-    <div style="padding: 15px;overflow: hidden;display: flex;justify-content: flex-end;">
+    <!--<div style="padding: 15px;overflow: hidden;display: flex;justify-content: flex-end;">
       <el-button type="primary" style="margin-left: 15px;" @click="addAccountButt('ruleForm')">导出结果</el-button>
-    </div>
+    </div>-->
     <div style="padding: 0 20px">
         <el-table
     :data="tableData"
@@ -290,7 +290,7 @@ export default {
             { required: true, message: '请输入密码', trigger: 'blur' }
         ],
         remark: [
-            { required: true, message: '请输入备注', trigger: 'blur' }
+            { required: false, message: '请输入备注', trigger: 'blur' }
         ]
       },
       loadingAccount: false,
@@ -327,14 +327,14 @@ export default {
     
     getFacultyData() {
         getCollege(
-        {"uid": sessionStorage.getItem('uid')}
+        {}
       ).then(r => {
         this.facultyData = r.data;
       }).catch(() => {});    
     },
 
     getSubjectData() {
-      getSubject({"uid": sessionStorage.getItem('uid')}).then(r => {
+      getSubject({}).then(r => {
         this.subjectData = r.data;
       }).catch(() => {});
     },
@@ -351,7 +351,7 @@ export default {
     },
 
     getTitleData() {
-      getTitle({"uid": sessionStorage.getItem('uid')}).then(r => {
+      getTitle({}).then(r => {
         this.titleData = r.data;
       }).catch(() => {});
     },

@@ -6,9 +6,9 @@
         <el-select v-model="searchFaculty" style="width: 80%" placeholder="请选择">
           <el-option
             v-for="item in facultyData"
-            :key="item.code"
+            :key="item.name"
             :label="item.name"
-            :value="item.code">
+            :value="item.name">
           </el-option>
         </el-select>
     </el-col>
@@ -17,9 +17,9 @@
         <el-select v-model="searchSubject" style="width: 80%" placeholder="请选择">
           <el-option
             v-for="item in subjectData"
-            :key="item.code"
+            :key="item.name"
             :label="item.name"
-            :value="item.code">
+            :value="item.name">
           </el-option>
         </el-select>
     </el-col>
@@ -32,9 +32,9 @@
         <el-select v-model="searchTitle" style="width: 80%" placeholder="请选择">
           <el-option
             v-for="item in titleData"
-            :key="item.code"
+            :key="item.name"
             :label="item.name"
-            :value="item.code">
+            :value="item.name">
           </el-option>
         </el-select>
     </el-col>
@@ -42,6 +42,8 @@
     <el-row :gutter="20" style="padding: 20px;">
       <el-col :span="6">
         <el-button type="primary" @click="searchFun">搜 索</el-button>
+        <el-button type="primary" plain @click="resetSearch()">重置</el-button>
+        <el-button type="success" plain @click="goBack()">返回场次列表</el-button>
     </el-col>
     </el-row>
     <div style="padding: 0 20px">
@@ -116,20 +118,20 @@ export default {
   methods: {
     getFacultyData() {
         getCollege(
-        {"uid": sessionStorage.getItem('uid')}
+        {}
       ).then(r => {
         this.facultyData = r.data;
       }).catch(() => {});    
     },
 
     getSubjectData() {
-      getSubject({"uid": sessionStorage.getItem('uid')}).then(r => {
+      getSubject({}).then(r => {
         this.subjectData = r.data;
       }).catch(() => {});
     },
 
     getTitleData() {
-      getTitle({"uid": sessionStorage.getItem('uid')}).then(r => {
+      getTitle({}).then(r => {
         this.titleData = r.data;
       }).catch(() => {});
     },
@@ -153,7 +155,15 @@ export default {
         this.currentPage = val;
         this.getTableData()
     },
-    
+    resetSearch() {
+      this.searchFaculty = '';
+      this.searchSubject = '';
+      this.searchTitle = '';
+      this.searchName = '';
+      this.currentPage = 1;
+      this.pageSize = 10;
+      this.getTableData()
+    },
     getTableData() {
       getTable({
         "college": this.searchFaculty,
@@ -167,16 +177,22 @@ export default {
         "status": this.status,
         })
       .then(r => {
-        r.data.list.map(item=>{
+        this.tableData = []
+          if(r.data.list) {
+            r.data.list.map(item=>{
           item.year = JSON.parse(this.$route.query.data).year;
           item.round_name = JSON.parse(this.$route.query.data).round_name;
         })
-            this.tableData = r.data.list;
-            // this.totalPage = r.data.datacount
+            this.tableData = r.data.list
+          }
+            this.totalPage = r.data.datacount
         }).catch(() => {});
     },
     moduleUp(data){
       this.getTableData();
+    },
+    goBack(){
+      this.$router.push({path:'/interviewRound',query:{id:JSON.parse(this.$route.query.data).searchNo, auditionName: JSON.parse(this.$route.query.data).auditionName}});     
     }
   },
   

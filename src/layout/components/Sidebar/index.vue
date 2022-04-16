@@ -31,8 +31,17 @@ export default {
       'sidebar'
     ]),
     routes() {
-        console.log(this.$router.options.routes,'this.$router.options.routes')
-         return this.$router.options.routes
+      let arr = [];
+      let type = sessionStorage.getItem('powerType')
+      this.$router.options.routes.map(item=>{
+        console.log(typeof item['power'])
+        if((item['power']+'').indexOf(type) !== -1) {
+          arr.push(item)
+        }
+      })
+      console.log(arr,'arr')
+        // console.log(this.$router.options.routes,'this.$router.options.routes')
+      return arr
       // return JSON.parse(localStorage.getItem('rt'))
     },
     activeMenu() {

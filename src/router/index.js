@@ -36,19 +36,22 @@ let constantRoutes = [
   {
     path: '/login',
     component: () => import('@/views/login/index'),
-    hidden: true
+    hidden: true,
+    power: '1234'
   },
 
   {
     path: '/404',
     component: () => import('@/views/404'),
-    hidden: true
+    hidden: true,
+    power: '1234'
   },
 
   {
     path: '/',
     component: Layout,
     redirect: '/byd',
+    power: '1234',
     children: [{
       path: 'byd',
       name: 'byd',
@@ -63,6 +66,7 @@ let constantRoutes = [
     redirect: '/powerManage',
     name: 'powerManage',
     meta: { title: '权限管理' },
+    power: '12',
     children: [
       {
         path: 'accountManage',
@@ -97,6 +101,7 @@ let constantRoutes = [
     redirect: '/expertBasics',
     name: 'expertBasics',
     meta: { title: '专家基础库' },
+    power: '12',
     children: [
       {
         path: 'expertBasics',
@@ -113,6 +118,7 @@ let constantRoutes = [
     redirect: '/uploadRecord',
     name: 'uploadRecord',
     meta: { title: '导入记录' },
+    power: '124',
     children: [
       {
         path: 'uploadRecord',
@@ -128,6 +134,7 @@ let constantRoutes = [
     redirect: '/yearManage',
     name: 'yearManage',
     meta: { title: '年份管理' },
+    power: '12',
     children: [
       {
         path: 'yearManage',
@@ -143,6 +150,7 @@ let constantRoutes = [
     redirect: '/expertSeniority',
     name: 'expertSeniority',
     meta: { title: '专家资格库' },
+    power: '1234',
     children: [
       {
         path: 'expertSeniority',
@@ -158,6 +166,7 @@ let constantRoutes = [
     redirect: '/interviewManage',
     name: 'interviewManage',
     meta: { title: '面试管理' },
+    power: '12',
     children: [
       {
         path: 'interviewManage',
@@ -174,6 +183,7 @@ let constantRoutes = [
     redirect: '/operationLog',
     name: 'operationLog',
     meta: { title: '操作日志' },
+    power: '12',
     children: [
       {
         path: 'operationLog',
@@ -189,6 +199,7 @@ let constantRoutes = [
     redirect: '/smsLog',
     name: 'smsLog',
     meta: { title: '短信日志' },
+    power: '12',
     children: [
       {
         path: 'smsLog',
@@ -204,6 +215,7 @@ let constantRoutes = [
     redirect: '/emailLog',
     name: 'emailLog',
     meta: { title: '邮件日志' },
+    power: '12',
     children: [
       {
         path: 'emailLog',
@@ -219,6 +231,7 @@ let constantRoutes = [
     redirect: '/statistics',
     name: 'statistics',
     meta: { title: '数据统计' },
+    power: '12',
     children: [
       {
         path: 'statistics',
@@ -234,6 +247,7 @@ let constantRoutes = [
     component: Layout,
     redirect: '/sessions',
     name: 'sessions',
+    power: '12',
     meta: { title: '场次' },
     children: [
       {
@@ -248,6 +262,7 @@ let constantRoutes = [
     redirect: '/importResults',
     name: 'importResults',
     meta: { title: '导入记录' },
+    power: '12',
     children: [
       {
         path: '/importResults',
@@ -261,6 +276,7 @@ let constantRoutes = [
     redirect: '/interviewRound',
     name: 'interviewRound',
     meta: { title: '面试场次' },
+    power: '12',
     children: [
       {
         path: '/interviewRound',
@@ -284,7 +300,7 @@ let constantRoutes = [
 
   // emailLog  
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  { path: '*', redirect: '/404', hidden: true,power: '1234' }
 ]
 console.log(Router,'this.$route.path')
 // researchlist({"title": '',

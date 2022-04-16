@@ -263,19 +263,19 @@ export default {
             { required: true, message: '请填写名字', trigger: 'blur' }
         ],
         sex: [
-            { required: true, message: '请选择性别', trigger: 'change' }
+            { required: true, message: '请选择性别', trigger: 'blur' }
         ],
         faculty: [
-            { required: true, message: '请选择院/系', trigger: 'change' }
+            { required: true, message: '请选择院/系', trigger: 'blur' }
         ],
         title: [
-            { required: true, message: '请选择职称', trigger: 'change' }
+            { required: true, message: '请选择职称', trigger: 'blur' }
         ],
         subject: [
-            { required: true, message: '请选择学科', trigger: 'change' }
+            { required: true, message: '请选择学科', trigger: 'blur' }
         ],
         inPosition: [
-            { required: true, message: '请选择在职状态', trigger: 'change' }
+            { required: true, message: '请选择在职状态', trigger: 'blur' }
         ],
         phone: [
             { required: true, validator: validatePhone, trigger: 'blur' }
@@ -290,7 +290,7 @@ export default {
             { required: true, message: '请输入密码', trigger: 'blur' }
         ],
         remark: [
-            { required: true, message: '请输入备注', trigger: 'blur' }
+            { required: false, message: '请输入备注', trigger: 'blur' }
         ]
       },
       loadingAccount: false,
@@ -319,20 +319,20 @@ export default {
   methods: {
     getFacultyData() {
         getCollege(
-        {"uid": sessionStorage.getItem('uid')}
+        {}
       ).then(r => {
         this.facultyData = r.data;
       }).catch(() => {});    
     },
 
     getSubjectData() {
-      getSubject({"uid": sessionStorage.getItem('uid')}).then(r => {
+      getSubject({}).then(r => {
         this.subjectData = r.data;
       }).catch(() => {});
     },
 
     getTitleData() {
-      getTitle({"uid": sessionStorage.getItem('uid')}).then(r => {
+      getTitle({}).then(r => {
         this.titleData = r.data;
       }).catch(() => {});
     },
@@ -406,6 +406,20 @@ export default {
     addAccountButt(formName) {
       this.accountId = '';
       this.titleForm = '添加专家信息'
+      this.form.sex = '';
+      this.form.name = '';
+      this.form.phone = '';
+      this.form.faculty = '';
+      this.form.facultyName = '';
+      this.form.title = '';
+      this.form.titleName = '';
+      this.form.subject = '';
+      this.form.subjectName = '';
+      this.form.email = '';
+      this.form.inPosition = '';
+      this.form.expertNo = '';
+      this.form.expertPwd = '';
+      this.form.remark = '';
       this.dialogAccountVisible = true
     },
     cancelSubmit(formName) {

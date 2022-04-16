@@ -1,7 +1,7 @@
 <template>
   <div class="account">
     <div style="padding: 15px;overflow: hidden;display: flex;justify-content: flex-end;">
-      <el-button type="primary" style="margin-left: 15px;"  @click="addAccountButt()">批量待确认</el-button>
+      <el-button type="primary" style="margin-left: 15px;"  @click="addAccountButt()">批量代确认</el-button>
     </div>
     <div style="padding: 0 0">
         <el-table
@@ -58,17 +58,17 @@
       label="操作">
       <template slot-scope="scope">
         <el-popconfirm
-            title="是否确定待确认？"
+            title="是否确定代确认？"
             @onConfirm="accountDel(scope.row)" 
         >
-        <el-button style="margin: 0 10px;" slot="reference"  type="text" size="small">待确认</el-button>
+        <el-button style="margin: 0 10px;" slot="reference"  type="text" size="small">代确认</el-button>
         </el-popconfirm>
       </template>
     </el-table-column>
   </el-table>
     </div>
     <el-dialog title="提示" :show-close="false" :close-on-click-modal="false" :visible.sync="dialogAccountVisible">
-      <div>是否确定转为确认？</div>
+      <div>是否确定转为代确认？</div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancelSubmit()">取 消</el-button>
         <el-button :loading="loadingAccount" type="primary" @click="submitAccount()">确 定</el-button>
@@ -80,6 +80,7 @@
 <script>
 import { getTable, expertbasicbind, expertbasicadd, expertbasicdel, expertbasicedit, expertbasicexport, getYearlist } from "@/api/interviewManage";
 import plupload from "@/components/plupload";
+import { expertconfirmadmin } from "@/api/confirmStatus";
 
 export default {
   name: 'Unconfirmed',

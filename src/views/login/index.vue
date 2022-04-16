@@ -122,6 +122,7 @@ export default {
         sessionStorage.setItem("uid",r.data.uid)
         sessionStorage.setItem("phone",r.data.phone)
         sessionStorage.setItem("name",r.data.name)
+        sessionStorage.setItem("powerType",r.data.type)
         this.$router.push({ path:  '/' })
       })
       .catch(() => {});
@@ -162,6 +163,7 @@ export default {
         sessionStorage.setItem("uid",r.data.uid)
         sessionStorage.setItem("phone",r.data.phone)
         sessionStorage.setItem("name",r.data.name)
+        sessionStorage.setItem("powerType",r.data.type)
         this.$router.push({ path:  '/' })
       })
       .catch(() => {});

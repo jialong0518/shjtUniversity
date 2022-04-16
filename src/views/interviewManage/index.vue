@@ -256,7 +256,7 @@ export default {
       this.loadingAccount = true
       expertbasicadd({
               "audition_name": this.form.name,
-              "year": this.form.year,
+              "year": Number(this.form.year),
               }).then(r => {
                 if(r.msg === '信息重复') {
                   this.loadingAccount = false
@@ -276,7 +276,7 @@ export default {
       this.loadingAccount = true
       expertbasicedit({
               "audition_name": this.form.name,
-              "year": this.form.year,
+              "year": Number(this.form.year),
               "id": this.accountId,
               })
             .then(r => {

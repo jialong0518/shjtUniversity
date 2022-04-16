@@ -82,8 +82,8 @@
       <el-button type="primary" style="margin-left: 15px;"  @click="addAccountButt('form')">添加</el-button>
       <plupload @updata="batchImport">批量导入</plupload>
       <el-button type="primary" style="margin-left: 15px;" @click="exportData('form')">导 出</el-button>
-      <el-button type="primary" style="margin-left: 15px;" @click="batchRefuse('通过')">批量通过</el-button>
-      <el-button type="primary" style="margin-left: 15px;" @click="batchRefuse('拒绝')">批量拒绝</el-button>
+      <el-button type="primary" style="margin-left: 15px;" v-show="powerType !== '4'" @click="batchRefuse('通过')">批量通过</el-button>
+      <el-button type="primary" style="margin-left: 15px;" v-show="powerType !== '4'" @click="batchRefuse('拒绝')">批量拒绝</el-button>
     </div>
     <div style="padding: 0 20px">
         <el-table
@@ -134,7 +134,12 @@
       label="操作">
       <template slot-scope="scope">
         <el-button  @click="seeAccountButt(scope.row)" v-show="scope.row.status === '通过'" type="text" size="small">详情</el-button>
-        <el-button  @click="seeAccountButt(scope.row)" v-show="scope.row.status === '通过'" type="text" size="small">申请撤回</el-button>
+        <el-popconfirm
+            title="是否确定申请撤回？"
+            @onConfirm="recallFun(scope.row)" 
+        >
+        <el-button v-show="scope.row.status === '通过'&&powerType == '4'" style="margin: 0 10px;" slot="reference" type="text" size="small">申请撤回</el-button>
+        </el-popconfirm>
         <el-button v-show="scope.row.status === '拒绝'" type="text" @click="editAccountButt(scope.row)" size="small">编辑</el-button>
         <el-popconfirm
             title="是否确定删除该账号？"
@@ -142,7 +147,7 @@
         >
         <el-button style="margin: 0 10px;" slot="reference" v-show="scope.row.status === '拒绝'" type="text" size="small">删除</el-button>
         </el-popconfirm>
-        <el-button  type="text" v-show="scope.row.status === '审核中'" @click="examineAccountButt(scope.row)" size="small">审核</el-button>
+        <el-button  type="text" v-show="scope.row.status === '审核中'&&powerType !== '4'" @click="examineAccountButt(scope.row)" size="small">审核</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -184,7 +189,7 @@
         <el-radio label="2" :disabled="titleForm.indexOf('查看')!== -1">女</el-radio>
       </el-radio-group>
     </el-form-item>
-    <el-form-item label="院/系" prop="faculty">
+    <el-form-item label="院/系" v-show="('123').indexOf(powerType) !== -1||titleForm.indexOf('查看')!== -1" prop="faculty">
       <el-select v-model="form.faculty" @change="facultyFun" style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" placeholder="请选择">
           <el-option
             v-for="(item, index) in facultyData"
@@ -235,7 +240,7 @@
   </el-form>
   <div slot="footer" class="dialog-footer" v-show="titleForm.indexOf('审核')=== -1">
     <el-button @click="cancelSubmit('form')">取 消</el-button>
-    <el-button :disabled="titleForm.indexOf('查看')!== -1" :loading="loadingAccount" type="primary" @click="submitAccount('ruleForm')">确 定</el-button>
+    <el-button :disabled="titleForm.indexOf('查看')!== -1" :loading="loadingAccount" type="primary" @click="submitAccount('form')">确 定</el-button>
   </div>
   <div slot="footer" class="dialog-footer" v-show="titleForm.indexOf('审核')!== -1">
     <el-button :loading="loadingAccount" @click="refuseSubmit('form','拒绝')">拒 绝</el-button>
@@ -253,7 +258,7 @@
 </template>
 
 <script>
-import { getYearlist, getCollege, getSubject, getTitle, getTable, expertbasicbind, expertbasicadd, expertreadydel, expertbasicedit, expertreadyapprove, expertreadyexport } from "@/api/expertSeniority";
+import { getYearlist, getCollege, getSubject, getTitle, getTable, expertbasicbind, expertbasicadd, expertreadydel, expertbasicedit, expertreadyapprove, expertreadyexport, getApplyBack } from "@/api/expertSeniority";
 import plupload from "@/components/plupload";
 
 export default {
@@ -288,6 +293,7 @@ export default {
         callback();
       };
     return {
+      powerType: sessionStorage.getItem('powerType'),
         searchFaculty:'',
         searchSubject: '',
         searchTitle: '',
@@ -336,7 +342,7 @@ export default {
             { required: true, message: '请选择性别', trigger: 'blur' }
         ],
         faculty: [
-            { required: true, message: '请选择院/系', trigger: 'blur' }
+            { required: false, message: '请选择院/系', trigger: 'blur' }
         ],
         title: [
             { required: true, message: '请选择职称', trigger: 'blur' }
@@ -360,7 +366,7 @@ export default {
             { required: true, message: '请输入密码', trigger: 'blur' }
         ],
         remark: [
-            { required: true, message: '请输入备注', trigger: 'blur' }
+            { required: false, message: '请输入备注', trigger: 'blur' }
         ]
       },
       loadingAccount: false,
@@ -388,6 +394,13 @@ export default {
     }
   },
   methods: {
+    recallFun(data) {
+      getApplyBack(
+        {id: data.id}
+      ).then(r => {
+        this.getTableData()
+      }).catch(() => {})
+    },
     selected(row, index) {
       if (row.status !== '审核中') {
         return false //不可勾选
@@ -421,20 +434,20 @@ export default {
     
     getFacultyData() {
         getCollege(
-        {"uid": sessionStorage.getItem('uid')}
+        {}
       ).then(r => {
         this.facultyData = r.data;
       }).catch(() => {});    
     },
 
     getSubjectData() {
-      getSubject({"uid": sessionStorage.getItem('uid')}).then(r => {
+      getSubject({}).then(r => {
         this.subjectData = r.data;
       }).catch(() => {});
     },
 
     getTitleData() {
-      getTitle({"uid": sessionStorage.getItem('uid')}).then(r => {
+      getTitle({}).then(r => {
         this.titleData = r.data;
       }).catch(() => {});
     },
@@ -552,7 +565,7 @@ export default {
               this.dialogAccountVisible = false
               this.batchAccountVisible = false
               // this.account = this.form.account
-              this.$refs[name].resetFields();
+              // this.$refs[name].resetFields();
               this.getTableData()
             })
             .catch(() => {

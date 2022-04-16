@@ -9,6 +9,14 @@ export function getYearlist(data) {
     })
   }
 
+  export function getApplyBack(data) {
+    return request({
+      url: '/expert/expertreadyback',
+      method: 'post',
+      data
+    })
+  }
+  
 export function getCollege(data) {
   return request({
     url: '/expert/collegelist',
@@ -104,7 +112,7 @@ export function expertreadyexport(data) {
       url: '/byd/web/index.php?r=reg/userdel',
       method: 'post',
       // data: JSON.parse(data)
-      data: JSON.stringify(data)
+      data
     })
   }
 

@@ -131,6 +131,9 @@
     <el-form-item label="email" prop="email">
       <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.email" autocomplete="off"></el-input>
     </el-form-item>
+    <el-form-item label="学工号" prop="code">
+      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.code" autocomplete="off"></el-input>
+    </el-form-item>
   </el-form>
   <div slot="footer" class="dialog-footer">
     <el-button @click="cancelSubmit('ruleForm')">取 消</el-button>
@@ -175,7 +178,8 @@ export default {
         name: '',
         phone: '',
         role: '',
-        roleName: ''
+        roleName: '',
+        code: ''
       },
       message_: null,
       message1_:null,
@@ -197,6 +201,9 @@ export default {
         ],
         email: [
             { required: true, message: '请填写email', trigger: 'blur' }
+        ],
+        code: [
+            { required: true, message: '请填写学工号', trigger: 'blur' }
         ]
       },
       loadingAccount: false,
@@ -252,7 +259,7 @@ export default {
     },
     getFacultyData() {
         getCollege(
-        {"uid": sessionStorage.getItem('uid')}
+        {}
       ).then(r => {
         this.facultyData = r.data;
       }).catch(() => {});    
@@ -303,6 +310,7 @@ export default {
         this.form.phone = data.phone
         this.form.role = data.type
         this.form.roleName = data.type_name
+        this.form.code = data.code
       this.accountId = data.id
       this.dialogAccountVisible = true
       // this.getuserbind()
@@ -349,6 +357,7 @@ export default {
               "college_code": this.form.faculty,
               "phone": this.form.phone,
               "email": this.form.email,
+              "code": this.form.code
               })
             .then(r => {
               if(r.code === 1) {
@@ -374,7 +383,7 @@ export default {
               "id": this.accountId,
               "phone": this.form.phone,
               "roleid": this.form.role,
-              "uid": sessionStorage.getItem('uid')})
+              })
             .then(r => {
               this.loadingAccount = false
               this.dialogAccountVisible = false
@@ -407,7 +416,7 @@ export default {
     accountDel(data) {
       userdel({
             "id": data.id,
-            "uid": sessionStorage.getItem('uid')})
+            })
             .then(r => {
               console.log(r)
               this.getTableData()
@@ -431,7 +440,7 @@ export default {
         this.getTableData()
     },
     getTableData() {
-      userlist({"id": this.searchID === '' ? 0 : this.searchID,
+      userlist({"id": this.searchID === '' ? 0 : Number(this.searchID),
         "username": this.searchusername,
         "college": this.searchcollege,
         "college_code": this.searchcollegecode,
@@ -451,7 +460,7 @@ export default {
     getuserbind() {
       userbind({
         "id": this.accountId,
-        "uid": sessionStorage.getItem('uid')})
+        })
       .then(r => {
       this.form.phone = r.data.phone;
       this.form.role = r.data.roleid.toString();
@@ -497,7 +506,7 @@ export default {
       this.getTableData()
     //   roleslist({"rolename": "",
     // "memo": "",
-    // "uid": sessionStorage.getItem('uid')})
+    // })
     //   .then(r => {
     //       this.roleList = r.data.data_list
     //         console.log(r)            

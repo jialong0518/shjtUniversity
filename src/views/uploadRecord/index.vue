@@ -162,6 +162,10 @@
       label="状态">
     </el-table-column>
     <el-table-column
+      prop="source"
+      label="导入类型">
+    </el-table-column>
+    <el-table-column
       prop="importMemo"
       label="描述">
     </el-table-column>
@@ -365,7 +369,7 @@ export default {
             { required: true, message: '请输入密码', trigger: 'blur' }
         ],
         remark: [
-            { required: true, message: '请输入备注', trigger: 'blur' }
+            { required: false, message: '请输入备注', trigger: 'blur' }
         ]
       },
       loadingAccount: false,
@@ -401,20 +405,20 @@ export default {
     },
     getFacultyData() {
         getCollege(
-        {"uid": sessionStorage.getItem('uid')}
+        {}
       ).then(r => {
         this.facultyData = r.data;
       }).catch(() => {});    
     },
 
     getSubjectData() {
-      getSubject({"uid": sessionStorage.getItem('uid')}).then(r => {
+      getSubject({}).then(r => {
         this.subjectData = r.data;
       }).catch(() => {});
     },
 
     getTitleData() {
-      getTitle({"uid": sessionStorage.getItem('uid')}).then(r => {
+      getTitle({}).then(r => {
         this.titleData = r.data;
       }).catch(() => {});
     },

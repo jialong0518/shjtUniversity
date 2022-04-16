@@ -1,8 +1,8 @@
 <template>
   <div class="account">
-    <div style="padding: 15px;overflow: hidden;display: flex;justify-content: flex-end;">
+    <!--<div style="padding: 15px;overflow: hidden;display: flex;justify-content: flex-end;">
       <el-button type="primary" style="margin-left: 15px;"  @click="addAccountButt('ruleForm')">添加面试</el-button>
-    </div>
+    </div>-->
     <div style="padding: 0 0">
         <el-table
     :data="tableData"

@@ -119,7 +119,7 @@ export function exportFile(data) {
       url: '/byd/web/index.php?r=reg/userdel',
       method: 'post',
       // data: JSON.parse(data)
-      data: JSON.stringify(data)
+      data
     })
   }
 

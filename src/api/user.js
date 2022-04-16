@@ -9,7 +9,7 @@ export function login(data) {
       expertPwd: data.password,
       type: '后台'
     }
-    // data: JSON.stringify(data)
+    // data
   })
 }
 export function goEmpower(data) {
@@ -33,6 +33,6 @@ export function passwordreset(data) {
       url: '/byd/web/index.php?r=reg/passwordreset',
       method: 'post',
       // data: JSON.parse(data)
-      data: JSON.stringify(data)
+      data
     })
   }

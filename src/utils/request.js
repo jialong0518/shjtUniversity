@@ -6,8 +6,8 @@ import { getToken } from '@/utils/auth'
 
 // create an axios instance
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  // baseURL: 'https://mob.hexntc.com',
+  // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+  baseURL: 'https://mob.hexntc.com',
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000, // request timeout
   headers: {
@@ -32,6 +32,8 @@ service.interceptors.request.use(
       // config.headers['X-Token'] = getToken()
       // config.headers['token'] = ''
     }
+    
+    config.data['uid'] = Number(sessionStorage.getItem("uid"));
     return config
   },
   error => {

@@ -6,7 +6,7 @@ export function roleslist(data) {
     // url: '/byd/web/index.php?r=reg/functionlist',
     method: 'post',
     // data: JSON.parse(data)
-    data: JSON.stringify(data)
+    data
   })
 }
 
@@ -22,7 +22,7 @@ export function functionlist(data) {
   return request({
     url: '/byd/web/index.php?r=reg/functionlist',
     method: 'post',
-    data: JSON.stringify(data)
+    data
   })
 }
 

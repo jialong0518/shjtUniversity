@@ -177,7 +177,7 @@ export default {
     seeroleButt(data) {
       rolesbind({
           "id": data.id,
-          "uid": sessionStorage.getItem('uid')}).then(r => {
+          }).then(r => {
               this.form = {
             name: r.data.rolename,
             remarks: r.data.memo,
@@ -192,7 +192,7 @@ export default {
     editroleButt(data) {
       rolesbind({
           "id": data.id,
-          "uid": sessionStorage.getItem('uid')}).then(r => {
+          }).then(r => {
               this.form = {
             name: r.data.rolename,
             remarks: r.data.memo,
@@ -235,7 +235,7 @@ export default {
         "rolename": this.form.name,
         "memo": this.form.remarks,
         "fids": this.form.roles,
-        "uid": sessionStorage.getItem('uid')}).then(r => {
+        }).then(r => {
           this.loadingRole = false
           this.dialogRoleVisible = false
           this.$refs.tree.setCheckedKeys([])
@@ -252,7 +252,7 @@ export default {
         "rolename": this.form.name,
         "memo": this.form.remarks,
         "fids": this.form.roles,
-        "uid": sessionStorage.getItem('uid')}).then(r => {
+        }).then(r => {
           this.loadingRole = false
           this.dialogRoleVisible = false
           this.$refs.tree.setCheckedKeys([])
@@ -265,7 +265,7 @@ export default {
     resetAccount(data) {
         passwordreset({
             "id": data.id,
-            "uid": sessionStorage.getItem('uid')})
+            })
             .then(r => {
               console.log(r)
             })
@@ -333,7 +333,7 @@ export default {
     getTableData() {
       roleslist({"rolename": this.searchrolename,
       "memo": this.searchmemo,
-      "uid": sessionStorage.getItem('uid'),
+      ,
       "pages": this.currentPage,
       "pagesize": this.pageSize
       })
@@ -344,7 +344,7 @@ export default {
             this.rights_list[item.rights] = item.rights_id
             })           
       }).catch(() => {});
-      functionlist({"uid": sessionStorage.getItem('uid')})
+      functionlist({})
       .then(r => {
         this.funList = r.data;
         this.treeData()
@@ -353,7 +353,7 @@ export default {
     rolesDel(data) {
       rolesdel({
             "id": data.id,
-            "uid": sessionStorage.getItem('uid')})
+            })
             .then(r => {
               console.log(r)
               this.$message({
