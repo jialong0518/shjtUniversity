@@ -32,8 +32,10 @@ service.interceptors.request.use(
       // config.headers['X-Token'] = getToken()
       // config.headers['token'] = ''
     }
+    if(sessionStorage.getItem("uid")) {
+      config.data['uid'] = Number(sessionStorage.getItem("uid"));
+    }
     
-    config.data['uid'] = Number(sessionStorage.getItem("uid"));
     return config
   },
   error => {

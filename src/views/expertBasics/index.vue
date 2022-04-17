@@ -48,6 +48,7 @@
     </el-row>
     <div style="padding: 15px;overflow: hidden;display: flex;justify-content: flex-end;">
       <el-button type="primary" style="margin-left: 15px;"  @click="addAccountButt('ruleForm')">添加专家</el-button>
+      <el-button type="primary" style="margin-left: 15px;"  @click="downFile">导入模板下载</el-button>
       <plupload @updata="batchImport">批量导入</plupload>
       <el-button type="primary" style="margin-left: 15px;" @click="exportData">导出查询结果</el-button>
     </div>
@@ -317,6 +318,9 @@ export default {
     }
   },
   methods: {
+    downFile() {
+      window.location.href = 'https://mob.hexntc.com/expert/downloadfile?file=expertimport.xlsx';
+    },
     getFacultyData() {
         getCollege(
         {}

@@ -80,6 +80,7 @@
     </el-row>
     <div style="padding: 15px;overflow: hidden;display: flex;justify-content: flex-end;">
       <el-button type="primary" style="margin-left: 15px;"  @click="addAccountButt('form')">添加</el-button>
+      <el-button type="primary" style="margin-left: 15px;"  @click="downFile">导入模板下载</el-button>
       <plupload @updata="batchImport">批量导入</plupload>
       <el-button type="primary" style="margin-left: 15px;" @click="exportData('form')">导 出</el-button>
       <el-button type="primary" style="margin-left: 15px;" v-show="powerType !== '4'" @click="batchRefuse('通过')">批量通过</el-button>
@@ -121,6 +122,10 @@
     <el-table-column
       prop="expertSubject"
       label="学科">
+    </el-table-column>
+    <el-table-column
+      prop="source"
+      label="类型">
     </el-table-column>
     <el-table-column
       prop="expertPhone"
@@ -394,6 +399,9 @@ export default {
     }
   },
   methods: {
+    downFile() {
+      window.location.href = 'https://mob.hexntc.com/expert/downloadfile?file=expertimport.xlsx';
+    },
     recallFun(data) {
       getApplyBack(
         {id: data.id}
