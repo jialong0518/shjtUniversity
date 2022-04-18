@@ -32,7 +32,7 @@
         <el-table
     :data="tableData"
     border
-    style="width: 100%;;border-radius: 10px;">
+    style="width: 100%;border-radius: 10px;">
     <el-table-column
       prop="name"
       label="关键字">

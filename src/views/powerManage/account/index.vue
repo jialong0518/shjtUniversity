@@ -33,10 +33,11 @@
     <div style="padding: 15px;overflow: hidden;">
       <el-button type="primary" style="float:right;" @click="addAccountButt('ruleForm')">添加用户</el-button>
     </div>
-    <el-table
+    <div style="margin:0 20px;">
+      <el-table
     :data="tableData"
     border
-    style="width: 100%">
+    style="width: 100%;border-radius: 10px;">
     <el-table-column
       type="index"
       label="编号"
@@ -76,10 +77,11 @@
       </template>
     </el-table-column>
     <el-table-column
+    width="250"
       label="操作">
       <template slot-scope="scope">
-        <el-button @click="enableButt(scope.row)" type="text" size="small">{{scope.row.status === 0 ? '启用' : '停用'}}</el-button>
-        <el-button @click="seeAccountButt(scope.row)" type="text" size="small">查看</el-button>
+        <el-button @click="enableButt(scope.row)" :type="scope.row.status === 1 ? 'danger' : 'success'" size="mini">{{scope.row.status === 0 ? '启用' : '停用'}}</el-button>
+        <el-button @click="seeAccountButt(scope.row)" type="primary" size="mini">查看</el-button>
         <!-- <el-button type="text" @click="editAccountButt(scope.row)" size="small">编辑</el-button> -->
         <!-- <el-popconfirm
             title="是否确定删除该用户？"
@@ -92,11 +94,12 @@
             title="确认重置密码吗？"
             @onConfirm="resetAccount(scope.row)" 
         >
-        <el-button  slot="reference" type="text" size="small">重置密码</el-button>
+        <el-button style="margin-left:10px;" slot="reference" type="warning" size="mini">重置密码</el-button>
         </el-popconfirm>
       </template>
     </el-table-column>
   </el-table>
+    </div>
   <div style="text-align: center;
     margin-top: 20px;">
       <el-pagination
