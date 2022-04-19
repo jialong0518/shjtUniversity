@@ -1,6 +1,14 @@
 import request from '@/utils/request'
 
 
+export function getYearlist(data) {
+  return request({
+    url: '/expert/yearlist',
+    method: 'post',
+    data
+  })
+}
+
 export function getCollege(data) {
   return request({
     url: '/expert/collegelist',

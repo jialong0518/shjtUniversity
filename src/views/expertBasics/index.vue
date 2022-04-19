@@ -1,9 +1,20 @@
 <template>
   <div class="account">
     <el-row :gutter="20" style="padding: 20px;">
+      <el-col :span="6">
+        <div style="display: inline-block;width:30%;">年份：</div>
+        <el-select v-model="searchYear" style="width: 70%" placeholder="请选择">
+          <el-option
+            v-for="item in yearData"
+            :key="item.year"
+            :label="item.year"
+            :value="item.year">
+          </el-option>
+        </el-select>
+    </el-col>
     <el-col :span="6">
-        <div style="display: inline-block;width:20%;">院系：</div>
-        <el-select v-model="searchFaculty" style="width: 80%" placeholder="请选择">
+        <div style="display: inline-block;width:30%;">院系：</div>
+        <el-select v-model="searchFaculty" style="width: 70%" placeholder="请选择">
           <el-option
             v-for="item in facultyData"
             :key="item.name"
@@ -13,8 +24,8 @@
         </el-select>
     </el-col>
     <el-col :span="6">
-        <div style="display: inline-block;width:20%;">学科：</div>
-        <el-select v-model="searchSubject" style="width: 80%" placeholder="请选择">
+        <div style="display: inline-block;width:30%;">学科：</div>
+        <el-select v-model="searchSubject" style="width: 70%" placeholder="请选择">
           <el-option
             v-for="item in subjectData"
             :key="item.name"
@@ -24,12 +35,18 @@
         </el-select>
     </el-col>
     <el-col :span="6">
-        <div style="display: inline-block;width:20%;">姓名：</div>
-        <el-input style="width: 80%" v-model="searchName" @change="getTableData()" autocomplete="off"></el-input>
+        <div style="display: inline-block;width:30%;">姓名：</div>
+        <el-input style="width: 70%" v-model="searchName" @change="getTableData()" autocomplete="off"></el-input>
     </el-col>
-    <el-col :span="6">
-        <div style="display: inline-block;width:20%;">职称：</div>
-        <el-select v-model="searchTitle" style="width: 80%" placeholder="请选择">
+    </el-row>
+    <el-row :gutter="20" style="padding: 20px;">
+      <el-col :span="6">
+        <div style="display: inline-block;width:30%;">电话：</div>
+        <el-input style="width: 70%" v-model="searchPhone" @change="getTableData()" autocomplete="off"></el-input>
+    </el-col>
+      <el-col :span="6">
+        <div style="display: inline-block;width:30%;">职称：</div>
+        <el-select v-model="searchTitle" style="width: 70%" placeholder="请选择">
           <el-option
             v-for="item in titleData"
             :key="item.name"
@@ -38,8 +55,19 @@
           </el-option>
         </el-select>
     </el-col>
-    </el-row>
-    <el-row :gutter="20" style="padding: 20px;">
+    <el-col :span="6">
+        <div style="display: inline-block;width:30%;">性别：</div>
+        <el-select v-model="searchGender" style="width: 70%" placeholder="请选择">
+          <el-option
+            label="男"
+            value="1">
+          </el-option>
+          <el-option
+            label="女"
+            value="2">
+          </el-option>
+        </el-select>
+    </el-col>
       <el-col :span="6">
         <el-button type="primary" @click="searchFun">搜 索</el-button>
         <el-button type="primary" plain @click="resetSearch()">重置</el-button>
@@ -192,7 +220,7 @@
 </template>
 
 <script>
-import { getCollege, getSubject, getTitle, getTable, expertimport, expertbasicbind, expertbasicadd, expertbasicdel, expertbasicedit, expertbasicexport } from "@/api/expertBasics";
+import { getCollege, getSubject, getTitle, getTable, expertimport, expertbasicbind, expertbasicadd, expertbasicdel, expertbasicedit, expertbasicexport, getYearlist } from "@/api/expertBasics";
 import plupload from "@/components/plupload";
 
 export default {
@@ -231,6 +259,9 @@ export default {
         searchSubject: '',
         searchTitle: '',
         searchName:'',
+        searchPhone: '',
+        searchYear: '',
+        searchGender: '',
         facultyData: [],
         subjectData: [],
         titleData: [],
@@ -304,6 +335,7 @@ export default {
       passwordType: 'password',
       redirect: undefined,
       tableData: [],
+      yearData: [],
       accountId: '',
       wordVisible: false,
       word:'',
@@ -319,6 +351,13 @@ export default {
     }
   },
   methods: {
+    getYearData() {
+        getYearlist(
+        {}
+      ).then(r => {
+        this.yearData = r.data;
+      }).catch(() => {});    
+    },
     downFile() {
       window.location.href = 'https://mob.hexntc.com/expert/downloadfile?file=expertbasic.xlsx';
     },
@@ -538,7 +577,11 @@ export default {
       this.getTableData()
     },
     getTableData() {
-      getTable({"college": this.searchFaculty,
+      getTable({
+        "year": this.searchYear === '' ? 0 : Number(this.searchYear),
+        "gender": this.searchGender === '' ? 0 : Number(this.searchGender),
+        "phone": this.searchPhone,
+        "college": this.searchFaculty,
         "subject": this.searchSubject,
         "competent": this.searchTitle,
         "name": this.searchName,
@@ -590,6 +633,7 @@ export default {
   },
 //   message_
   mounted: function() {
+    this.getYearData()
     this.getFacultyData()
     this.getSubjectData()
     this.getTitleData()

@@ -146,7 +146,7 @@
         >
         <el-button v-show="scope.row.status === '通过'&&powerType == '4'" style="margin: 0 10px;" slot="reference" type="primary" size="mini">申请撤回</el-button>
         </el-popconfirm>
-        <el-button v-show="scope.row.status === '拒绝'" type="primary" @click="editAccountButt(scope.row)" size="mini">编辑</el-button>
+        <el-button  style="margin: 0 10px;" v-show="(scope.row.status === '拒绝'||scope.row.status === '通过')&&powerType == '1'" type="primary" @click="editAccountButt(scope.row)" size="mini">编辑</el-button>
         <el-popconfirm
             title="是否确定删除该账号？"
             @onConfirm="accountDel(scope.row)" 
