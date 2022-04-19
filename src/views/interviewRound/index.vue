@@ -1,10 +1,10 @@
 <template>
   <div class="account">
     <el-row :gutter="20" style="padding: 20px;">
-      <el-col :span="6">
+      <!-- <el-col :span="6">
         <div style="display: inline-block;width:30%;">面试编号：</div>
         <el-input style="width: 70%" v-model="searchNo" @change="getTableData()" autocomplete="off"></el-input>
-    </el-col>
+    </el-col> -->
     <el-col :span="6">
         <div style="display: inline-block;width:30%;">年份：</div>
         <el-select v-model="searchYear" style="width: 70%" placeholder="请选择">
@@ -73,18 +73,19 @@
       label="状态">
     </el-table-column>
     <el-table-column
+    width="200"
       label="操作">
       <template slot-scope="scope">
-        <el-button  @click="mateButt(scope.row)" type="text" size="small">匹配确认专家</el-button>
+        <el-button style="margin-bottom: 10px;" @click="mateButt(scope.row)" type="primary" size="mini">匹配确认专家</el-button>
         <!-- <el-button  @click="seeAccountButt(scope.row)" type="text" size="small">人员详情</el-button> -->
-        <el-button  @click="exportButt(scope.row, '0')" type="text" size="small">导出未确认人员表格</el-button>
-        <el-button  @click="exportButt(scope.row, '1')" type="text" size="small">签到表</el-button>
-        <el-button  type="text" @click="editAccountButt(scope.row)" size="small">编辑</el-button>
+        <el-button style="margin-bottom: 10px;" @click="exportButt(scope.row, '0')" type="primary" size="mini">导出未确认人员表格</el-button>
+        <el-button style="margin-bottom: 10px;" @click="exportButt(scope.row, '1')" type="primary" size="mini">签到表</el-button>
+        <el-button style="margin-bottom: 10px;" type="primary" @click="editAccountButt(scope.row)" size="mini">编辑</el-button>
         <el-popconfirm
             title="是否确定删除该账号？"
             @onConfirm="accountDel(scope.row)" 
         >
-        <el-button style="margin: 0 10px;" slot="reference"  type="text" size="small">删除</el-button>
+        <el-button style="margin: 0 10px;" slot="reference"  type="danger" size="mini">删除</el-button>
         </el-popconfirm>
       </template>
     </el-table-column>
@@ -176,21 +177,25 @@
 </el-dialog>
 <el-dialog title="匹配确认专家" :show-close="false" :close-on-click-modal="false" :visible.sync="dialogMateVisible">
   <div>
-      <el-row :gutter="20" style="padding: 5px;">
+      <el-row :gutter="20" style="padding: 5px 5px 10px 5px;">
         <el-col :span="6">
             <div style="display: inline-block;width:30%;">年份：</div>
             {{this.form.year}}
         </el-col>
-        <el-col :span="12">
-            <div style="display: inline-block;width:30%;">场次名称：</div>
+        <el-col :span="6">
+            <div style="display: inline-block;width:50%;">场次名称：</div>
             {{this.form.name}}
         </el-col>
         <el-col :span="6">
             <div style="display: inline-block;width:30%;">场次：</div>
             {{this.form.round_num}}
         </el-col>
+        <el-col :span="6">
+            <div style="display: inline-block;width:50%;">限定人数：</div>
+            {{this.form.num}}
+        </el-col>
       </el-row>
-      <el-row :gutter="20" style="padding: 5px;">
+      <el-row :gutter="20" style="padding:  5px 5px 10px 5px;">
         <el-col :span="12">
             <div style="display: inline-block;width:30%;">确认开始：</div>
             {{this.form.confirmStart}}
@@ -200,15 +205,12 @@
             {{this.form.confirmEnd}}
         </el-col>
       </el-row>
-      <el-row :gutter="20" style="padding: 5px;">
+      <el-row :gutter="20" style="padding:  5px 5px 10px 5px;">
         <el-col :span="17">
-            <div style="display: inline-block;width:30%;">面试时间段：</div>
+            <div style="display: inline-block;width:20%;">面试时间段：</div>
             {{this.form.interviewStart+'——'+this.form.interviewEnd}}
         </el-col>
-        <el-col :span="7">
-            <div style="display: inline-block;width:50%;">限定人数：</div>
-            {{this.form.num}}
-        </el-col>
+        
       </el-row>
   </div>
   <div>
@@ -217,7 +219,8 @@
         @select="mateTableSelect"
         @select-all="mateTableSelectAll"
         border
-        height="250"
+        size="mini"
+        height="500"
         style="width: 100%;border-radius: 10px;">
         <el-table-column
           type="selection"
@@ -237,7 +240,7 @@
         </el-table-column>
         <el-table-column
           prop="matchCount"
-          label="本次抽取人数">
+          :label="`本次抽取人数（${matchCountNum}）`">
           <template slot-scope="scope">
             <el-input v-model="scope.row.matchCount" @input="matchNumData(scope.$index, scope.row, $event)" autocomplete="off"></el-input>
           </template>
@@ -375,7 +378,8 @@ export default {
       account:'',
       mateTableSelectData: [],
       selectionObj: {},
-      checkData: {}
+      checkData: {},
+      matchCountNum: 0,
     }
   },
   watch: {
@@ -620,24 +624,35 @@ export default {
           confirmButtonText: '确定',
         });
         this.mateTableData[index].matchCount = ''
+        this.matchCountNumFun();
         return
       }
       if(!Number(value)&&value !== ''){
         this.$alert('请输入数字', '提示', {
           confirmButtonText: '确定',
         });
-        this.mateTableData[index].matchCount = ''
+        this.mateTableData[index].matchCount = '';
+        this.matchCountNumFun();
         return
       }
       if(Number(value) > (Number(data.basicCount)+Number(data.sourceCount))){
         this.$alert('本次抽取人数不能大于资格库人数加基础库人数的和', '提示', {
           confirmButtonText: '确定',
         });
-        this.mateTableData[index].matchCount = ''
+        this.mateTableData[index].matchCount = '';
+        this.matchCountNumFun();
         return
       }
       this.selectionObj[data.idNo].matchCount = value === '' ? value : Number(value);
       this.mateTableData[index].matchCount = value === '' ? value : Number(value);
+      this.matchCountNumFun();
+    },
+    matchCountNumFun () {
+      let matchCountNum = 0;
+      for(let i in this.selectionObj) {
+        matchCountNum = Number(matchCountNum) + Number(this.selectionObj[i].matchCount);
+      }
+      this.matchCountNum = matchCountNum;
     },
     mateTableSelect(selection, row) {
       this.selectionObj = {};

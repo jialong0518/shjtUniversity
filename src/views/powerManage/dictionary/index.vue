@@ -54,12 +54,12 @@
     <el-table-column
       label="操作">
       <template slot-scope="scope">
-        <el-button  type="text" @click="editAccountButt(scope.row)" size="small">编辑</el-button>
+        <el-button  type="primary" @click="editAccountButt(scope.row)" size="mini">编辑</el-button>
         <el-popconfirm
             title="是否确定删除该字典值？"
             @onConfirm="accountDel(scope.row)" 
         >
-        <el-button style="margin: 0 10px;" slot="reference"  type="text" size="small">删除</el-button>
+        <el-button style="margin: 0 10px;" slot="reference"  type="danger" size="mini">删除</el-button>
         </el-popconfirm>
       </template>
     </el-table-column>
@@ -98,7 +98,7 @@
     </el-form-item>
   </el-form>
   <div slot="footer" class="dialog-footer">
-    <el-button @click="cancelSubmit('ruleForm')">取 消</el-button>
+    <el-button  @click="cancelSubmit('ruleForm')">取 消</el-button>
     <el-button :disabled="titleForm.indexOf('查看')!== -1" :loading="loadingAccount" type="primary" @click="submitAccount('ruleForm')">确 定</el-button>
   </div>
 </el-dialog>

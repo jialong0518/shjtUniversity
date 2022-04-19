@@ -172,7 +172,7 @@
     <el-table-column
       label="操作">
       <template slot-scope="scope">
-        <el-button  type="text" :disabled="scope.row.result  !== '失败'" @click="editAccountButt(scope.row)" size="small">修正提交</el-button>
+        <el-button  type="primary" :disabled="scope.row.result  !== '失败'" @click="editAccountButt(scope.row)" size="mini">修正提交</el-button>
       </template>
     </el-table-column>
   </el-table>

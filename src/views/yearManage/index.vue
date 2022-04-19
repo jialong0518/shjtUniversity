@@ -27,7 +27,7 @@
             title="是否确定删除该年份？"
             @onConfirm="accountDel(scope.row)" 
         >
-        <el-button style="margin: 0 10px;" slot="reference"  type="text" size="small">删除</el-button>
+        <el-button style="margin: 0 10px;" slot="reference"  type="danger" size="mini">删除</el-button>
         </el-popconfirm>
       </template>
     </el-table-column>

@@ -92,15 +92,16 @@
       <template slot-scope="scope">{{ scope.row.inPosition === 1 ? '是' : '否' }}</template>
     </el-table-column>
     <el-table-column
+    width="250"
       label="操作">
       <template slot-scope="scope">
-        <el-button  @click="seeAccountButt(scope.row)" type="text" size="small">查看</el-button>
-        <el-button  type="text" @click="editAccountButt(scope.row)" size="small">编辑</el-button>
+        <el-button  @click="seeAccountButt(scope.row)" type="primary" size="mini">查看</el-button>
+        <el-button  type="primary" @click="editAccountButt(scope.row)" size="mini">编辑</el-button>
         <el-popconfirm
             title="是否确定删除该账号？"
             @onConfirm="accountDel(scope.row)" 
         >
-        <el-button style="margin: 0 10px;" slot="reference"  type="text" size="small">删除</el-button>
+        <el-button style="margin: 0 10px;" slot="reference"  type="danger" size="mini">删除</el-button>
         </el-popconfirm>
       </template>
     </el-table-column>
@@ -319,7 +320,7 @@ export default {
   },
   methods: {
     downFile() {
-      window.location.href = 'https://mob.hexntc.com/expert/downloadfile?file=expertimport.xlsx';
+      window.location.href = 'https://mob.hexntc.com/expert/downloadfile?file=expertbasic.xlsx';
     },
     getFacultyData() {
         getCollege(

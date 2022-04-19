@@ -136,23 +136,24 @@
       label="状态">
     </el-table-column>
     <el-table-column
+    width="250"
       label="操作">
       <template slot-scope="scope">
-        <el-button  @click="seeAccountButt(scope.row)" v-show="scope.row.status === '通过'" type="text" size="small">详情</el-button>
+        <el-button  @click="seeAccountButt(scope.row)" v-show="scope.row.status === '通过'" type="primary" size="mini">详情</el-button>
         <el-popconfirm
             title="是否确定申请撤回？"
             @onConfirm="recallFun(scope.row)" 
         >
-        <el-button v-show="scope.row.status === '通过'&&powerType == '4'" style="margin: 0 10px;" slot="reference" type="text" size="small">申请撤回</el-button>
+        <el-button v-show="scope.row.status === '通过'&&powerType == '4'" style="margin: 0 10px;" slot="reference" type="primary" size="mini">申请撤回</el-button>
         </el-popconfirm>
-        <el-button v-show="scope.row.status === '拒绝'" type="text" @click="editAccountButt(scope.row)" size="small">编辑</el-button>
+        <el-button v-show="scope.row.status === '拒绝'" type="primary" @click="editAccountButt(scope.row)" size="mini">编辑</el-button>
         <el-popconfirm
             title="是否确定删除该账号？"
             @onConfirm="accountDel(scope.row)" 
         >
-        <el-button style="margin: 0 10px;" slot="reference" v-show="scope.row.status === '拒绝'" type="text" size="small">删除</el-button>
+        <el-button style="margin: 0 10px;" slot="reference" v-show="scope.row.status === '拒绝'" type="danger" size="mini">删除</el-button>
         </el-popconfirm>
-        <el-button  type="text" v-show="scope.row.status === '审核中'&&powerType !== '4'" @click="examineAccountButt(scope.row)" size="small">审核</el-button>
+        <el-button  type="primary" v-show="scope.row.status === '审核中'&&powerType !== '4'" @click="examineAccountButt(scope.row)" size="mini">审核</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -255,7 +256,7 @@
 <el-dialog title="提示" :show-close="false" :close-on-click-modal="false" :visible.sync="batchAccountVisible">
   <div>您确定批量审批{{batchState}}数据吗？</div>
   <div slot="footer" class="dialog-footer">
-    <el-button :loading="loadingAccount" @click="refuseSubmit('form',batchState)">取 消</el-button>
+    <el-button :loading="loadingAccount" @click="batchAccountVisible = false">取 消</el-button>
     <el-button :loading="loadingAccount" type="primary" @click="refuseSubmit('form',batchState)">确 定</el-button>
   </div>
 </el-dialog>
@@ -400,7 +401,7 @@ export default {
   },
   methods: {
     downFile() {
-      window.location.href = 'https://mob.hexntc.com/expert/downloadfile?file=expertimport.xlsx';
+      window.location.href = 'https://mob.hexntc.com/expert/downloadfile?file=expertready.xlsx';
     },
     recallFun(data) {
       getApplyBack(
@@ -557,6 +558,14 @@ export default {
       this.dialogAccountVisible = false;
     },
     refuseSubmit(name,state) {
+      console.log(this.accountId.length)
+      if(this.accountId.length === 0){
+        this.$message({
+          message: '请先勾选记录！',
+          type: 'warning'
+        });
+        return
+      }
       if(typeof this.accountId !== 'object'){
         this.accountId = [this.accountId]
       }
