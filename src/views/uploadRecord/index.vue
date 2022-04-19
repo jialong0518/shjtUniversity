@@ -123,8 +123,13 @@
         <el-button type="primary" plain @click="resetSearch()">重置</el-button>
     </el-col>
     </el-row>
+    <div style="padding: 15px;overflow: hidden;display: flex;justify-content: flex-end;">
+      <el-button type="primary" style="margin-left: 15px;"  @click="batchDel()">批量删除</el-button>
+    </div>
     <div style="padding: 0 20px">
         <el-table
+        @select="tableSelect"
+    @select-all="tableSelectAll"
     :data="tableData"
     border
     style="width: 100%;;border-radius: 10px;">
@@ -135,6 +140,10 @@
     <el-table-column
       prop="expertName"
       label="姓名">
+    </el-table-column>
+    <el-table-column
+      prop="expertNo"
+      label="学工号">
     </el-table-column>
     <el-table-column
       prop="expertGender"
@@ -170,9 +179,16 @@
       label="描述">
     </el-table-column>
     <el-table-column
+    width="200"
       label="操作">
       <template slot-scope="scope">
         <el-button  type="primary" :disabled="scope.row.result  !== '失败'" @click="editAccountButt(scope.row)" size="mini">修正提交</el-button>
+        <el-popconfirm
+            title="是否确定删除？"
+            @onConfirm="delFun()" 
+        >
+          <el-button style="margin: 0  10px;" type="danger" slot="reference" @click="singleDel(scope.row)" size="mini">删除</el-button>
+        </el-popconfirm>
       </template>
     </el-table-column>
   </el-table>
@@ -258,11 +274,18 @@
     <el-button :disabled="titleForm.indexOf('查看')!== -1" :loading="loadingAccount" type="primary" @click="submitAccount('ruleForm')">确 定</el-button>
   </div>
 </el-dialog>
+<el-dialog title="提示" :show-close="false" :close-on-click-modal="false" :visible.sync="batchAccountVisible">
+  <div>您确定批量删除数据吗？</div>
+  <div slot="footer" class="dialog-footer">
+    <el-button  @click="batchAccountVisible = false">取 消</el-button>
+    <el-button  type="primary" @click="delFun()">确 定</el-button>
+  </div>
+</el-dialog>
   </div>
 </template>
 
 <script>
-import { getCollege, getSubject, getTitle, getTable, expertbasicbind, expertbasicadd, expertbasicdel, expertbasicedit, expertbasicexport, getYearlist } from "@/api/uploadRecord";
+import { getCollege, getSubject, getTitle, getTable, expertbasicbind, expertbasicadd, expertbasicdel, expertbasicedit, expertbasicexport, getYearlist, dataDel } from "@/api/uploadRecord";
 import plupload from "@/components/plupload";
 
 import { roleslist } from "@/api/role";
@@ -384,7 +407,9 @@ export default {
       accountId: '',
       wordVisible: false,
       word:'',
-      account:''
+      account:'',
+      delId: [],
+      batchAccountVisible: false,
     }
   },
   watch: {
@@ -396,6 +421,31 @@ export default {
     }
   },
   methods: {
+    singleDel(data) {
+      this.delId = [data.id];
+    },
+    batchDel() {
+      if(this.delId.length === 0){
+        this.$message({
+          message: '请先勾选记录！',
+          type: 'warning'
+        });
+        return
+      }
+      this.batchAccountVisible = true;
+    },
+    tableSelect(selection, row) {
+      this.delId = []
+      selection.map(item=>{
+        this.delId.push(item.id);
+      })
+    },
+    tableSelectAll(selection) {
+      this.delId = []
+      selection.map(item=>{
+        this.delId.push(item.id);
+      })
+    },
     getYearData() {
         getYearlist(
         {}
@@ -575,6 +625,20 @@ export default {
             .catch(() => {
               this.loadingAccount = false
             });
+    },
+    delFun() {
+      dataDel({
+            "id":this.delId,
+            })
+            .then(r => {
+              this.getTableData()
+              this.$message({
+                message: '删除成功！',
+                type: 'success'
+                });
+            })
+            .catch(() => {
+            }); 
     },
     accountDel(data) {
       expertbasicdel({

@@ -1,6 +1,22 @@
 import request from '@/utils/request'
 
 
+export function sendemail(data) {
+  return request({
+    url: '/expert/sendemail',
+    method: 'post',
+    data
+  })
+}
+
+export function expertstatus(data) {
+  return request({
+    url: '/expert/auditionroundstatus',
+    method: 'post',
+    data
+  })
+}
+
 export function getYearlist(data) {
     return request({
       url: '/expert/yearlist',

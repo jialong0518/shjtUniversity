@@ -56,6 +56,13 @@
         <span style="color: #409EFF;cursor: pointer;" @click="planNum(scope.row)">{{scope.row.count_plan+'/'+scope.row.count_act}}</span>
       </template>
     </el-table-column>
+     <el-table-column
+      prop="countWait"
+      label="递补">
+      <template slot-scope="scope">
+        <span style="color: #409EFF;cursor: pointer;" @click="planNum(scope.row)">{{scope.row.countWait}}</span>
+      </template>
+    </el-table-column>
     <el-table-column
       prop="confirm_begin"
       label="确实开始">
@@ -76,16 +83,18 @@
     width="200"
       label="操作">
       <template slot-scope="scope">
-        <el-button style="margin-bottom: 10px;" @click="mateButt(scope.row)" type="primary" size="mini">匹配确认专家</el-button>
+        <el-button style="margin-bottom: 10px;margin-left: 10px;" @click="mateButt(scope.row)" type="primary" size="mini">匹配确认专家</el-button>
         <!-- <el-button  @click="seeAccountButt(scope.row)" type="text" size="small">人员详情</el-button> -->
         <el-button style="margin-bottom: 10px;" @click="exportButt(scope.row, '0')" type="primary" size="mini">导出未确认人员表格</el-button>
+        <el-button type="primary" v-show="powerType == '1'" style="margin-bottom: 10px;" size="mini" @click="emlButt(scope.row)">发送邮件</el-button>
         <el-button style="margin-bottom: 10px;" @click="exportButt(scope.row, '1')" type="primary" size="mini">签到表</el-button>
         <el-button style="margin-bottom: 10px;" type="primary" @click="editAccountButt(scope.row)" size="mini">编辑</el-button>
+        <el-button style="margin-bottom: 10px;" type="primary" @click="switchButt(scope.row)" size="mini">{{scope.row.status === '已关闭' ? '开启' : '关闭'}}</el-button>
         <el-popconfirm
             title="是否确定删除该账号？"
             @onConfirm="accountDel(scope.row)" 
         >
-        <el-button style="margin: 0 10px;" slot="reference"  type="danger" size="mini">删除</el-button>
+          <el-button style="margin: 0 10px;" slot="reference"  type="danger" size="mini">删除</el-button>
         </el-popconfirm>
       </template>
     </el-table-column>
@@ -252,11 +261,47 @@
     <el-button  :loading="loadingAccount" type="primary" @click="submitExtract()">确认抽取</el-button>
   </div>
 </el-dialog>
+<el-dialog title="发送邮件" :show-close="false" :close-on-click-modal="false" :visible.sync="emlVisible">
+  <div>
+  <el-form label-width="200px">
+    <el-form-item label="场次类型：" prop="year">
+      <el-select v-model="emlType" style="width: 500px" placeholder="请选择">
+          <el-option
+            label="全部（未确认及已确认）"
+            value="all">
+          </el-option>
+          <el-option
+            label="未确认"
+            value="unconfirm">
+          </el-option>
+          <el-option
+            label="已确认"
+            value="confiremd">
+          </el-option>
+        </el-select>
+    </el-form-item>
+    <el-form-item label="邮件内容：" prop="name">
+    <el-input
+    style="width: 500px"
+      type="textarea"
+      :rows="5"
+      placeholder="请输入内容"
+      v-model="emlTxt">
+    </el-input>
+    </el-form-item>
+   
+  </el-form>
+  </div>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="emlVisible = false">取 消</el-button>
+    <el-button  :loading="loadingAccount" type="primary" @click="emlsubmitExtract()">确认发送</el-button>
+  </div>
+</el-dialog>
   </div>
 </template>
 
 <script>
-import { getTable, expertbasicbind, expertbasicadd, expertbasicdel, expertbasicedit, expertbasicexport, getYearlist, expertreadytomatch, expertauditionmatch, exportFile } from "@/api/interviewRound";
+import { getTable, expertbasicbind, expertbasicadd, expertbasicdel, expertbasicedit, expertbasicexport, getYearlist, expertreadytomatch, expertauditionmatch, exportFile, expertstatus, sendemail } from "@/api/interviewRound";
 import plupload from "@/components/plupload";
 
 export default {
@@ -303,7 +348,7 @@ export default {
         searchName:'',
         searchNo: '',
         yearData:[],
-
+        powerType: sessionStorage.getItem('powerType'),
         currentPage: 1,
       totalPage: 0,
       pageSize: 10,
@@ -380,6 +425,9 @@ export default {
       selectionObj: {},
       checkData: {},
       matchCountNum: 0,
+      emlTxt: '',
+      emlVisible: false,
+      emlType: 'all'
     }
   },
   watch: {
@@ -391,6 +439,35 @@ export default {
     }
   },
   methods: {
+    emlsubmitExtract() {
+      this.loadingAccount = true
+       sendemail({
+              "msgType": this.emlType,
+              "contentDetail": this.emlTxt,
+              "auditionId": this.checkData.audition_id,
+              "auditionRoundId": this.checkData.id,
+              
+              }).then(r => {
+                if(r.msg === '信息重复') {
+                  this.loadingAccount = false
+                  return
+                }
+                this.emlTxt = '';
+      this.emlType = 'all';
+              this.loadingAccount = false
+              this.emlVisible = false
+            })
+            .catch(() => {
+              this.loadingAccount = false
+            });
+    },
+    emlButt(data) {
+      this.checkData = data;
+      this.emlTxt = '';
+      this.emlType = 'all';
+      this.loadingAccount = false
+      this.emlVisible = true;
+    },
     getYearData() {
       getYearlist({}).then(r => {
         this.yearData = r.data;
@@ -527,6 +604,22 @@ export default {
             .catch(() => {
               this.loadingAccount = false
             });
+    },
+    switchButt(data) {
+       expertstatus({
+            "id": data.id,
+            "status": data.status === '已关闭' ? '已开启' : '已关闭'
+            })
+            .then(r => {
+              console.log(r)
+              this.getTableData()
+              // this.$message({
+              //   message: '删除成功！',
+              //   type: 'success'
+              //   });
+            })
+            .catch(() => {
+            }); 
     },
     accountDel(data) {
       expertbasicdel({

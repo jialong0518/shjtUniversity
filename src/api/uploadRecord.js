@@ -1,6 +1,14 @@
 import request from '@/utils/request'
 
 
+export function dataDel(data) {
+  return request({
+    url: '/expert/importrecorddel',
+    method: 'post',
+    data
+  })
+}
+
 export function getCollege(data) {
   return request({
     url: '/expert/collegelist',
