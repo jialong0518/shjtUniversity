@@ -138,7 +138,7 @@ export default {
               'bizType': that.bizType,
               "mid":that.mid,
               "type":that.type,
-              "uid":sessionStorage.getItem('uid'),  
+              "uid":sessionStorage.getItem('jd_uid'),  
               "filename":file.name, 
               
             })
@@ -152,7 +152,7 @@ export default {
             that.fileRawList.push(...files)
             that.mid = that.mid
             that.type = that.type
-            that.uid = sessionStorage.getItem('uid')
+            that.uid = sessionStorage.getItem('jd_uid')
             if (that.fileRawList.length > that.limit) {
               // that.deleteFile(that.fileRawList[0])
             }

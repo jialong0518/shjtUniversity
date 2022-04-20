@@ -61,7 +61,7 @@
                   title="是否确定取消确认？"
                   @onConfirm="accountDel(scope.row)" 
               >
-              <el-button style="margin: 0 10px;" slot="reference"  type="text" size="small">取消确认</el-button>
+              <el-button style="margin: 0 10px;" slot="reference"  type="primary" size="mini">取消确认</el-button>
               </el-popconfirm>
             </template>
           </el-table-column>

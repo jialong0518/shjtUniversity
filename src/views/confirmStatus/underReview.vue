@@ -58,7 +58,7 @@
     <el-table-column
       label="操作">
       <template  slot-scope="scope">
-        <el-button  type="text" @click="examineButt(scope.row)" size="small">审核</el-button>
+        <el-button  type="primary" @click="examineButt(scope.row)" size="mini">审核</el-button>
       </template>
     </el-table-column>
   </el-table>

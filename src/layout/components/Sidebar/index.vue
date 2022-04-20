@@ -32,7 +32,7 @@ export default {
     ]),
     routes() {
       let arr = [];
-      let type = sessionStorage.getItem('powerType')
+      let type = sessionStorage.getItem('jd_powerType')
       this.$router.options.routes.map(item=>{
         console.log(typeof item['power'])
         if((item['power']+'').indexOf(type) !== -1) {

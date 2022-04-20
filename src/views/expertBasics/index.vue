@@ -90,6 +90,10 @@
       label="姓名">
     </el-table-column>
     <el-table-column
+      prop="expertNo"
+      label="学工号">
+    </el-table-column>
+    <el-table-column
       prop="expertGender"
       label="性别">
       <template slot-scope="scope">{{ scope.row.expertGender === 1 ? '男' : '女' }}</template>

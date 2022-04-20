@@ -64,7 +64,7 @@ export function passwordreset(data) {
       data:{
         "title": "",
         "type": "",
-        "uid": sessionStorage.getItem('uid')
+        "uid": sessionStorage.getItem('jd_uid')
       }
     })
   } 

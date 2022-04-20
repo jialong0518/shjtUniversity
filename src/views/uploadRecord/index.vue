@@ -628,14 +628,15 @@ export default {
     },
     delFun() {
       dataDel({
-            "id":this.delId,
+            "ids":this.delId,
             })
             .then(r => {
-              this.getTableData()
               this.$message({
                 message: '删除成功！',
                 type: 'success'
                 });
+                this.batchAccountVisible = false;
+              this.getTableData()  
             })
             .catch(() => {
             }); 

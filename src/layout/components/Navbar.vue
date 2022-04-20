@@ -80,8 +80,8 @@ export default {
       }
     }
       return{
-          name: sessionStorage.getItem('name'),
-          phone: sessionStorage.getItem('phone'),
+          name: sessionStorage.getItem('jd_name'),
+          phone: sessionStorage.getItem('jd_phone'),
           dialogVisible:false,
           rulesAccount: {
             oldword: [
@@ -147,9 +147,9 @@ export default {
     async logout() {
       // await this.$store.dispatch('user/logout')
       this.$router.push(`/login`)
-      sessionStorage.removeItem("uid")
-      sessionStorage.removeItem("phone")
-      sessionStorage.removeItem("name")
+      sessionStorage.removeItem("jd_uid")
+      sessionStorage.removeItem("jd_phone")
+      sessionStorage.removeItem("jd_name")
       sessionStorage.removeItem("dialog")
     },
     showeditpassword(){
@@ -169,12 +169,12 @@ export default {
             showModuleDeployList('/byd/web/index.php?r=reg/passwordupd', {
             "old": this.form.oldword,
             "new": this.form.newword,
-            "uid": sessionStorage.getItem('uid')
+            "uid": sessionStorage.getItem('jd_uid')
         }).then(r => {
             this.$router.push(`/login`)
-            sessionStorage.removeItem("uid")
-            sessionStorage.removeItem("phone")
-            sessionStorage.removeItem("name")
+            sessionStorage.removeItem("jd_uid")
+            sessionStorage.removeItem("jd_phone")
+            sessionStorage.removeItem("jd_name")
             sessionStorage.removeItem("dialog")
         })
             .catch(() => {

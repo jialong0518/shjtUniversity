@@ -348,7 +348,7 @@ export default {
         searchName:'',
         searchNo: '',
         yearData:[],
-        powerType: sessionStorage.getItem('powerType'),
+        powerType: sessionStorage.getItem('jd_powerType'),
         currentPage: 1,
       totalPage: 0,
       pageSize: 10,
@@ -749,17 +749,33 @@ export default {
     },
     mateTableSelect(selection, row) {
       this.selectionObj = {};
-      this.mateTableSelectData =  selection;
+      let selectId = [];
+      this.mateTableSelectData = selection;
       this.mateTableSelectData.map(item=>{
+        selectId.push(item.idNo);
         this.selectionObj[item.idNo+''] = item;
       })
+      this.mateTableData.map(item=>{
+        if(selectId.indexOf(item.idNo) === -1) {
+          item.matchCount = 0
+        }
+      })
+      this.matchCountNumFun()
     },
     mateTableSelectAll(selection) {
       this.selectionObj = {};
+      let selectId = [];
       this.mateTableSelectData = selection;
       this.mateTableSelectData.map(item=>{
+        selectId.push(item.idNo);
         this.selectionObj[item.idNo+''] = item;
       })
+      this.mateTableData.map(item=>{
+        if(selectId.indexOf(item.idNo) === -1) {
+          item.matchCount = 0
+        }
+      })
+      this.matchCountNumFun()
     },
     submitExtract() {
       let state = true;
@@ -788,7 +804,7 @@ export default {
           "auditionId": this.checkData.audition_id,
           "auditionRoundId": this.checkData.id,
           "year": Number(this.form.year),
-          "uid":  Number(sessionStorage.getItem("uid"))
+          "uid":  Number(sessionStorage.getItem("jd_uid"))
         })
       }
       // if(matchCountNum > Number(this.form.num)) {

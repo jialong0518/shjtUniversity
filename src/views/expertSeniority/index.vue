@@ -139,7 +139,7 @@
     width="250"
       label="操作">
       <template slot-scope="scope">
-        <el-button  @click="seeAccountButt(scope.row)" v-show="scope.row.status === '通过'" type="primary" size="mini">详情</el-button>
+        <el-button style="margin: 0 10px;" @click="seeAccountButt(scope.row)" v-show="scope.row.status === '通过'" type="primary" size="mini">详情</el-button>
         <el-popconfirm
             title="是否确定申请撤回？"
             @onConfirm="recallFun(scope.row)" 
@@ -153,7 +153,7 @@
         >
         <el-button style="margin: 0 10px;" slot="reference" v-show="scope.row.status === '拒绝'" type="danger" size="mini">删除</el-button>
         </el-popconfirm>
-        <el-button  type="primary" v-show="scope.row.status === '审核中'&&powerType !== '4'" @click="examineAccountButt(scope.row)" size="mini">审核</el-button>
+        <el-button style="margin: 0 10px;" type="primary" v-show="scope.row.status === '审核中'&&powerType !== '4'" @click="examineAccountButt(scope.row)" size="mini">审核</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -299,7 +299,7 @@ export default {
         callback();
       };
     return {
-      powerType: sessionStorage.getItem('powerType'),
+      powerType: sessionStorage.getItem('jd_powerType'),
         searchFaculty:'',
         searchSubject: '',
         searchTitle: '',

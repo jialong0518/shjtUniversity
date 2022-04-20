@@ -23,7 +23,7 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // do something before request is sent
-    config.headers['uid'] = sessionStorage.getItem("uid")
+    config.headers['uid'] = sessionStorage.getItem("jd_uid")
     // config.headers['token'] = '1'
     if (store.getters.token) {
       // let each request carry token
@@ -32,8 +32,8 @@ service.interceptors.request.use(
       // config.headers['X-Token'] = getToken()
       // config.headers['token'] = ''
     }
-    if(sessionStorage.getItem("uid")) {
-      config.data['uid'] = Number(sessionStorage.getItem("uid"));
+    if(sessionStorage.getItem("jd_uid")) {
+      config.data['uid'] = Number(sessionStorage.getItem("jd_uid"));
     }
     
     return config

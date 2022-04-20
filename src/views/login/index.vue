@@ -119,10 +119,10 @@ export default {
           return
         }
         resetRouter()
-        sessionStorage.setItem("uid",r.data.uid)
-        sessionStorage.setItem("phone",r.data.phone)
-        sessionStorage.setItem("name",r.data.name)
-        sessionStorage.setItem("powerType",r.data.type)
+        sessionStorage.setItem("jd_uid",r.data.uid)
+        sessionStorage.setItem("jd_phone",r.data.phone)
+        sessionStorage.setItem("jd_name",r.data.name)
+        sessionStorage.setItem("jd_powerType",r.data.type)
         this.$router.push({ path:  '/' })
       })
       .catch(() => {});
@@ -160,10 +160,10 @@ export default {
           return
         }
         resetRouter()
-        sessionStorage.setItem("uid",r.data.uid)
-        sessionStorage.setItem("phone",r.data.phone)
-        sessionStorage.setItem("name",r.data.name)
-        sessionStorage.setItem("powerType",r.data.type)
+        sessionStorage.setItem("jd_uid",r.data.uid)
+        sessionStorage.setItem("jd_phone",r.data.phone)
+        sessionStorage.setItem("jd_name",r.data.name)
+        sessionStorage.setItem("jd_powerType",r.data.type)
         this.$router.push({ path:  '/' })
       })
       .catch(() => {});
