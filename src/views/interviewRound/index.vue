@@ -86,7 +86,7 @@
         <el-button style="margin-bottom: 10px;margin-left: 10px;" @click="mateButt(scope.row)" type="primary" size="mini">匹配确认专家</el-button>
         <!-- <el-button  @click="seeAccountButt(scope.row)" type="text" size="small">人员详情</el-button> -->
         <el-button style="margin-bottom: 10px;" @click="exportButt(scope.row, '0')" type="primary" size="mini">导出未确认人员表格</el-button>
-        <el-button type="primary" v-show="powerType == '1'" style="margin-bottom: 10px;" size="mini" @click="emlButt(scope.row)">发送邮件</el-button>
+        <el-button type="primary" v-show="powerType == '1'" style="margin-bottom: 10px;" size="mini" @click="emlButt(scope.row)">发送通知</el-button>
         <el-button style="margin-bottom: 10px;" @click="exportButt(scope.row, '1')" type="primary" size="mini">签到表</el-button>
         <el-button style="margin-bottom: 10px;" type="primary" @click="editAccountButt(scope.row)" size="mini">编辑</el-button>
         <el-button style="margin-bottom: 10px;" type="primary" @click="switchButt(scope.row)" size="mini">{{scope.row.status === '已关闭' ? '开启' : '关闭'}}</el-button>
@@ -264,6 +264,18 @@
 <el-dialog title="发送邮件" :show-close="false" :close-on-click-modal="false" :visible.sync="emlVisible">
   <div>
   <el-form label-width="200px">
+    <el-form-item label="通知方式：" prop="year">
+      <el-select v-model="noticeType" style="width: 500px" placeholder="请选择">
+          <el-option
+            label="邮件"
+            value="邮件">
+          </el-option>
+          <el-option
+            label="短信"
+            value="短信">
+          </el-option>
+        </el-select>
+    </el-form-item>
     <el-form-item label="场次类型：" prop="year">
       <el-select v-model="emlType" style="width: 500px" placeholder="请选择">
           <el-option
@@ -280,7 +292,7 @@
           </el-option>
         </el-select>
     </el-form-item>
-    <el-form-item label="邮件内容：" prop="name">
+    <el-form-item :label="`${noticeType}内容：`" prop="name">
     <el-input
     style="width: 500px"
       type="textarea"
@@ -344,6 +356,7 @@ export default {
         callback();
       };
     return {
+        noticeType: '邮件',
         searchYear:'',
         searchName:'',
         searchNo: '',
@@ -446,7 +459,7 @@ export default {
               "contentDetail": this.emlTxt,
               "auditionId": this.checkData.audition_id,
               "auditionRoundId": this.checkData.id,
-              
+              "source": this.noticeType === '邮件' ? 'email' : 'sms'
               }).then(r => {
                 if(r.msg === '信息重复') {
                   this.loadingAccount = false
