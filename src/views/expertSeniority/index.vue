@@ -348,7 +348,7 @@ export default {
             { required: true, message: '请选择性别', trigger: 'blur' }
         ],
         faculty: [
-            { required: false, message: '请选择院/系', trigger: 'blur' }
+            { required: ('123').indexOf(sessionStorage.getItem('jd_powerType')) !== -1, message: '请选择院/系', trigger: 'blur' }
         ],
         title: [
             { required: true, message: '请选择职称', trigger: 'blur' }
