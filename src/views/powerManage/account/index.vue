@@ -200,7 +200,7 @@ export default {
             { required: true, message: '请填选择角色', trigger: 'change' }
         ],
         faculty: [
-            { required: false, message: '请填选择院系', trigger: 'change' }
+            { required: true, message: '请填选择院系', trigger: 'change' }
         ],
         email: [
             { required: true, message: '请填写email', trigger: 'blur' }
@@ -218,7 +218,7 @@ export default {
       passwordType: 'password',
       redirect: undefined,
       tableData: [],
-      roleList: [{name:'超级管理员',code:1}, {name:'院系教学秘书', code: 2}, {name:'教学院长', code: 3}, {name:'院系管理员', code: 4}],
+      roleList: [{name:'教务处超级管理员',code:1}, {name:'院系教学院长', code: 3}, {name:'院系教学老师', code: 4}],
       facultyData: [],
       accountId: '',
       wordVisible: false,
