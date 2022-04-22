@@ -65,7 +65,7 @@ let constantRoutes = [
     component: Layout,
     redirect: '/powerManage',
     name: 'powerManage',
-    meta: { title: '权限管理' },
+    meta: { title: '权限管理', icon: 'qxgl' },
     power: '12',
     children: [
       {
@@ -100,7 +100,7 @@ let constantRoutes = [
     component: Layout,
     redirect: '/expertBasics',
     name: 'expertBasics',
-    meta: { title: '专家基础库' },
+    meta: { title: '专家基础库', icon: 'zj1' },
     power: '12',
     children: [
       {
@@ -117,7 +117,7 @@ let constantRoutes = [
     component: Layout,
     redirect: '/uploadRecord',
     name: 'uploadRecord',
-    meta: { title: '导入记录' },
+    meta: { title: '导入记录', icon: 'drjl' },
     power: '124',
     children: [
       {
@@ -133,7 +133,7 @@ let constantRoutes = [
     component: Layout,
     redirect: '/yearManage',
     name: 'yearManage',
-    meta: { title: '年份管理' },
+    meta: { title: '年份管理', icon: 'rq1' },
     power: '12',
     children: [
       {
@@ -149,7 +149,7 @@ let constantRoutes = [
     component: Layout,
     redirect: '/expertSeniority',
     name: 'expertSeniority',
-    meta: { title: '专家资格库' },
+    meta: { title: '专家资格库', icon: 'zj2' },
     power: '1234',
     children: [
       {
@@ -165,7 +165,7 @@ let constantRoutes = [
     component: Layout,
     redirect: '/interviewManage',
     name: 'interviewManage',
-    meta: { title: '面试管理' },
+    meta: { title: '面试管理', icon: 'ms' },
     power: '12',
     children: [
       {
@@ -182,7 +182,7 @@ let constantRoutes = [
     component: Layout,
     redirect: '/operationLog',
     name: 'operationLog',
-    meta: { title: '操作日志' },
+    meta: { title: '操作日志', icon: 'cz' },
     power: '12',
     children: [
       {
@@ -198,7 +198,7 @@ let constantRoutes = [
     component: Layout,
     redirect: '/smsLog',
     name: 'smsLog',
-    meta: { title: '短信日志' },
+    meta: { title: '短信日志', icon: 'sms' },
     power: '12',
     children: [
       {
@@ -214,7 +214,7 @@ let constantRoutes = [
     component: Layout,
     redirect: '/emailLog',
     name: 'emailLog',
-    meta: { title: '邮件日志' },
+    meta: { title: '邮件日志', icon: 'eml1' },
     power: '12',
     children: [
       {
@@ -230,7 +230,7 @@ let constantRoutes = [
     component: Layout,
     redirect: '/statistics',
     name: 'statistics',
-    meta: { title: '数据统计' },
+    meta: { title: '数据统计', icon: 'data' },
     power: '12',
     children: [
       {

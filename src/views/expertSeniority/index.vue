@@ -151,7 +151,7 @@
             title="是否确定删除该账号？"
             @onConfirm="accountDel(scope.row)" 
         >
-        <el-button style="margin: 0 10px;" slot="reference" v-show="scope.row.status === '拒绝'" type="danger" size="mini">删除</el-button>
+        <el-button style="margin: 0 10px;" slot="reference" type="danger" size="mini">删除</el-button>
         </el-popconfirm>
         <el-button style="margin: 0 10px;" type="primary" v-show="scope.row.status === '审核中'&&powerType !== '4'" @click="examineAccountButt(scope.row)" size="mini">审核</el-button>
       </template>
@@ -249,6 +249,7 @@
     <el-button :disabled="titleForm.indexOf('查看')!== -1" :loading="loadingAccount" type="primary" @click="submitAccount('form')">确 定</el-button>
   </div>
   <div slot="footer" class="dialog-footer" v-show="titleForm.indexOf('审核')!== -1">
+    <el-button :loading="loadingAccount" @click="dialogAccountVisible = false">关闭</el-button>
     <el-button :loading="loadingAccount" @click="refuseSubmit('form','拒绝')">拒 绝</el-button>
     <el-button :loading="loadingAccount" type="primary" @click="refuseSubmit('form','通过')">通 过</el-button>
   </div>
@@ -675,7 +676,13 @@ export default {
             "id": data.id,
             })
             .then(r => {
-              console.log(r)
+              if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                return
+              }
               this.getTableData()
               this.$message({
                 message: '删除成功！',
