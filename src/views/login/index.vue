@@ -97,7 +97,7 @@ export default {
   methods: {
     goEmpower() {
       // ?code=6118ae9a113d44f892bfd15b877adef8
-      window.location.href ='https://jaccount.sjtu.edu.cn/oauth2/authorize?response_type=code&scope=essential&client_id=HTjYQXuT3U1QqTp8h0ug&redirect_uri=https://mob.hexntc.com/jdexpert/admin/index.html#/login';
+      window.location.href ='https://jaccount.sjtu.edu.cn/oauth2/authorize?response_type=code&scope=essential&client_id=HTjYQXuT3U1QqTp8h0ug&redirect_uri=https://expert.sjtu.edu.cn/jdexpert/admin/index.html#/login';
     },
     showPwd() {
       if (this.passwordType === 'password') {
@@ -145,11 +145,11 @@ export default {
   mounted() {
     let url = window.location.href;
     let urlArr = [];
-    // let url_ = 'https://mob.hexntc.com/jdexpert/admin/index.html?code=66a3e83a6bb347c1bc6b11d7a31b7ab5#/login?back=index.html'
+    // let url_ = 'https:///jdexpert/admin/index.html?code=66a3e83a6bb347c1bc6b11d7a31b7ab5#/login?back=index.html'
     if(url.indexOf('index.html?code=') !== -1){
       urlArr = url.split('index.html?code=');
       urlArr = urlArr[1].split('#/login')[0];
-      window.location.href = `https://mob.hexntc.com/jdexpert/admin/index.html#/login?code=${urlArr}`
+      window.location.href = `https://expert.sjtu.edu.cn/jdexpert/admin/index.html#/login?code=${urlArr}`
     }
     console.log(this.$route.query.code)
     if(this.$route.query.code){

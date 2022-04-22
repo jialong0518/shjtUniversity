@@ -6,8 +6,9 @@ import { getToken } from '@/utils/auth'
 
 // create an axios instance
 const service = axios.create({
-  // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  baseURL: 'https://mob.hexntc.com',
+  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+  // baseURL: 'https://mob.hexntc.com',
+  // baseURL: 'https://expert.sjtu.edu.cn',
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 50000, // request timeout
   headers: {
@@ -23,7 +24,6 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // do something before request is sent
-    config.headers['uid'] = sessionStorage.getItem("jd_uid")
     // config.headers['token'] = '1'
     if (store.getters.token) {
       // let each request carry token
@@ -33,6 +33,7 @@ service.interceptors.request.use(
       // config.headers['token'] = ''
     }
     if(sessionStorage.getItem("jd_uid")) {
+      config.headers['uid'] = sessionStorage.getItem("jd_uid")
       config.data['uid'] = Number(sessionStorage.getItem("jd_uid"));
     }
     

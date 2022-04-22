@@ -401,7 +401,7 @@ export default {
   },
   methods: {
     downFile() {
-      window.location.href = 'https://mob.hexntc.com/expert/downloadfile?file=expertready.xlsx';
+      window.location.href = 'https://expert.sjtu.edu.cn/expert/downloadfile?file=expertready.xlsx';
     },
     recallFun(data) {
       getApplyBack(

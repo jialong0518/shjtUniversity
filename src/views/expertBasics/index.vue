@@ -363,7 +363,7 @@ export default {
       }).catch(() => {});    
     },
     downFile() {
-      window.location.href = 'https://mob.hexntc.com/expert/downloadfile?file=expertbasic.xlsx';
+      window.location.href = 'https://expert.sjtu.edu.cn/expert/downloadfile?file=expertbasic.xlsx';
     },
     getFacultyData() {
         getCollege(

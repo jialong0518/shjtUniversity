@@ -22,7 +22,7 @@ router.beforeEach((to, from, next) => {
   if (!hasToken) {
     if(to.path.indexOf('login') === -1){
         // window.location.href= `${window.location.protocol}//${window.location.host}/#/login`
-        window.location.href= `https://mob.hexntc.com/jdexpert/admin/index.html#/login`
+        window.location.href= `https://expert.sjtu.edu.cn/jdexpert/admin/index.html#/login`
         // next()
     }else{
         next()

@@ -93,7 +93,7 @@ export default {
             let formData = new FormData
             formData.append('file', file)
             formData.append('hash', hash)
-            return fetch("https://mob.hexntc.com/expert/uploadChunk", {
+            return fetch("https://expert.sjtu.edu.cn/expert/uploadChunk", {
                 method: "POST",
                 body: formData
             })
@@ -101,7 +101,7 @@ export default {
 
     checkFileChunkState(hash) {
             return new Promise(resolve => {
-                fetch("https://mob.hexntc.com/expert/checkChunk?hash=" + hash)
+                fetch("https://expert.sjtu.edu.cn/expert/checkChunk?hash=" + hash)
                 .then(r => r.json())
                 .then(response => {
                     resolve(response)
@@ -111,7 +111,7 @@ export default {
 
     megerChunkFile(hash, fileName) {
             return new Promise(resolve => {
-                fetch(`https://mob.hexntc.com/expert/megerChunk?hash=${hash}&fileName=${fileName}`)
+                fetch(`https://expert.sjtu.edu.cn/expert/megerChunk?hash=${hash}&fileName=${fileName}`)
                 .then(r => r.json())
                 .then(r => {
                     resolve(r)
