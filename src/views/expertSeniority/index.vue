@@ -153,7 +153,7 @@
         >
         <el-button style="margin: 0 10px;" slot="reference" type="danger" size="mini">删除</el-button>
         </el-popconfirm>
-        <el-button style="margin: 0 10px;" type="primary" v-show="scope.row.status === '审核中'&&powerType !== '4'" @click="examineAccountButt(scope.row)" size="mini">审核</el-button>
+        <el-button style="margin: 0 10px;" type="primary" v-show="('导入添加'.indexOf(scope.row.source) !== -1 && scope.row.status === '审核中'&&powerType !== '4')||('撤回'.indexOf(scope.row.source) !== -1  && scope.row.status === '审核中' &&powerType === '1')" @click="examineAccountButt(scope.row)" size="mini">审核</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -401,6 +401,9 @@ export default {
     }
   },
   methods: {
+    butbck() {
+      return <div>123</div>
+    },
     downFile() {
       window.location.href = 'https://expert.sjtu.edu.cn/expert/downloadfile?file=expertready.xlsx';
     },
@@ -624,8 +627,11 @@ export default {
               "remark": this.form.remark,
               "year": Number(this.form.year)
               }).then(r => {
-                if(r.msg === '信息重复') {
-                  this.loadingAccount = false
+                 if(r.code === 1){
+                  this.$message({
+                  message:  r.msg,
+                  type: 'warning'
+                  });
                   return
                 }
               this.loadingAccount = false
@@ -658,10 +664,13 @@ export default {
               "year": Number(this.form.year)
               })
             .then(r => {
-              if(r.msg === '信息重复') {
-                  this.loadingAccount = false
-                  return
-                }
+               if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                return
+              }
               this.loadingAccount = false
               this.dialogAccountVisible = false
               this.$refs[formName].resetFields();

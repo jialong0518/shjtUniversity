@@ -510,10 +510,13 @@ export default {
               "expertPwd": this.form.expertPwd,
               "remark": this.form.remark
               }).then(r => {
-                if(r.msg === '信息重复') {
-                  this.loadingAccount = false
-                  return
-                }
+                if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                return
+              }
               this.loadingAccount = false
               this.dialogAccountVisible = false
               this.account = this.form.account
@@ -543,10 +546,13 @@ export default {
               "expertPwd": this.form.expertPwd,
               "remark": this.form.remark})
             .then(r => {
-              if(r.msg === '信息重复') {
-                  this.loadingAccount = false
-                  return
-                }
+               if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                return
+              }
               this.loadingAccount = false
               this.dialogAccountVisible = false
               this.$refs[formName].resetFields();
