@@ -167,9 +167,10 @@ export default {
             .then(r => {
               if(r.code === 1){
                 this.$message({
-                message: r.msg,
-                type: 'error'
+                message:  r.msg,
+                type: 'warning'
                 });
+                this.loadingAccount = false
                 return
               }
               this.ids = [];

@@ -258,10 +258,14 @@ export default {
               "audition_name": this.form.name,
               "year": Number(this.form.year),
               }).then(r => {
-                if(r.msg === '信息重复') {
-                  this.loadingAccount = false
-                  return
-                }
+                if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                this.loadingAccount = false
+                return
+              }
               this.loadingAccount = false
               this.dialogAccountVisible = false
               this.account = this.form.account
@@ -280,10 +284,14 @@ export default {
               "id": this.accountId,
               })
             .then(r => {
-              if(r.msg === '信息重复') {
-                  this.loadingAccount = false
-                  return
-                }
+              if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                this.loadingAccount = false
+                return
+              }
               this.loadingAccount = false
               this.dialogAccountVisible = false
               this.$refs[formName].resetFields();
@@ -298,7 +306,13 @@ export default {
             "id": data.id,
             })
             .then(r => {
-              console.log(r)
+              if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                return
+              }
               this.getTableData()
               this.$message({
                 message: '删除成功！',

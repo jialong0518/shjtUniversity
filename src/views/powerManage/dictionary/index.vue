@@ -295,10 +295,14 @@ export default {
               "name": this.form.name,
               "unionType": Number(this.form.type),
               }).then(r => {
-                if(r.msg === '信息重复') {
-                  this.loadingAccount = false
-                  return
-                }
+                if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                this.loadingAccount = false
+                return
+              }
               this.loadingAccount = false
               this.dialogAccountVisible = false
               this.account = this.form.account
@@ -320,10 +324,14 @@ export default {
               "id": this.accountId,
               })
             .then(r => {
-              if(r.msg === '信息重复') {
-                  this.loadingAccount = false
-                  return
-                }
+              if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                this.loadingAccount = false
+                return
+              }
               this.loadingAccount = false
               this.dialogAccountVisible = false
               this.$refs[formName].resetFields();
@@ -340,7 +348,14 @@ export default {
             "id": data.id,
             })
             .then(r => {
-              console.log(r)
+              if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                // this.loadingAccount = false
+                return
+              }
               this.currentPage = 1
               this.pageSize = 10
               this.getTableData()

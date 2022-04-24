@@ -461,10 +461,14 @@ export default {
               "auditionRoundId": this.checkData.id,
               "source": this.noticeType === '邮件' ? 'email' : 'sms'
               }).then(r => {
-                if(r.msg === '信息重复') {
-                  this.loadingAccount = false
-                  return
-                }
+                if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                this.loadingAccount = false
+                return
+              }
                 this.emlTxt = '';
       this.emlType = 'all';
               this.loadingAccount = false
@@ -573,10 +577,14 @@ export default {
               "year": Number(this.form.year),
               "round_num": this.form.round_num
               }).then(r => {
-                if(r.msg === '信息重复') {
-                  this.loadingAccount = false
-                  return
-                }
+                if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                this.loadingAccount = false
+                return
+              }
               this.loadingAccount = false
               this.dialogAccountVisible = false
               this.account = this.form.account
@@ -605,10 +613,14 @@ export default {
               "id": this.accountId,
               })
             .then(r => {
-              if(r.msg === '信息重复') {
-                  this.loadingAccount = false
-                  return
-                }
+              if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                this.loadingAccount = false
+                return
+              }
               this.loadingAccount = false
               this.dialogAccountVisible = false
               this.$refs[formName].resetFields();
@@ -624,7 +636,13 @@ export default {
             "status": data.status === '已关闭' ? '已开启' : '已关闭'
             })
             .then(r => {
-              console.log(r)
+              if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                return
+              }
               this.getTableData()
               // this.$message({
               //   message: '删除成功！',
@@ -639,7 +657,13 @@ export default {
             "id": data.id,
             })
             .then(r => {
-              console.log(r)
+              if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                return
+              }
               this.getTableData()
               this.$message({
                 message: '删除成功！',
@@ -829,6 +853,13 @@ export default {
       if(!state) return
       expertauditionmatch(arr)
       .then(r => {
+        if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                return
+              }
         if(r.code === 0){
           this.dialogMateVisible = false;
         }

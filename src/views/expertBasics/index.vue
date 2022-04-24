@@ -515,6 +515,7 @@ export default {
                 message:  r.msg,
                 type: 'warning'
                 });
+                this.loadingAccount = false
                 return
               }
               this.loadingAccount = false
@@ -551,6 +552,7 @@ export default {
                 message:  r.msg,
                 type: 'warning'
                 });
+                this.loadingAccount = false
                 return
               }
               this.loadingAccount = false
@@ -567,7 +569,13 @@ export default {
             "id": data.id,
             })
             .then(r => {
-              console.log(r)
+              if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                return
+              }
               this.getTableData()
               this.$message({
                 message: '删除成功！',

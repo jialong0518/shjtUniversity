@@ -240,6 +240,13 @@ export default {
       userstartstop(
         {"id": data.id}
       ).then(r => {
+        if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                return
+              }
         this.getTableData()
       }).catch(() => {});    
       // userstartstop
@@ -388,6 +395,14 @@ export default {
               "roleid": this.form.role,
               })
             .then(r => {
+              if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                this.loadingAccount = false
+                return
+              }
               this.loadingAccount = false
               this.dialogAccountVisible = false
               this.$refs[formName].resetFields();
@@ -401,6 +416,14 @@ export default {
         passwordreset({
             "id": data.id})
             .then(r => {
+              if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                // this.loadingAccount = false
+                return
+              }
               if(r.code === 0){
                 this.$message({
                 message: '密码重置成功！',
@@ -421,7 +444,14 @@ export default {
             "id": data.id,
             })
             .then(r => {
-              console.log(r)
+              if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                // this.loadingAccount = false
+                return
+              }
               this.getTableData()
               this.$message({
                 message: '删除成功！',

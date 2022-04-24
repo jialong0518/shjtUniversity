@@ -411,6 +411,13 @@ export default {
       getApplyBack(
         {id: data.id}
       ).then(r => {
+        if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                return
+              }
         this.getTableData()
       }).catch(() => {})
     },
@@ -578,10 +585,14 @@ export default {
               "ids": this.accountId,
               "status": state
               }).then(r => {
-                if(r.msg === '信息重复') {
-                  this.loadingAccount = false
-                  return
-                }
+                if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                this.loadingAccount = false
+                return
+              }
               this.loadingAccount = false
               this.dialogAccountVisible = false
               this.batchAccountVisible = false
@@ -628,12 +639,13 @@ export default {
               "year": Number(this.form.year)
               }).then(r => {
                  if(r.code === 1){
-                  this.$message({
-                  message:  r.msg,
-                  type: 'warning'
-                  });
-                  return
-                }
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                this.loadingAccount = false
+                return
+              }
               this.loadingAccount = false
               this.dialogAccountVisible = false
               // this.account = this.form.account
@@ -669,6 +681,7 @@ export default {
                 message:  r.msg,
                 type: 'warning'
                 });
+                this.loadingAccount = false
                 return
               }
               this.loadingAccount = false
