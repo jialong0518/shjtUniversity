@@ -85,6 +85,8 @@
       <el-button type="primary" style="margin-left: 15px;" @click="exportData('form')">导 出</el-button>
       <el-button type="primary" style="margin-left: 15px;" v-show="powerType !== '4'" @click="batchRefuse('通过')">批量通过</el-button>
       <el-button type="primary" style="margin-left: 15px;" v-show="powerType !== '4'" @click="batchRefuse('拒绝')">批量拒绝</el-button>
+      <el-button type="primary" style="margin-left: 15px;"  @click="downSMSFile">批量短信模板下载</el-button>
+      <plupload1 @updata="batchImportSMS">批量发送短信</plupload1>
     </div>
     <div style="padding: 0 20px">
         <el-table
@@ -126,6 +128,15 @@
     <el-table-column
       prop="source"
       label="类型">
+    </el-table-column>
+    <el-table-column
+      prop="commitment"
+      label="承诺书">
+      <template slot-scope="scope">{{ scope.row.commitment === '1' ? '已确认' : '未确认' }}</template>
+    </el-table-column>
+    <el-table-column
+      prop="commitmentTime"
+      label="承诺时间">
     </el-table-column>
     <el-table-column
       prop="expertPhone"
@@ -265,13 +276,14 @@
 </template>
 
 <script>
-import { getYearlist, getCollege, getSubject, getTitle, getTable, expertbasicbind, expertbasicadd, expertreadydel, expertbasicedit, expertreadyapprove, expertreadyexport, getApplyBack } from "@/api/expertSeniority";
+import { getYearlist, smsimport, getCollege, getSubject, getTitle, getTable, expertbasicbind, expertbasicadd, expertreadydel, expertbasicedit, expertreadyapprove, expertreadyexport, getApplyBack } from "@/api/expertSeniority";
 import plupload from "@/components/plupload";
-
+import plupload1 from "@/components/plupload";
 export default {
   name: 'Login',
   components: {
     plupload,
+    plupload1
   },
   data() {
       let validatePhone = (rule, value, callback) => {
@@ -285,8 +297,8 @@ export default {
       };
       let validateNo = (rule, value, callback) => {
           let myreg = /^[0-9A-Za-z]+$/;
-        if (!myreg.test(value) || value.length > 15 || value.length === 0) {
-            callback(new Error('专家工号1至15位，数组或者字母'));
+        if (!myreg.test(value) || value.length !== 5 && value.length !== 11) {
+            callback(new Error('专家工号5位或者11位，数组或者字母'));
             return;
         }
         callback();
@@ -401,6 +413,15 @@ export default {
     }
   },
   methods: {
+    downSMSFile() {
+      let url = window.location.href;
+      if(url.indexOf('mob.hexntc.com') !== -1 || url.indexOf('localhost') !== -1 ) {
+        window.location.href = 'https://mob.hexntc.com/expert/downloadfile?file=sms.xlsx';
+      } 
+      if(url.indexOf('expert.sjtu.edu.cn') !== -1 || url.indexOf('localhost') !== -1 ) {
+        window.location.href = 'https://mob.hexntc.com/expert/downloadfile?file=sms.xlsx';
+      }
+    },
     butbck() {
       return <div>123</div>
     },
@@ -482,6 +503,31 @@ export default {
          path:'/importResults',
          query:{data: JSON.stringify(data)}
         });
+    },
+    batchImportSMS(data) {
+      console.log(data,'批量导入sms')
+      // return
+      smsimport({
+              "fileName": `${data.fileHash}/${data.name}`,
+              }).then(r => {
+                if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                this.loadingAccount = false
+                return
+              }
+                this.$message({
+                message:  '批量发送短信成功',
+                type: 'success'
+                });
+                this.loadingAccount = false
+              
+            })
+            .catch(() => {
+              this.loadingAccount = false
+            });
     },
 
     facultyFun(data){

@@ -353,7 +353,8 @@ export default {
         inPosition: '',
         expertNo: '',
         expertPwd: '',
-        remark:''
+        remark:'',
+        year: ''
       },
       message_: null,
       message1_:null,
@@ -611,8 +612,9 @@ export default {
               "inPosition": Number(this.form.inPosition),
               "expertNo": this.form.expertNo,
               "expertPwd": this.form.expertPwd,
-              "remark": this.form.remark})
-            .then(r => {
+              "remark": this.form.remark,
+              "year": this.form.year,
+              }).then(r => {
               if(r.msg === '信息重复') {
                   this.loadingAccount = false
                   return
@@ -724,6 +726,7 @@ export default {
       this.form.expertNo = r.data.expertNo;
       this.form.expertPwd = r.data.expertPwd;
       this.form.remark = r.data.remark;
+      this.form.year = r.data.year;
       this.dialogAccountVisible = true
         }).catch(() => {});
     },

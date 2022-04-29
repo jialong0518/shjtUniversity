@@ -39,7 +39,7 @@ module.exports = {
     },
     proxy: {  //配置跨域
       '/expert': {
-        target: 'https://expert.sjtu.edu.cn/expert',  //这里后台的地址模拟的;应该填写你们真实的后台接口
+        target: 'https://mob.hexntc.com/expert',  //这里后台的地址模拟的;应该填写你们真实的后台接口
         pathRewrite: {
           '^/expert': ''  //请求的时候使用这个api就可以
         }

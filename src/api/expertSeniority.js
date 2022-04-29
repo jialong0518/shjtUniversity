@@ -1,6 +1,16 @@
 import request from '@/utils/request'
 
 
+
+export function smsimport(data) {
+  return request({
+    url: '/expert/smsimport',
+    method: 'post',
+    data
+  })
+}
+
+
 export function getYearlist(data) {
     return request({
       url: '/expert/yearlist',
