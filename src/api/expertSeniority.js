@@ -2,6 +2,14 @@ import request from '@/utils/request'
 
 
 
+export function adminback(data) {
+  return request({
+    url: '/expert/adminback',
+    method: 'post',
+    data
+  })
+}
+
 export function smsimport(data) {
   return request({
     url: '/expert/smsimport',

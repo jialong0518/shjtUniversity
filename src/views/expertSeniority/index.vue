@@ -165,6 +165,12 @@
         <el-button style="margin: 0 10px;" slot="reference" type="danger" size="mini">删除</el-button>
         </el-popconfirm>
         <el-button style="margin: 0 10px;" type="primary" v-show="('导入添加'.indexOf(scope.row.source) !== -1 && scope.row.status === '审核中'&&powerType !== '4')||('撤回'.indexOf(scope.row.source) !== -1  && scope.row.status === '审核中' &&powerType === '1')" @click="examineAccountButt(scope.row)" size="mini">审核</el-button>
+        <el-popconfirm
+            title="是否确定撤回数据？"
+            @click="backDataButt(scope.row)"
+        >
+        <el-button style="margin: 10px 10px 0;" slot="reference"  v-show="scope.row.status === '通过'&&powerType === '1'" type="primary" size="mini">强制退回</el-button>
+        </el-popconfirm>
       </template>
     </el-table-column>
   </el-table>
@@ -276,7 +282,7 @@
 </template>
 
 <script>
-import { getYearlist, smsimport, getCollege, getSubject, getTitle, getTable, expertbasicbind, expertbasicadd, expertreadydel, expertbasicedit, expertreadyapprove, expertreadyexport, getApplyBack } from "@/api/expertSeniority";
+import { getYearlist, smsimport, getCollege, adminback, getSubject, getTitle, getTable, expertbasicbind, expertbasicadd, expertreadydel, expertbasicedit, expertreadyapprove, expertreadyexport, getApplyBack } from "@/api/expertSeniority";
 import plupload from "@/components/plupload";
 import plupload1 from "@/components/plupload";
 export default {
@@ -413,6 +419,20 @@ export default {
     }
   },
   methods: {
+    backDataButt(data){
+      adminback(
+        {id: data.id}
+      ).then(r => {
+        if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                return
+              }
+        this.getTableData()
+      }).catch(() => {})
+    },
     downSMSFile() {
       let url = window.location.href;
       if(url.indexOf('mob.hexntc.com') !== -1 || url.indexOf('localhost') !== -1 ) {
