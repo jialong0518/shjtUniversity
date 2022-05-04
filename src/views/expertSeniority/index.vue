@@ -167,7 +167,7 @@
         <el-button style="margin: 0 10px;" type="primary" v-show="('导入添加'.indexOf(scope.row.source) !== -1 && scope.row.status === '审核中'&&powerType !== '4')||('撤回'.indexOf(scope.row.source) !== -1  && scope.row.status === '审核中' &&powerType === '1')" @click="examineAccountButt(scope.row)" size="mini">审核</el-button>
         <el-popconfirm
             title="是否确定撤回数据？"
-            @click="backDataButt(scope.row)"
+            @onConfirm="backDataButt(scope.row)"
         >
         <el-button style="margin: 10px 10px 0;" slot="reference"  v-show="scope.row.status === '通过'&&powerType === '1'" type="primary" size="mini">强制退回</el-button>
         </el-popconfirm>
@@ -420,6 +420,7 @@ export default {
   },
   methods: {
     backDataButt(data){
+      console.log(data)
       adminback(
         {id: data.id}
       ).then(r => {
@@ -439,7 +440,7 @@ export default {
         window.location.href = 'https://mob.hexntc.com/expert/downloadfile?file=sms.xlsx';
       } 
       if(url.indexOf('expert.sjtu.edu.cn') !== -1 || url.indexOf('localhost') !== -1 ) {
-        window.location.href = 'https://mob.hexntc.com/expert/downloadfile?file=sms.xlsx';
+        window.location.href = 'https://expert.sjtu.edu.cn/expert/downloadfile?file=sms.xlsx';
       }
     },
     butbck() {
