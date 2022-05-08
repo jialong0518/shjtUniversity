@@ -122,17 +122,18 @@ export default {
    }
 },
   mounted(){
-      if(sessionStorage.getItem('upd') === '0'&&sessionStorage.getItem('dialog') == null){
+      if(sessionStorage.getItem('ifupdpassword') === '0'&&sessionStorage.getItem('dialog') == null){
            const h = this.$createElement;
         this.$msgbox({
           title: '提示',
           message: h('p', null, [
-            h('span', null, '您当前使用的密码是初始密码，为了确保账户安全，建议先修改登录密码！ '),
+            h('span', null, '您当前使用的密码是初始密码，为了确保账户安全，请先修改登录密码！ '),
           ]),
           showCancelButton: true,
           confirmButtonText: '修改密码',
-          cancelButtonText: '知道了',
-          
+          showCancelButton: false,
+          closeOnClickModal: false,  
+          showClose: false,        
         }).then(action => {
           this.dialogVisible = true
         });
@@ -151,6 +152,8 @@ export default {
       sessionStorage.removeItem("jd_phone")
       sessionStorage.removeItem("jd_name")
       sessionStorage.removeItem("dialog")
+      sessionStorage.removeItem("ifupdpassword")
+
     },
     showeditpassword(){
         if(this.$refs.ruleForm){
@@ -166,16 +169,18 @@ export default {
         // this.$refs[formName].resetFields();
         this.$refs.ruleForm.validate(valid => {
             if (valid) {
-            showModuleDeployList('/byd/web/index.php?r=reg/passwordupd', {
-            "old": this.form.oldword,
-            "new": this.form.newword,
-            "uid": sessionStorage.getItem('jd_uid')
+            showModuleDeployList('/expert/userpasswordupd', {
+            "passwordOld": this.form.oldword,
+            "passwordNew": this.form.newword,
+            "uid": Number(sessionStorage.getItem('jd_uid')),
+            "id": Number(sessionStorage.getItem('jd_uid')),
         }).then(r => {
             this.$router.push(`/login`)
             sessionStorage.removeItem("jd_uid")
             sessionStorage.removeItem("jd_phone")
             sessionStorage.removeItem("jd_name")
             sessionStorage.removeItem("dialog")
+            sessionStorage.removeItem("ifupdpassword")
         })
             .catch(() => {
             });

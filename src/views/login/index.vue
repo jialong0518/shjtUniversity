@@ -123,6 +123,7 @@ export default {
         sessionStorage.setItem("jd_phone",r.data.phone)
         sessionStorage.setItem("jd_name",r.data.name)
         sessionStorage.setItem("jd_powerType",r.data.type)
+        sessionStorage.setItem("ifupdpassword",r.data.ifupdpassword)
         this.$router.push({ path:  '/' })
       })
       .catch(() => {});
@@ -164,6 +165,7 @@ export default {
         sessionStorage.setItem("jd_phone",r.data.phone)
         sessionStorage.setItem("jd_name",r.data.name)
         sessionStorage.setItem("jd_powerType",r.data.type)
+        sessionStorage.setItem("ifupdpassword",r.data.ifupdpassword)
         this.$router.push({ path:  '/' })
       })
       .catch(() => {});
