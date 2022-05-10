@@ -11,7 +11,7 @@ export default {
   name: 'plupload',
   data() {
     return {
-        
+        fileUrl: 'https://mob.hexntc.com'
     }
   },
   watch: {
@@ -88,12 +88,13 @@ export default {
                 console.log("报错了", err.target.error)
             }
             fileReader.readAsBinaryString(event.target.files[0])
+            this.$refs.inputFile.value = "";
     },
     uploadFileChunk(hash, file) {
             let formData = new FormData
             formData.append('file', file)
             formData.append('hash', hash)
-            return fetch("https://expert.sjtu.edu.cn/expert/uploadChunk", {
+            return fetch(`${this.fileUrl}/expert/uploadChunk`, {
                 method: "POST",
                 body: formData
             })
@@ -101,7 +102,7 @@ export default {
 
     checkFileChunkState(hash) {
             return new Promise(resolve => {
-                fetch("https://expert.sjtu.edu.cn/expert/checkChunk?hash=" + hash)
+                fetch(`${this.fileUrl}/expert/checkChunk?hash=${hash}`)
                 .then(r => r.json())
                 .then(response => {
                     resolve(response)
@@ -111,7 +112,7 @@ export default {
 
     megerChunkFile(hash, fileName) {
             return new Promise(resolve => {
-                fetch(`https://expert.sjtu.edu.cn/expert/megerChunk?hash=${hash}&fileName=${fileName}`)
+                fetch(`${this.fileUrl}/expert/megerChunk?hash=${hash}&fileName=${fileName}`)
                 .then(r => r.json())
                 .then(r => {
                     resolve(r)
@@ -122,7 +123,13 @@ export default {
   
 //   message_
   mounted: function() {
-   
+   let url = window.location.href;
+      if(url.indexOf('mob.hexntc.com') !== -1 || url.indexOf('localhost') !== -1 ) {
+        this.fileUrl = 'https://mob.hexntc.com';
+      } 
+      if(url.indexOf('expert.sjtu.edu.cn') !== -1) {
+        this.fileUrl = 'https://expert.sjtu.edu.cn';
+      }
   }
 }
 </script>
