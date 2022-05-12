@@ -125,6 +125,13 @@
               size="mini"
               >{{ scope.row.status === "已关闭" ? "开启" : "关闭" }}</el-button
             >
+            <el-button
+                style="margin: 0 10px 10px"
+                type="primary"
+                size="mini"
+                @click="goSecretaryButt(scope.row)"
+                >导入秘书对应数据</el-button
+              >
             <el-popconfirm
               title="是否确定删除该账号？"
               @onConfirm="accountDel(scope.row)"
@@ -648,6 +655,11 @@ export default {
     editor.destroy(); // 组件销毁时，及时销毁编辑器
   },
   methods: {
+    goSecretaryButt(data) {
+      // ,query:{id:data.id, auditionName: data.audition_name}
+      this.$router.push({path:'/secretary'});
+      console.log(data);
+    },
     onCreated(editor) {
       this.editor = Object.seal(editor); // 一定要用 Object.seal() ，否则会报错
     },

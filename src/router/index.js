@@ -271,6 +271,20 @@ let constantRoutes = [
     ]
   },
   {
+    path: '/secretaryResults',
+    component: Layout,
+    redirect: '/secretaryResults',
+    name: 'secretaryResults',
+    meta: { title: '导入记录' },
+    power: '12',
+    children: [
+      {
+        path: '/secretaryResults',
+        component: () => import('@/views/secretaryResults/index'),
+      },
+    ]
+  },
+  {
     path: '/interviewRound',
     component: Layout,
     redirect: '/interviewRound',
@@ -297,7 +311,21 @@ let constantRoutes = [
       },
     ]
   },
+  {
+    path: '/secretary',
+    component: Layout,
+    redirect: '/secretary',
+    name: 'secretary',
+    meta: { title: '教学秘书' },
+    children: [
+      {
+        path: '/secretary',
+        component: () => import('@/views/secretary/index'),
+      },
+    ]
+  },
 
+  
   // emailLog  
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true,power: '1234' }
