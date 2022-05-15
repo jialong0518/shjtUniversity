@@ -31,6 +31,8 @@
     </el-col>
     </el-row>
     <div style="padding: 15px;overflow: hidden;">
+      <plupload @updata="batchImport" style="float:right;">导入秘书信息</plupload>
+      <el-button type="primary" style="float:right;margin-left: 15px;"  @click="downFile">秘书导入模板下载</el-button>
       <el-button type="primary" style="float:right;" @click="addAccountButt('ruleForm')">添加用户</el-button>
     </div>
     <div style="margin:0 20px;">
@@ -158,10 +160,14 @@
 import { validUsername } from '@/utils/validate'
 import { userlist, userAdd, passwordreset, userdel, useredit, userbind, getCollege, userstartstop } from "@/api/account";
 import { roleslist } from "@/api/role";
+import plupload from "@/components/plupload";
 
 
 export default {
   name: 'Login',
+  components: {
+    plupload,
+  },
   data() {
     return {
         searchemail: '',
@@ -235,6 +241,20 @@ export default {
     }
   },
   methods: {
+    batchImport(data) {
+      console.log(data,'批量导入')
+      let time = new Date();//time为现在的时间
+      let year_ = time.getFullYear();//获取现在的年份
+      data.year = year_
+      data.typepage = '2'
+       this.$router.push({
+         path:'/secretaryResults',
+         query:{data: JSON.stringify(data)}
+        });
+    },
+    downFile() {
+      window.location.href = 'https://mob.hexntc.com/expert/downloadfile?file=secretary.xlsx';
+    },
     enableButt(data) {
       console.log(data.status)
       userstartstop(

@@ -243,6 +243,23 @@ let constantRoutes = [
     ]
   },
   {
+    path: '/secretary',
+    component: Layout,
+    redirect: '/secretary',
+    name: 'secretary',
+    meta: { title: '教学秘书表格', icon: 'mishu1' },
+    power: '15',
+    children: [
+      {
+        path: 'secretary',
+        name: 'secretary',
+        component: () => import('@/views/secretary/index'),
+        meta: { title: '教学秘书表格' }
+      },
+      
+    ]
+  },
+  {
     path: '/sessions',
     component: Layout,
     redirect: '/sessions',
@@ -311,19 +328,7 @@ let constantRoutes = [
       },
     ]
   },
-  {
-    path: '/secretary',
-    component: Layout,
-    redirect: '/secretary',
-    name: 'secretary',
-    meta: { title: '教学秘书' },
-    children: [
-      {
-        path: '/secretary',
-        component: () => import('@/views/secretary/index'),
-      },
-    ]
-  },
+  
 
   
   // emailLog  

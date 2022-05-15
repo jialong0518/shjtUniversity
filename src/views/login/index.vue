@@ -124,7 +124,12 @@ export default {
         sessionStorage.setItem("jd_name",r.data.name)
         sessionStorage.setItem("jd_powerType",r.data.type)
         sessionStorage.setItem("ifupdpassword",r.data.ifupdpassword)
-        this.$router.push({ path:  '/expertSeniority/expertSeniority' })
+        if(sessionStorage.getItem('jd_powerType') === '5') {
+          this.$router.push({ path:  '/secretary/secretary' })
+        } else {
+          this.$router.push({ path:  '/expertSeniority/expertSeniority' })
+        }
+        
       })
       .catch(() => {});
       // this.$refs.loginForm.validate(valid => {
@@ -166,7 +171,11 @@ export default {
         sessionStorage.setItem("jd_name",r.data.name)
         sessionStorage.setItem("jd_powerType",r.data.type)
         sessionStorage.setItem("ifupdpassword",r.data.ifupdpassword)
-        this.$router.push({ path:  '/expertSeniority/expertSeniority' })
+        if(sessionStorage.getItem('jd_powerType') === '5') {
+          this.$router.push({ path:  '/secretary/secretary' })
+        } else {
+          this.$router.push({ path:  '/expertSeniority/expertSeniority' })
+        }
       })
       .catch(() => {});
     }

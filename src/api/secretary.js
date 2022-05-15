@@ -35,13 +35,21 @@ export function getTitle(data) {
 
 export function getTable(data) {
     return request({
-      url: '/expert/expertbasiclist',
+      url: '/expert/expertsecretarylist',
       method: 'post',
       data
     })
 }
 
 export function expertimport(data) {
+  return request({
+    url: '/expert/expertsecretaryimport',
+    method: 'post',
+    data
+  })
+}
+
+export function secretaryimport(data) {
   return request({
     url: '/expert/secretaryimport',
     method: 'post',
@@ -67,7 +75,7 @@ export function expertbasicadd(data) {
 
 export function expertbasicdel(data) {
   return request({
-    url: '/expert/expertbasicdel',
+    url: '/expert/expertsecretarydel',
     method: 'post',
     data
   })
@@ -83,7 +91,7 @@ export function expertbasicedit(data) {
 
 export function expertbasicexport(data) {
   return request({
-    url: '/expert/expertbasicexport',
+    url: '/expert/expertsecretaryexport',
     method: 'post',
     data
   })
@@ -100,6 +108,8 @@ export function expertbasicexport(data) {
     })
   }
 
+
+ 
   
 
   

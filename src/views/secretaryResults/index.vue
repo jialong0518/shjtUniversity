@@ -4,9 +4,6 @@
       <el-col :span="18" style="line-height: 30px;">
         导入结果：成功<span style="color: green;">{{successNum}}</span>条，失败<span style="color: red;">{{failNum}}</span>条
       </el-col>
-      <el-col :span="6">
-        <el-button style="float: right;margin-right: 20px;" @click="goHandle" type="primary">去处理</el-button>
-      </el-col>
     </el-row>
     <div style="padding: 0 20px" v-show="tableData.length > 0">
         <el-table
@@ -14,32 +11,27 @@
     border
     style="width: 100%;;border-radius: 10px;">
     <el-table-column
-      prop="expertName"
-      label="姓名">
+      prop="expertNo"
+      label="工号">
     </el-table-column>
     <el-table-column
-      prop="expertGender"
-      label="性别">
-      <template slot-scope="scope">{{ scope.row.expertGender === 1 ? '男' : '女' }}</template>
+      prop="expertName"
+      label="姓名">
     </el-table-column>
     <el-table-column
       prop="expertCollege"
       label="院/系">
     </el-table-column>
     <el-table-column
-      prop="expertTitle"
-      label="职称">
+      prop="expertPhone"
+      label="手机">
     </el-table-column>
     <el-table-column
-      prop="expertSubject"
-      label="学科">
+      prop="expertEmail"
+      label="Email">
     </el-table-column>
     <el-table-column
-      prop="result"
-      label="状态">
-    </el-table-column>
-    <el-table-column
-      prop="importMemo"
+      prop="remark"
       label="描述">
     </el-table-column>
     
@@ -52,7 +44,7 @@
 
 <script>
 
-import { getCollege, getSubject, getTitle, getTable, expertimport } from "@/api/secretary";
+import { getCollege, getSubject, getTitle, getTable, expertimport, secretaryimport } from "@/api/secretary";
 export default {
   name: 'Login',
   
@@ -73,15 +65,26 @@ export default {
         });
     },
     expertImportData(data) {
-      expertimport({
-        "fileName": `${data.fileHash}/${data.name}`,
-        "year": data.year,
-        "source": data.source
-        }).then(r => {
-          this.failNum = r.data.fail;
-          this.successNum = r.data.success;
-          this.tableData = r.data['fail_list']||[];
-      }).catch(() => {});
+      if(data.typepage === '1'){
+         expertimport({
+          "fileName": `${data.fileHash}/${data.name}`,
+          "fid": Number(data.fid),
+          "auditionRoundName": data.auditionRoundName
+          }).then(r => {
+            this.failNum = r.data.fail;
+            this.successNum = r.data.success;
+            this.tableData = r.data['fail_list']||[];
+        }).catch(() => {});
+      } else {
+        secretaryimport({
+          "fileName": `${data.fileHash}/${data.name}`,
+          }).then(r => {
+            this.failNum = r.data.fail;
+            this.successNum = r.data.success;
+            this.tableData = r.data['fail_list']||[];
+        }).catch(() => {});
+      }
+     
     },
   },
   mounted: function() {

@@ -44,41 +44,31 @@
         <div style="display: inline-block;width:30%;">电话：</div>
         <el-input style="width: 70%" v-model="searchPhone" @change="getTableData()" autocomplete="off"></el-input>
     </el-col>
-      <el-col :span="6">
-        <div style="display: inline-block;width:30%;">职称：</div>
-        <el-select v-model="searchTitle" style="width: 70%" placeholder="请选择">
-          <el-option
-            v-for="item in titleData"
-            :key="item.name"
-            :label="item.name"
-            :value="item.name">
-          </el-option>
-        </el-select>
-    </el-col>
     <el-col :span="6">
-        <div style="display: inline-block;width:30%;">性别：</div>
-        <el-select v-model="searchGender" style="width: 70%" placeholder="请选择">
-          <el-option
-            label="男"
-            value="1">
-          </el-option>
-          <el-option
-            label="女"
-            value="2">
-          </el-option>
-        </el-select>
-    </el-col>
+        <div style="display: inline-block;width:30%;">专家工号：</div>
+        <el-input style="width: 70%" v-model="searchExpertNo" @change="getTableData()" autocomplete="off"></el-input>
+    </el-col>  
+    <el-col :span="6">
+        <div style="display: inline-block;width:30%;">秘书姓名：</div>
+        <el-input style="width: 70%" v-model="searchSecretaryName" @change="getTableData()" autocomplete="off"></el-input>
+    </el-col>  
+    <el-col :span="6">
+        <div style="display: inline-block;width:30%;">场次名称：</div>
+        <el-input style="width: 70%" v-model="searchAuditionRoundName" @change="getTableData()" autocomplete="off"></el-input>
+    </el-col> 
+    </el-row>
+    <el-row :gutter="20" style="padding: 20px;">
       <el-col :span="6">
         <el-button type="primary" @click="searchFun">搜 索</el-button>
         <el-button type="primary" plain @click="resetSearch()">重置</el-button>
         <!-- <el-button type="primary" @click="exportData">导 出</el-button> -->
-    </el-col>
+      </el-col>
     </el-row>
     <div style="padding: 15px;overflow: hidden;display: flex;justify-content: flex-end;">
       <!-- <el-button type="primary" style="margin-left: 15px;"  @click="addAccountButt('ruleForm')">添加专家</el-button> -->
-      <el-button type="primary" style="margin-left: 15px;"  @click="downFile">导入模板下载</el-button>
-      <plupload @updata="batchImport">批量导入</plupload>
-      <!-- <el-button type="primary" style="margin-left: 15px;" @click="exportData">导出查询结果</el-button> -->
+      <el-button type="primary" style="margin-left: 15px;" v-show="cid != undefined"  @click="downFile">秘书导入模板下载</el-button>
+      <plupload @updata="batchImport"  v-show="cid != undefined">导入秘书信息</plupload>
+      <el-button type="primary" style="margin-left: 15px;" @click="exportData">导出查询结果</el-button>
     </div>
     <div style="padding: 0 20px">
         <el-table
@@ -92,11 +82,6 @@
     <el-table-column
       prop="expertNo"
       label="学工号">
-    </el-table-column>
-    <el-table-column
-      prop="expertGender"
-      label="性别">
-      <template slot-scope="scope">{{ scope.row.expertGender === 1 ? '男' : '女' }}</template>
     </el-table-column>
     <el-table-column
       prop="expertCollege"
@@ -119,21 +104,30 @@
       label="邮箱">
     </el-table-column>
     <el-table-column
-      prop="inPosition"
-      label="在职">
-      <template slot-scope="scope">{{ scope.row.inPosition === 1 ? '是' : '否' }}</template>
+      prop="secretary"
+      label="对应秘书">
+    </el-table-column>
+    <el-table-column
+      prop="meetingInfo"
+      label="会议信息">
+      <template slot-scope="scope"><div v-html="scope.row.meetingInfo"></div></template>
+    </el-table-column>
+    <el-table-column
+      prop="auditionRoundName"
+      label="场次">
     </el-table-column>
     <el-table-column
     width="100"
+    v-if="powerType === '1'" 
       label="操作">
       <template slot-scope="scope">
         <!-- <el-button  @click="seeAccountButt(scope.row)" type="primary" size="mini">查看</el-button> -->
         <!-- <el-button  type="primary" @click="editAccountButt(scope.row)" size="mini">编辑</el-button> -->
         <el-popconfirm
-            title="是否确定删除该账号？"
+            title="是否确定删除该数据？"
             @onConfirm="accountDel(scope.row)" 
         >
-        <el-button style="margin: 0 10px;" slot="reference"  type="danger" size="mini">删除</el-button>
+        <el-button v-show="powerType === '1'" style="margin: 0 10px;" slot="reference"  type="danger" size="mini">删除</el-button>
         </el-popconfirm>
       </template>
     </el-table-column>
@@ -259,13 +253,16 @@ export default {
         callback();
       };
     return {
+        powerType: sessionStorage.getItem('jd_powerType'),
         searchFaculty:'',
         searchSubject: '',
         searchTitle: '',
         searchName:'',
-        searchPhone: '',
-        searchYear: '',
-        searchGender: '',
+        searchExpertNo: '',
+        searchSecretaryName: '',
+        searchAuditionRoundName: '',
+        searchYear:'',
+        searchPhone:'',
         facultyData: [],
         subjectData: [],
         titleData: [],
@@ -343,7 +340,8 @@ export default {
       accountId: '',
       wordVisible: false,
       word:'',
-      account:''
+      account:'',
+      cid: this.$route.query.id
     }
   },
   watch: {
@@ -363,7 +361,7 @@ export default {
       }).catch(() => {});    
     },
     downFile() {
-      window.location.href = 'https://expert.sjtu.edu.cn/expert/downloadfile?file=expertbasic.xlsx';
+      window.location.href = 'https://mob.hexntc.com/expert/downloadfile?file=secretary.xlsx';
     },
     getFacultyData() {
         getCollege(
@@ -389,8 +387,9 @@ export default {
       console.log(data,'批量导入')
       let time = new Date();//time为现在的时间
       let year_ = time.getFullYear();//获取现在的年份
-      data.year = year_
-      data.source = '资格库'
+      data.fid = this.$route.query.id
+      data.typepage = '1'
+      data.auditionRoundName = this.$route.query.round_name
        this.$router.push({
          path:'/secretaryResults',
          query:{data: JSON.stringify(data)}
@@ -586,10 +585,14 @@ export default {
             }); 
     },
     resetSearch() {
+      this.searchYear = '';
+      this.searchPhone = '';
       this.searchFaculty = '';
       this.searchSubject = '';
-      this.searchTitle = '';
       this.searchName = '';
+      this.searchExpertNo = '';
+      this.searchSecretaryName = '';
+      this.searchAuditionRoundName = '';
       this.currentPage = 1;
       this.pageSize = 10;
       this.getTableData()
@@ -597,12 +600,13 @@ export default {
     getTableData() {
       getTable({
         "year": this.searchYear === '' ? 0 : Number(this.searchYear),
-        "gender": this.searchGender === '' ? 0 : Number(this.searchGender),
         "phone": this.searchPhone,
         "college": this.searchFaculty,
         "subject": this.searchSubject,
-        "competent": this.searchTitle,
         "name": this.searchName,
+        "expertNo": this.searchExpertNo,
+        "secretaryName": this.searchSecretaryName,
+        "auditionRoundName": this.searchAuditionRoundName,
         "page":this.currentPage,
         "pageSize":this.pageSize
         })
@@ -612,10 +616,15 @@ export default {
         }).catch(() => {});
     },
     exportData() {
-      expertbasicexport({"college": this.searchFaculty,
+      expertbasicexport({
+        "year": this.searchYear === '' ? 0 : Number(this.searchYear),
+        "phone": this.searchPhone,
+        "college": this.searchFaculty,
         "subject": this.searchSubject,
-        "competent": this.searchTitle,
         "name": this.searchName,
+        "expertNo": this.searchExpertNo,
+        "secretaryName": this.searchSecretaryName,
+        "auditionRoundName": this.searchAuditionRoundName,
         "page":this.currentPage,
         "pageSize":this.pageSize
         })
@@ -654,7 +663,7 @@ export default {
     this.getYearData()
     this.getFacultyData()
     this.getSubjectData()
-    this.getTitleData()
+    // this.getTitleData()
       this.getTableData()
   }
 }

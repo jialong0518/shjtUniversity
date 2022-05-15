@@ -656,9 +656,8 @@ export default {
   },
   methods: {
     goSecretaryButt(data) {
-      // ,query:{id:data.id, auditionName: data.audition_name}
-      this.$router.push({path:'/secretary'});
       console.log(data);
+      this.$router.push({path:'/secretary/secretary',query:{round_name:data.round_name, id: data.id}});
     },
     onCreated(editor) {
       this.editor = Object.seal(editor); // 一定要用 Object.seal() ，否则会报错
