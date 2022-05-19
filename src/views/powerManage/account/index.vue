@@ -122,7 +122,7 @@
     </el-form-item>
     <el-form-item label="角色" prop="role">
       <el-select style="width: 300px" @change="roleFun" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.role" placeholder="请选择角色">
-        <el-option v-for="item in roleList" :key="item.code" :label="item.name" :value="item.code"></el-option>
+        <el-option v-for="item in roleList" :key="item.id" :label="item.rolename" :value="item.id"></el-option>
       </el-select>
     </el-form-item>
     <el-form-item label="院系" prop="faculty">
@@ -158,7 +158,7 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
-import { userlist, userAdd, passwordreset, userdel, useredit, userbind, getCollege, userstartstop } from "@/api/account";
+import { userlist, userAdd, passwordreset, userdel, useredit, userbind, getCollege, userstartstop, getroleslist  } from "@/api/account";
 import { roleslist } from "@/api/role";
 import plupload from "@/components/plupload";
 
@@ -192,7 +192,7 @@ export default {
       },
       message_: null,
       message1_:null,
-      roleList: {},
+      // roleList: {},
       titleForm:'',
       rights_list: {},
       rulesAccount: {
@@ -273,9 +273,9 @@ export default {
     },
     roleFun(data) {
       this.roleList.map(item=>{
-        if(item.code === data) {
-          this.form.roleName = item.name;
-          console.log(item.name)
+        if(item.id === data) {
+          this.form.roleName = item.rolename;
+          console.log(item.rolename)
         }
       })
     },
@@ -557,13 +557,11 @@ export default {
   mounted: function() {
     this.getFacultyData()
       this.getTableData()
-    //   roleslist({"rolename": "",
-    // "memo": "",
-    // })
-    //   .then(r => {
-    //       this.roleList = r.data.data_list
-    //         console.log(r)            
-    //     }).catch(() => {});
+      getroleslist({})
+      .then(r => {
+          this.roleList = r.data
+            console.log(r)            
+        }).catch(() => {});
   }
 }
 </script>
