@@ -101,7 +101,7 @@ let constantRoutes = [
     redirect: '/expertBasics',
     name: 'expertBasics',
     meta: { title: '专家基础库', icon: 'zj1' },
-    power: '12',
+    power: '126',
     children: [
       {
         path: 'expertBasics',
@@ -150,7 +150,7 @@ let constantRoutes = [
     redirect: '/expertSeniority',
     name: 'expertSeniority',
     meta: { title: '专家资格库', icon: 'zj2' },
-    power: '1234',
+    power: '12346',
     children: [
       {
         path: 'expertSeniority',
