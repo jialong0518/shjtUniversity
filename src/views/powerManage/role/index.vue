@@ -1,6 +1,6 @@
 <template>
   <div class="account">
-      <el-row :gutter="20" style="padding: 20px;">
+      <!-- <el-row :gutter="20" style="padding: 20px;">
     <el-col :span="6">
         <div style="display: inline-block;width:25%;">角色名称：</div>
         <el-input style="width: 75%" v-model="searchrolename" autocomplete="off"></el-input>
@@ -12,9 +12,9 @@
     <el-col :span="6">
         <el-button type="primary" @click="getTableData()">搜索</el-button>
     </el-col>
-    </el-row>
+    </el-row> -->
     <div style="padding: 15px;overflow: hidden;">
-      <el-button type="primary" v-if="rights_list['添加']" style="float:right;" @click="addAccountButt('ruleForm')">添加角色权限</el-button>
+      <el-button type="primary" style="float:right;" @click="addAccountButt('ruleForm')">添加角色权限</el-button>
     </div>
     <el-table
     :data="tableData"
@@ -37,18 +37,18 @@
     <el-table-column
       label="操作">
       <template slot-scope="scope">
-        <el-button v-if="rights_list['查看']" @click="seeroleButt(scope.row)" type="text" size="small">查看</el-button>
-        <el-button v-if="rights_list['编辑']" type="text" @click="editroleButt(scope.row)" size="small">编辑</el-button>
+        <el-button  @click="seeroleButt(scope.row)" type="primary" size="mini">查看</el-button>
+        <el-button  type="primary" size="mini" @click="editroleButt(scope.row)" >编辑</el-button>
         <el-popconfirm
             title="是否确定删除该角色权限？"
             @onConfirm="rolesDel(scope.row)" 
         >
-        <el-button style="margin: 0 10px;"  slot="reference" v-if="rights_list['删除']" type="text" size="small">删除</el-button>
+        <el-button style="margin: 0 10px;"  slot="reference" v-if="rights_list['删除']" type="primary" size="mini">删除</el-button>
         </el-popconfirm>
       </template>
     </el-table-column>
   </el-table>
-  <div style="text-align: center;
+  <!-- <div style="text-align: center;
     margin-top: 20px;">
       <el-pagination
       background
@@ -60,7 +60,7 @@
       layout="total,  prev, pager, next, sizes,jumper"
       :total="totalPage">
     </el-pagination>
-  </div>
+  </div> -->
   <el-dialog :show-close="false" :title="titleForm" :visible.sync="dialogRoleVisible">
   <el-form style="overflow: hidden;" :model="form" :rules="rulesRole" ref="ruleForm" label-width="100px">
     <div style="float: left;">
@@ -290,6 +290,14 @@ export default {
           if(!item.children){
             item.children = [];
           }
+          if(item['list']){
+            // let list = {}
+            // list['fname'] = '展示模块';
+            // list['id'] = '展示模块';
+            // list['children'] = item['list'];
+            item.children.push(item['list'])
+            item.children = item['list']
+          }
           if(item['category_list']){
               if(item['category_list'].length > 0){
                   let category_list = {}
@@ -331,18 +339,13 @@ export default {
         return this.titleForm.indexOf('查看')!== -1
     },
     getTableData() {
-      roleslist({"rolename": this.searchrolename,
-      "memo": this.searchmemo,
-      ,
-      "pages": this.currentPage,
-      "pagesize": this.pageSize
-      })
+      roleslist({})
       .then(r => {
-          this.tableData = r.data.data_list;
-          this.totalPage = r.data.datacount
-            r.data.rights_list.map(item=>{
-            this.rights_list[item.rights] = item.rights_id
-            })           
+          this.tableData = r.data;
+          // this.totalPage = r.data.datacount
+          //   r.data.rights_list.map(item=>{
+          //   this.rights_list[item.rights] = item.rights_id
+          //   })           
       }).catch(() => {});
       functionlist({})
       .then(r => {

@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function roleslist(data) {
   return request({
-    url: '/byd/web/index.php?r=reg/roleslist',
+    url: '/expert/roleslist',
     // url: '/byd/web/index.php?r=reg/functionlist',
     method: 'post',
     // data: JSON.parse(data)
@@ -20,7 +20,7 @@ export function getInfo(token) {
 
 export function functionlist(data) {
   return request({
-    url: '/byd/web/index.php?r=reg/functionlist',
+    url: '/expert/functionlist',
     method: 'post',
     data
   })
@@ -28,7 +28,7 @@ export function functionlist(data) {
 
 export function rolesadd(data) {
     return request({
-      url: '/byd/web/index.php?r=reg/rolesadd',
+      url: '/expert/rolesadd',
       method: 'post',
       data
     })
@@ -36,14 +36,14 @@ export function rolesadd(data) {
 
 export function rolesbind(data) {
     return request({
-      url: '/byd/web/index.php?r=reg/rolesbind',
+      url: '/expert/rolesbind',
       method: 'post',
       data
     })
 }
 export function rolesedit(data) {
     return request({
-      url: '/byd/web/index.php?r=reg/rolesedit',
+      url: '/expert/rolesupd',
       method: 'post',
       data
     })

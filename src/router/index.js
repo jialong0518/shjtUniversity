@@ -74,18 +74,12 @@ let constantRoutes = [
         component: () => import('@/views/powerManage/account/index'),
         meta: { title: '用户管理' }
       },
-      // {
-      //   path: 'roleManage',
-      //   name: 'roleManage',
-      //   component: () => import('@/views/powerManage/role/index'),
-      //   meta: { title: '角色管理' }
-      // },
-      // {
-      //   path: 'roleManage',
-      //   name: 'roleManage',
-      //   component: () => import('@/views/powerManage/role/index'),
-      //   meta: { title: '角色管理' }
-      // },
+      {
+        path: 'roleManage',
+        name: 'roleManage',
+        component: () => import('@/views/powerManage/role/index'),
+        meta: { title: '角色管理' }
+      },
       {
         path: 'dictionary',
         name: 'dictionary',
