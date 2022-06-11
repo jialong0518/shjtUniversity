@@ -72,6 +72,10 @@
           </el-option>
         </el-select>
     </el-col>
+    <el-col :span="6">
+        <div style="display: inline-block;width:20%;">工号：</div>
+        <el-input style="width: 80%" v-model="searchExpertNo" @change="getTableData()" autocomplete="off"></el-input>
+    </el-col>
       <el-col :span="6">
         <el-button type="primary" @click="searchFun">搜 索</el-button>
         <el-button type="primary" plain @click="resetSearch()">重置</el-button>
@@ -325,6 +329,7 @@ export default {
         searchName:'',
         searchYear: '',
         searchState:'',
+        searchExpertNo: '',
         facultyData: [],
         subjectData: [],
         titleData: [],
@@ -790,12 +795,14 @@ export default {
       this.pageSize = 10;
       this.searchYear = '';
       this.searchState = '';
+      this.searchExpertNo = '';
       this.getTableData()
     },
     getTableData() {
       getTable({"college": this.searchFaculty,
         "subject": this.searchSubject,
         "competent": this.searchTitle,
+        "expertNo": this.searchExpertNo,
         "name": this.searchName,
         "page":this.currentPage,
         "pageSize":this.pageSize,
