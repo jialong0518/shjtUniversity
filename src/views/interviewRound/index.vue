@@ -216,7 +216,7 @@
                 :disabled="titleForm.indexOf('查看') !== -1"
                 v-model="form.confirmStart"
                 type="datetime"
-                value-format="yyyy-MM-dd HH:mm"
+                value-format="yyyy-MM-dd HH:mm:ss"
                 placeholder="请选择日期时间"
               >
               </el-date-picker>
@@ -227,7 +227,7 @@
                 :disabled="titleForm.indexOf('查看') !== -1"
                 v-model="form.confirmEnd"
                 type="datetime"
-                value-format="yyyy-MM-dd HH:mm"
+                value-format="yyyy-MM-dd HH:mm:ss"
                 placeholder="请选择日期时间"
               >
               </el-date-picker>
@@ -238,7 +238,7 @@
                 :disabled="titleForm.indexOf('查看') !== -1"
                 v-model="form.interviewStart"
                 type="datetime"
-                value-format="yyyy-MM-dd HH:mm"
+                value-format="yyyy-MM-dd HH:mm:ss"
                 placeholder="请选择日期时间"
               >
               </el-date-picker>
@@ -249,7 +249,7 @@
                 :disabled="titleForm.indexOf('查看') !== -1"
                 v-model="form.interviewEnd"
                 type="datetime"
-                value-format="yyyy-MM-dd HH:mm"
+                value-format="yyyy-MM-dd HH:mm:ss"
                 placeholder="请选择日期时间"
               >
               </el-date-picker>
@@ -311,7 +311,7 @@
                 :disabled="titleForm.indexOf('查看') !== -1"
                 v-model="form.signInBegin"
                 type="datetime"
-                value-format="yyyy-MM-dd HH:mm"
+                value-format="yyyy-MM-dd HH:mm:ss"
                 placeholder="请选择日期时间"
               >
               </el-date-picker>
@@ -322,7 +322,7 @@
                 :disabled="titleForm.indexOf('查看') !== -1"
                 v-model="form.signInEnd"
                 type="datetime"
-                value-format="yyyy-MM-dd HH:mm"
+                value-format="yyyy-MM-dd HH:mm:ss"
                 placeholder="请选择日期时间"
               >
               </el-date-picker>

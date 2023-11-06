@@ -87,6 +87,7 @@
       <el-button type="primary" style="margin-left: 15px;"  @click="downFile">导入模板下载</el-button>
       <plupload @updata="batchImport">批量导入</plupload>
       <el-button type="primary" style="margin-left: 15px;" @click="exportData('form')">导 出</el-button>
+      <el-button type="primary" style="margin-left: 15px;" @click="exportLastData('form')">导出上一年名单</el-button>
       <el-button type="primary" style="margin-left: 15px;" v-show="powerType !== '4'" @click="batchRefuse('通过')">批量通过</el-button>
       <el-button type="primary" style="margin-left: 15px;" v-show="powerType !== '4'" @click="batchRefuse('拒绝')">批量拒绝</el-button>
       <el-button type="primary" style="margin-left: 15px;"  @click="downSMSFile">批量短信模板下载</el-button>
@@ -201,7 +202,7 @@
       <el-select v-model="form.year" style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" placeholder="请选择">
           <el-option
             v-for="(item, index) in yearData"
-            :key="item.year"
+            :key="index"
             :label="item.year"
             :value="item.year">
           </el-option>
@@ -260,6 +261,12 @@
     </el-form-item> -->
     <el-form-item label="密码" prop="expertPwd">
       <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.expertPwd" autocomplete="off"></el-input>
+    </el-form-item>  
+    <el-form-item label="开户行" prop="bankName"  :rules="[{ required: form.facultyName === '医学院', message: '请填写开户行名称'}]">
+      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.bankName" autocomplete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="银行卡号" prop="bankNumber" :rules="[{ required: form.facultyName === '医学院', message: '请填写银行卡号'}]">
+      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.bankNumber" autocomplete="off"></el-input>
     </el-form-item>
     <el-form-item label="备注" prop="remark">
       <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.remark" autocomplete="off"></el-input>
@@ -286,7 +293,7 @@
 </template>
 
 <script>
-import { getYearlist, smsimport, getCollege, adminback, getSubject, getTitle, getTable, expertbasicbind, expertbasicadd, expertreadydel, expertbasicedit, expertreadyapprove, expertreadyexport, getApplyBack } from "@/api/expertSeniority";
+import { getYearlist, smsimport, getCollege, adminback, getSubject, getTitle, getTable, expertbasicbind, expertbasicadd, expertreadydel, expertbasicedit, expertreadyapprove, expertreadyexport, getApplyBack, expertReadyExportLastYear } from "@/api/expertSeniority";
 import plupload from "@/components/plupload";
 import plupload1 from "@/components/plupload";
 export default {
@@ -354,7 +361,9 @@ export default {
         expertNo: '',
         expertPwd: '',
         remark:'',
-        year: ''
+        year: '',
+        bankName: '',
+        bankNumber: '',
       },
       message_: null,
       message1_:null,
@@ -389,6 +398,12 @@ export default {
         email: [
             { required: true, message: '请填写邮箱', trigger: 'blur' }
         ],
+        // bankName: [
+        //     { required: this.form.facultyName === '医学院', message: '请填写开户行名称', trigger: 'blur' }
+        // ],
+        // bankNumber: [
+        //     { required: this.form.facultyName === '医学院', message: '请填写银行卡号', trigger: 'blur' }
+        // ],
         expertNo: [
             { required: true, validator: validateNo, trigger: 'blur' }
         ],
@@ -630,6 +645,8 @@ export default {
         this.form.expertPwd = ''
         this.form.remark = ''
         this.form.year = ''
+        this.form.bankName = ''
+        this.form.bankNumber = ''
       this.accountId = '';
       this.titleForm = '添加专家信息'
       this.dialogAccountVisible = true
@@ -708,7 +725,9 @@ export default {
               "expertNo": this.form.expertNo,
               "expertPwd": this.form.expertPwd,
               "remark": this.form.remark,
-              "year": Number(this.form.year)
+              "year": Number(this.form.year),
+              "bankName": this.form.bankName,
+              "bankNumber": this.form.bankNumber,
               }).then(r => {
                  if(r.code === 1){
                 this.$message({
@@ -745,7 +764,9 @@ export default {
               "expertNo": this.form.expertNo,
               "expertPwd": this.form.expertPwd,
               "remark": this.form.remark,
-              "year": Number(this.form.year)
+              "year": Number(this.form.year),
+              "bankName": this.form.bankName,
+              "bankNumber": this.form.bankNumber,
               })
             .then(r => {
                if(r.code === 1){
@@ -828,11 +849,27 @@ export default {
         window.location.href= r.data;
         }).catch(() => {});
     },
+    exportLastData() {
+      expertReadyExportLastYear({"college": this.searchFaculty,
+        "subject": this.searchSubject,
+        "competent": this.searchTitle,
+        "name": this.searchName,
+        "page":this.currentPage,
+        "pageSize":this.pageSize,
+        "year": this.searchYear === '' ? 0 : Number(this.searchYear),
+        "status": this.searchState,
+        })
+      .then(r => {
+        window.location.href= r.data;
+        }).catch(() => {});
+    },
     getuserbind() {
       expertbasicbind({
         "id": this.accountId,
       })
       .then(r => {
+      this.form.bankName = r.data.bankName;
+      this.form.bankNumber = r.data.bankNumber;
       this.form.subjectName = r.data.expertSubject;
       this.form.titleName = r.data.expertTitle;
       this.form.facultyName = r.data.expertCollege;

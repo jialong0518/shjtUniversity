@@ -211,6 +211,12 @@
     <el-form-item label="密码" prop="expertPwd">
       <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.expertPwd" autocomplete="off"></el-input>
     </el-form-item>
+    <el-form-item label="开户行" prop="bankName">
+      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.bankName" autocomplete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="银行卡号" prop="bankNumber">
+      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.bankNumber" autocomplete="off"></el-input>
+    </el-form-item>
     <el-form-item label="备注" prop="remark">
       <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.remark" autocomplete="off"></el-input>
     </el-form-item>
@@ -288,7 +294,9 @@ export default {
         inPosition: '',
         expertNo: '',
         expertPwd: '',
-        remark:''
+        remark:'',
+        bankName: '',
+        bankNumber: '',
       },
       message_: null,
       message1_:null,
@@ -319,6 +327,12 @@ export default {
         ],
         email: [
             { required: true, message: '请填写邮箱', trigger: 'blur' }
+        ],
+        bankName: [
+            { required: true, message: '请填写开户行名称', trigger: 'blur' }
+        ],
+        bankNumber: [
+            { required: true, message: '请填写银行卡号', trigger: 'blur' }
         ],
         expertNo: [
             { required: true, validator: validateNo, trigger: 'blur' }
@@ -468,6 +482,8 @@ export default {
       this.form.expertNo = '';
       this.form.expertPwd = '';
       this.form.remark = '';
+      this.form.bankName = ''
+      this.form.bankNumber = ''
       this.dialogAccountVisible = true
     },
     cancelSubmit(formName) {
@@ -508,7 +524,9 @@ export default {
               "inPosition": Number(this.form.inPosition),
               "expertNo": this.form.expertNo,
               "expertPwd": this.form.expertPwd,
-              "remark": this.form.remark
+              "remark": this.form.remark,
+              "bankName": this.form.bankName,
+              "bankNumber": this.form.bankNumber,
               }).then(r => {
                 if(r.code === 1){
                 this.$message({
@@ -545,6 +563,8 @@ export default {
               "inPosition": Number(this.form.inPosition),
               "expertNo": this.form.expertNo,
               "expertPwd": this.form.expertPwd,
+              "bankName": this.form.bankName,
+              "bankNumber": this.form.bankNumber,
               "remark": this.form.remark})
             .then(r => {
                if(r.code === 1){
@@ -628,6 +648,8 @@ export default {
         "id": this.accountId,
       })
       .then(r => {
+        this.form.bankName = r.data.bankName;
+        this.form.bankNumber = r.data.bankNumber;
         this.form.facultyName = r.data.expertCollege;
         this.form.titleName = r.data.expertTitle;
         this.form.subjectName = r.data.expertSubject;

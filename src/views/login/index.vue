@@ -110,7 +110,7 @@ export default {
       })
     },
     handleLogin() {
-      console.log(Object.assign({},this.loginForm))
+      
       
       login(Object.assign({},this.loginForm))
       .then(r => {
@@ -120,6 +120,7 @@ export default {
         }
         resetRouter()
         sessionStorage.setItem("jd_uid",r.data.uid)
+        sessionStorage.setItem("jd_date",r.data.date)
         sessionStorage.setItem("jd_phone",r.data.phone)
         sessionStorage.setItem("jd_name",r.data.name)
         sessionStorage.setItem("jd_powerType",r.data.type)
@@ -149,6 +150,7 @@ export default {
     }
   },
   mounted() {
+    sessionStorage.clear()
     let url = window.location.href;
     let urlArr = [];
     // let url_ = 'https:///jdexpert/admin/index.html?code=66a3e83a6bb347c1bc6b11d7a31b7ab5#/login?back=index.html'
@@ -167,6 +169,7 @@ export default {
         }
         resetRouter()
         sessionStorage.setItem("jd_uid",r.data.uid)
+        sessionStorage.setItem("jd_date",r.data.date)
         sessionStorage.setItem("jd_phone",r.data.phone)
         sessionStorage.setItem("jd_name",r.data.name)
         sessionStorage.setItem("jd_powerType",r.data.type)

@@ -19,7 +19,7 @@
           style="width: 70%" v-model="searchBegin"
           type="datetime"
           @change="getTableData()"
-          value-format="yyyy-MM-dd HH:mm"
+          value-format="yyyy-MM-dd HH:mm:ss"
           placeholder="请选择日期时间">
         </el-date-picker>
     </el-col>
@@ -31,7 +31,7 @@
           style="width: 70%" v-model="searchEnd"
           type="datetime"
           @change="getTableData()"
-          value-format="yyyy-MM-dd HH:mm"
+          value-format="yyyy-MM-dd HH:mm:ss"
           placeholder="请选择日期时间">
         </el-date-picker>
     </el-col>

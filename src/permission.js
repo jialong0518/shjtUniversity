@@ -19,7 +19,9 @@ router.beforeEach((to, from, next) => {
 
   // determine whether the user has logged in
   const hasToken = sessionStorage.getItem('jd_uid')
-  if (!hasToken) {
+  const date = sessionStorage.getItem('jd_date')
+  
+  if (!hasToken || !date) {
     if(to.path.indexOf('login') === -1){
       next(`/login`)
         // window.location.href= `${window.location.protocol}//${window.location.host}/#/login`

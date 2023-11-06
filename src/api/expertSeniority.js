@@ -123,7 +123,13 @@ export function expertreadyexport(data) {
   })
 }
 
-
+export function expertReadyExportLastYear(data) {
+  return request({
+    url: '/expert/expertReadyExportLastYear',
+    method: 'post',
+    data
+  })
+}
 
   export function userdel(data) {
     return request({

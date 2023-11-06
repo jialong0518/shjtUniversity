@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import md5 from 'js-md5'
 
 export function login(data) {
   return request({
@@ -6,7 +7,7 @@ export function login(data) {
     method: 'post',
     data: {
       expertNo: data.username,
-      expertPwd: data.password,
+      expertPwd: md5(`${data.password}password`),
       type: '后台'
     }
     // data
