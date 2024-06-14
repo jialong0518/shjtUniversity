@@ -1,87 +1,115 @@
 <template>
   <div class="account">
     <el-row :gutter="20" style="padding: 20px;">
-    <!-- <el-col :span="6">
-        <div style="display: inline-block;width:20%;">年份：</div>
-        <el-select v-model="searchYear" style="width: 80%" placeholder="请选择">
-          <el-option
-            v-for="item in yearData"
-            :key="item.year"
-            :label="item.year"
-            :value="item.year">
-          </el-option>
-        </el-select>
-    </el-col>
     <el-col :span="6">
-        <div style="display: inline-block;width:20%;">院系：</div>
-        <el-select v-model="searchFaculty" style="width: 80%" placeholder="请选择">
+        <div style="display: inline-block;width:30%;">院系：</div>
+        <el-select v-model="searchFaculty" style="width: 70%" placeholder="请选择">
           <el-option
             v-for="item in facultyData"
-            :key="item.id"
+            :key="item.name"
             :label="item.name"
-            :value="item.id">
-          </el-option>
-        </el-select>
-    </el-col> -->
-    <!-- <el-col :span="6">
-        <div style="display: inline-block;width:20%;">面试：</div>
-        <el-select v-model="searchInterview" style="width: 80%" placeholder="请选择">
-          <el-option
-            v-for="item in interviewData"
-            :key="item.audition_name"
-            :label="item.audition_name"
-            :value="item.audition_name">
+            :value="item.name">
           </el-option>
         </el-select>
     </el-col>
     <el-col :span="6">
-        <el-button type="primary" @click="searchFun">搜 索</el-button>
-        <el-button type="primary" @click="exportData">导 出</el-button>
-    </el-col> -->
+        <div style="display: inline-block;width:30%;">学科：</div>
+        <el-select v-model="searchSubject" style="width: 70%" placeholder="请选择">
+          <el-option
+            v-for="item in subjectData"
+            :key="item.name"
+            :label="item.name"
+            :value="item.name">
+          </el-option>
+        </el-select>
+    </el-col>
+    <el-col :span="6">
+        <div style="display: inline-block;width:30%;">姓名：</div>
+        <el-input style="width: 70%" v-model="searchName" @change="getTableData()" autocomplete="off"></el-input>
+    </el-col>
+    <el-col :span="6">
+        <div style="display: inline-block;width:30%;">电话：</div>
+        <el-input style="width: 70%" v-model="searchPhone" @change="getTableData()" autocomplete="off"></el-input>
+    </el-col>
     </el-row>
-    <!--<div style="padding: 15px;overflow: hidden;display: flex;justify-content: flex-end;">
-      <el-button type="primary" style="margin-left: 15px;" @click="addAccountButt('ruleForm')">导出结果</el-button>
-    </div>-->
+    <el-row :gutter="20" style="padding: 20px;">
+      
+      <el-col :span="6">
+        <div style="display: inline-block;width:30%;">职称：</div>
+        <el-select v-model="searchTitle" style="width: 70%" placeholder="请选择">
+          <el-option
+            v-for="item in titleData"
+            :key="item.name"
+            :label="item.name"
+            :value="item.name">
+          </el-option>
+        </el-select>
+    </el-col>
+    <el-col :span="6">
+        <div style="display: inline-block;width:30%;">性别：</div>
+        <el-select v-model="searchGender" style="width: 70%" placeholder="请选择">
+          <el-option
+            label="男"
+            value="1">
+          </el-option>
+          <el-option
+            label="女"
+            value="2">
+          </el-option>
+        </el-select>
+    </el-col>
+      <el-col :span="6">
+        <el-button type="primary" @click="searchFun">搜 索</el-button>
+        <el-button type="primary" plain @click="resetSearch()">重置</el-button>
+        <!-- <el-button type="primary" @click="exportData">导 出</el-button> -->
+    </el-col>
+    </el-row>
     <div style="padding: 0 20px">
         <el-table
     :data="tableData"
     border
     style="width: 100%;;border-radius: 10px;">
-     <el-table-column
-      prop="year"
-      label="年份">
+    <el-table-column
+      prop="expertName"
+      label="姓名">
     </el-table-column>
     <el-table-column
-      prop="auditionName"
-      label="场次名称">
+      prop="expertNo"
+      label="学工号">
     </el-table-column>
     <el-table-column
       prop="expertGender"
-      label="应抽取人数">
+      label="性别">
+      <template slot-scope="scope">{{ scope.row.expertGender === 1 ? '男' : '女' }}</template>
     </el-table-column>
     <el-table-column
-      prop="countPlan"
-      label="确认人数">
+      prop="expertCollege"
+      label="院/系">
     </el-table-column>
     <el-table-column
-      prop="rateRefuse"
-      label="拒绝率">
+      prop="expertTitle"
+      label="职称">
     </el-table-column>
     <el-table-column
-      prop="countCancle"
-      label="取消人数">
+      prop="expertSubject"
+      label="学科">
     </el-table-column>
     <el-table-column
-      prop="countUnconfirm"
-      label="未确认人数">
+      prop="expertPhone"
+      label="电话">
     </el-table-column>
     <el-table-column
-      prop="countRefuse"
-      label="拒绝人数">
+      prop="expertEmail"
+      label="邮箱">
+    </el-table-column>
+    <el-table-column
+      prop="inPosition"
+      label="在职">
+      <template slot-scope="scope">{{ scope.row.inPosition === 1 ? '是' : '否' }}</template>
     </el-table-column>
   </el-table>
     </div>
-  <!-- <div style="text-align: center;
+  <div style="text-align: center;
     margin-top: 20px;">
       <el-pagination
       background
@@ -93,21 +121,11 @@
       layout="total,  prev, pager, next, sizes,jumper"
       :total="totalPage">
     </el-pagination>
-  </div>  -->
+  </div> 
   <el-dialog :title="titleForm" :show-close="false" :close-on-click-modal="false" :visible.sync="dialogAccountVisible">
   <el-form :model="form" :rules="rulesAccount" ref="ruleForm" label-width="100px">
     <el-form-item label="专家工号" prop="expertNo">
       <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" @input="expertNoFun" v-model="form.expertNo" autocomplete="off"></el-input>
-    </el-form-item>
-    <el-form-item label="年份" prop="year">
-      <el-select v-model="form.year" style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" placeholder="请选择">
-          <el-option
-            v-for="(item, index) in yearData"
-            :key="item.year"
-            :label="item.year"
-            :value="item.year">
-          </el-option>
-        </el-select>
     </el-form-item>
     <el-form-item label="姓名" prop="name">
       <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.name" autocomplete="off"></el-input>
@@ -154,42 +172,41 @@
     <el-form-item label="邮箱" prop="email">
       <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.email" autocomplete="off"></el-input>
     </el-form-item>
-    <!-- <el-form-item label="在职" prop="inPosition">
+    <el-form-item label="在职" prop="inPosition">
       <el-radio-group v-model="form.inPosition">
         <el-radio label="1" :disabled="titleForm.indexOf('查看')!== -1">是</el-radio>
         <el-radio label="2" :disabled="titleForm.indexOf('查看')!== -1">否</el-radio>
       </el-radio-group>
-    </el-form-item> -->
+    </el-form-item>
     <el-form-item label="密码" prop="expertPwd">
       <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.expertPwd" autocomplete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="开户行" prop="bankName">
+      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.bankName" autocomplete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="银行卡号" prop="bankNumber">
+      <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.bankNumber" autocomplete="off"></el-input>
     </el-form-item>
     <el-form-item label="备注" prop="remark">
       <el-input style="width: 300px" :disabled="titleForm.indexOf('查看')!== -1" v-model="form.remark" autocomplete="off"></el-input>
     </el-form-item>
   </el-form>
-  <div slot="footer" class="dialog-footer" v-show="titleForm.indexOf('审核')=== -1">
+  <div slot="footer" class="dialog-footer">
     <el-button @click="cancelSubmit('ruleForm')">取 消</el-button>
     <el-button :disabled="titleForm.indexOf('查看')!== -1" :loading="loadingAccount" type="primary" @click="submitAccount('ruleForm')">确 定</el-button>
   </div>
-  <div slot="footer" class="dialog-footer" v-show="titleForm.indexOf('审核')!== -1">
-    <el-button :loading="loadingAccount" @click="refuseSubmit('ruleForm','拒绝')">拒 绝</el-button>
-    <el-button :loading="loadingAccount" type="primary" @click="refuseSubmit('ruleForm','通过')">通 过</el-button>
-  </div>
 </el-dialog>
-<div style="display: flex;justify-content: space-around;">
-      <div style="height: 400px;width: 400px;display:inline-block;" id="mainBing"></div>
-      <div style="height: 400px;width: 400px;display:inline-block;" id="mainZhe"></div>
-    </div>
   </div>
 </template>
 
 <script>
-import { getTable, getCollege, getYearlist, expertauditionlist } from "@/api/statistics";
+import { getCollege, getSubject, getTitle, getTable, expertBlackListIn, expertbasicbind, expertbasicadd, expertbasicdel, expertbasicedit, expertbasicexport, getYearlist,expertBlackList } from "@/api/expertBlackList";
+import plupload from "@/components/plupload";
 import {download} from '@/utils'
-import * as echarts from 'echarts';
 export default {
   name: 'Login',
   components: {
+    plupload,
   },
   data() {
       let validatePhone = (rule, value, callback) => {
@@ -222,14 +239,13 @@ export default {
         searchSubject: '',
         searchTitle: '',
         searchName:'',
+        searchPhone: '',
         searchYear: '',
-        searchState:'',
-        searchInterview: '',
+        searchGender: '',
         facultyData: [],
         subjectData: [],
         titleData: [],
-        yearData: [],
-        interviewData: [],
+
         currentPage: 1,
       totalPage: 0,
       pageSize: 10,
@@ -245,11 +261,12 @@ export default {
         subject: '',
         subjectName: '',
         email: '',
-        // inPosition: '',
+        inPosition: '',
         expertNo: '',
         expertPwd: '',
         remark:'',
-        year: ''
+        bankName: '',
+        bankNumber: '',
       },
       message_: null,
       message1_:null,
@@ -257,32 +274,35 @@ export default {
       titleForm:'',
       rights_list: {},
       rulesAccount: {
-        year: [
-            { required: true, message: '请选择年份', trigger: 'blur' }
-        ],
         name: [
             { required: true, message: '请填写名字', trigger: 'blur' }
         ],
         sex: [
-            { required: true, message: '请选择性别', trigger: 'change' }
+            { required: true, message: '请选择性别', trigger: 'blur' }
         ],
         faculty: [
-            { required: true, message: '请选择院/系', trigger: 'change' }
+            { required: true, message: '请选择院/系', trigger: 'blur' }
         ],
         title: [
-            { required: true, message: '请选择职称', trigger: 'change' }
+            { required: true, message: '请选择职称', trigger: 'blur' }
         ],
         subject: [
-            { required: true, message: '请选择学科', trigger: 'change' }
+            { required: true, message: '请选择学科', trigger: 'blur' }
         ],
-        // inPosition: [
-        //     { required: true, message: '请选择在职状态', trigger: 'change' }
-        // ],
+        inPosition: [
+            { required: true, message: '请选择在职状态', trigger: 'blur' }
+        ],
         phone: [
             { required: true, validator: validatePhone, trigger: 'blur' }
         ],
         email: [
             { required: true, message: '请填写邮箱', trigger: 'blur' }
+        ],
+        bankName: [
+            { required: true, message: '请填写开户行名称', trigger: 'blur' }
+        ],
+        bankNumber: [
+            { required: true, message: '请填写银行卡号', trigger: 'blur' }
         ],
         expertNo: [
             { required: true, validator: validateNo, trigger: 'blur' }
@@ -303,6 +323,7 @@ export default {
       passwordType: 'password',
       redirect: undefined,
       tableData: [],
+      yearData: [],
       accountId: '',
       wordVisible: false,
       word:'',
@@ -318,14 +339,10 @@ export default {
     }
   },
   methods: {
-    getYearData() {
-        getYearlist(
-        {}
-      ).then(r => {
-        this.yearData = r.data;
-      }).catch(() => {});    
+    downFile() {
+      download('https://expert.sjtu.edu.cn/expert/downloadfile?file=expertbasic.xlsx','expertbasic.xlsx')
+      // window.location.href = 'https://expert.sjtu.edu.cn/expert/downloadfile?file=expertbasic.xlsx';
     },
-    
     getFacultyData() {
         getCollege(
         {}
@@ -340,23 +357,23 @@ export default {
       }).catch(() => {});
     },
 
-    getInterviewData() {
-      expertauditionlist({
-        "year": 0,
-        "audition_name": '',
-        "page": 1,
-        "pageSize": 1000
-        }).then(r => {
-        this.interviewData = r.data.list;
-      }).catch(() => {});
-    },
-
     getTitleData() {
       getTitle({}).then(r => {
         this.titleData = r.data;
       }).catch(() => {});
     },
 
+    batchImport(data) {
+      console.log(data,'批量导入')
+      let time = new Date();//time为现在的时间
+      let year_ = time.getFullYear();//获取现在的年份
+      data.year = year_
+      data.source = '基础库'
+       this.$router.push({
+         path:'/importResults',
+         query:{data: JSON.stringify(data)}
+        });
+    },
 
     facultyFun(data){
       this.facultyData.map(item=>{
@@ -412,14 +429,25 @@ export default {
       this.titleForm = '编辑专家信息'
       this.getuserbind()
     },
-    examineAccountButt(data) {
-      this.accountId = data.id
-      this.titleForm = '审核专家信息'
-      this.getuserbind()
-    },
     addAccountButt(formName) {
       this.accountId = '';
       this.titleForm = '添加专家信息'
+      this.form.sex = '';
+      this.form.name = '';
+      this.form.phone = '';
+      this.form.faculty = '';
+      this.form.facultyName = '';
+      this.form.title = '';
+      this.form.titleName = '';
+      this.form.subject = '';
+      this.form.subjectName = '';
+      this.form.email = '';
+      this.form.inPosition = '';
+      this.form.expertNo = '';
+      this.form.expertPwd = '';
+      this.form.remark = '';
+      this.form.bankName = ''
+      this.form.bankNumber = ''
       this.dialogAccountVisible = true
     },
     cancelSubmit(formName) {
@@ -427,26 +455,6 @@ export default {
       this.accountId = '';
       this.$refs[formName].resetFields();
       this.dialogAccountVisible = false;
-    },
-    refuseSubmit(name,state) {
-      this.loadingAccount = true
-      expertreadyapprove({
-              "id": this.accountId,
-              "status": state
-              }).then(r => {
-                if(r.msg === '信息重复') {
-                  this.loadingAccount = false
-                  return
-                }
-              this.loadingAccount = false
-              this.dialogAccountVisible = false
-              // this.account = this.form.account
-              this.$refs[name].resetFields();
-              this.getTableData()
-            })
-            .catch(() => {
-              this.loadingAccount = false
-            });
     },
     submitAccount(formName) {
       this.$refs[formName].validate((valid) => {
@@ -477,18 +485,24 @@ export default {
               "expertSubjectCode": this.form.subject,
               "expertPhone": this.form.phone,
               "expertEmail": this.form.email,
+              "inPosition": Number(this.form.inPosition),
               "expertNo": this.form.expertNo,
               "expertPwd": this.form.expertPwd,
               "remark": this.form.remark,
-              "year": Number(this.form.year)
+              "bankName": this.form.bankName,
+              "bankNumber": this.form.bankNumber,
               }).then(r => {
-                if(r.msg === '信息重复') {
-                  this.loadingAccount = false
-                  return
-                }
+                if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                this.loadingAccount = false
+                return
+              }
               this.loadingAccount = false
               this.dialogAccountVisible = false
-              // this.account = this.form.account
+              this.account = this.form.account
               this.$refs[formName1].resetFields();
               this.getTableData()
             })
@@ -510,16 +524,21 @@ export default {
               "expertSubjectCode": this.form.subject,
               "expertPhone": this.form.phone,
               "expertEmail": this.form.email,
+              "inPosition": Number(this.form.inPosition),
               "expertNo": this.form.expertNo,
               "expertPwd": this.form.expertPwd,
-              "remark": this.form.remark,
-              "year": Number(this.form.year)
-              })
+              "bankName": this.form.bankName,
+              "bankNumber": this.form.bankNumber,
+              "remark": this.form.remark})
             .then(r => {
-              if(r.msg === '信息重复') {
-                  this.loadingAccount = false
-                  return
-                }
+               if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                this.loadingAccount = false
+                return
+              }
               this.loadingAccount = false
               this.dialogAccountVisible = false
               this.$refs[formName].resetFields();
@@ -529,12 +548,39 @@ export default {
               this.loadingAccount = false
             });
     },
+    hmdBut(data) {
+      expertBlackListIn({
+            "expertNo": data.expertNo,
+            })
+            .then(r => {
+              if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                return
+              }
+              this.getTableData()
+              this.$message({
+                message: '已拉入黑名单！',
+                type: 'success'
+                });
+            })
+            .catch(() => {
+            });
+    },
     accountDel(data) {
-      expertreadydel({
+      expertbasicdel({
             "id": data.id,
             })
             .then(r => {
-              console.log(r)
+              if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                return
+              }
               this.getTableData()
               this.$message({
                 message: '删除成功！',
@@ -544,30 +590,42 @@ export default {
             .catch(() => {
             }); 
     },
-    getTableData() {
-      getTable({"auditionName": this.$route.query.auditionName,
-        "auditionRoundName": this.$route.query.auditionRoundName,
-        "auditionId": 0,
-        "statsType": 1,
-        })
-      .then(r => {
-            this.tableData = r.data;
-            this.chartInit(r.data);
-        }).catch(() => {});
+    resetSearch() {
+      this.searchFaculty = '';
+      this.searchSubject = '';
+      this.searchTitle = '';
+      this.searchName = '';
+      this.currentPage = 1;
+      this.pageSize = 10;
+      this.getTableData()
     },
-    exportData() {
-      expertreadyexport({"college": this.searchFaculty,
+    getTableData() {
+      expertBlackList({
+        "gender": this.searchGender === '' ? 0 : Number(this.searchGender),
+        "phone": this.searchPhone,
+        "college": this.searchFaculty,
         "subject": this.searchSubject,
         "competent": this.searchTitle,
         "name": this.searchName,
         "page":this.currentPage,
-        "pageSize":this.pageSize,
-        "year": this.searchYear === '' ? 0 : Number(this.searchYear),
-        "status": this.searchState,
+        "pageSize":this.pageSize
         })
       .then(r => {
-        download(r.data,'expertreadyexport.xlsx')
+            this.tableData = r.data.list;
+            this.totalPage = r.data.datacount
+        }).catch(() => {});
+    },
+    exportData() {
+      expertbasicexport({"college": this.searchFaculty,
+        "subject": this.searchSubject,
+        "competent": this.searchTitle,
+        "name": this.searchName,
+        "page":this.currentPage,
+        "pageSize":this.pageSize
+        })
+      .then(r => {
         // window.location.href= r.data;
+        download(r.data,'expertbasicexport.xlsx')
         }).catch(() => {});
     },
     getuserbind() {
@@ -575,101 +633,34 @@ export default {
         "id": this.accountId,
       })
       .then(r => {
-      this.form.sex = r.data.expertGender+'';
-      this.form.name = r.data.expertName;
-      this.form.phone = r.data.expertPhone;
-      this.form.faculty = r.data.expertCollegeCode;
-      this.form.title = r.data.expertTitleCode;
-      this.form.subject = r.data.expertSubjectCode;
-      this.form.email = r.data.expertEmail;
-      this.form.inPosition = r.data.inPosition+'';
-      this.form.expertNo = r.data.expertNo;
-      this.form.expertPwd = r.data.expertPwd;
-      this.form.remark = r.data.remark;
-      this.form.year = r.data.year + '';
-      this.dialogAccountVisible = true
+        this.form.bankName = r.data.bankName;
+        this.form.bankNumber = r.data.bankNumber;
+        this.form.facultyName = r.data.expertCollege;
+        this.form.titleName = r.data.expertTitle;
+        this.form.subjectName = r.data.expertSubject;
+        this.form.sex = r.data.expertGender+'';
+        this.form.name = r.data.expertName;
+        this.form.phone = r.data.expertPhone;
+        this.form.faculty = r.data.expertCollegeCode;
+        this.form.title = r.data.expertTitleCode;
+        this.form.subject = r.data.expertSubjectCode;
+        this.form.email = r.data.expertEmail;
+        this.form.inPosition = r.data.inPosition+'';
+        this.form.expertNo = r.data.expertNo;
+        this.form.expertPwd = r.data.expertPwd;
+        this.form.remark = r.data.remark;
+        this.dialogAccountVisible = true
         }).catch(() => {});
     },
-    chartInit(data) {
-      console.log(data)
-      let bingData = [];
-      let zheData = [];
-      let zheName = [];
-      data.map(item=>{
-        bingData.push({
-          value: item.countPlan,
-          name: item.auditionName
-        })
-        zheName.push(item.auditionName)
-        zheData.push(item.countPlan)
-      })
-      var chartDom = document.getElementById('mainBing');
-      var myChart = echarts.init(chartDom);
-      let option = {
-        tooltip: {
-          trigger: 'item'
-        },
-        series: [
-          {
-            type: 'pie',
-            radius: '50%',
-            data: bingData,
-            emphasis: {
-              itemStyle: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: 'rgba(0, 0, 0, 0.5)'
-              }
-            }
-          }
-        ]
-      };
-      myChart.setOption(option);
-      
-      var chartDom1 = document.getElementById('mainZhe');
-      var myChart1 = echarts.init(chartDom1);
-      let option1 = {
-        xAxis: {
-          type: 'category',
-          data: zheName,
-          axisLabel:{
-                    interval:0,
-                   rotate:-45,//倾斜度 -90 至 90 默认为0
-                    margin:2,
-                   textStyle:{
-                     
-                  fontSize: 9,//横轴字体大小
-                      color:"#000000"
-                    }
-                  }
-        },
-        yAxis: {
-          type: 'value',
-        },
-        tooltip: {
-              valueFormatter: function (value) {
-                return value;
-              }
-            },
-        series: [
-          {
-            data: zheData,
-            type: 'bar',
-            showBackground: true,
-            backgroundStyle: {
-              color: 'rgba(180, 180, 180, 0.2)'
-            },
-          }
-        ]
-      };
-      myChart1.setOption(option1);
-    }
   },
   beforeDestroy(){
       this.message1_.close()
   },
 //   message_
   mounted: function() {
+    this.getFacultyData()
+    this.getSubjectData()
+    this.getTitleData()
       this.getTableData()
   }
 }

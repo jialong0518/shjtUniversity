@@ -287,7 +287,7 @@
 <script>
 import { getCollege, getSubject, getTitle, getTable, expertbasicbind, expertbasicadd, expertbasicdel, expertbasicedit, expertbasicexport, getYearlist, dataDel } from "@/api/uploadRecord";
 import plupload from "@/components/plupload";
-
+import {download} from '@/utils'
 import { roleslist } from "@/api/role";
 export default {
   name: 'Login',
@@ -704,7 +704,8 @@ export default {
         "pageSize":this.pageSize
         })
       .then(r => {
-        window.location.href= r.data;
+        // window.location.href= r.data;
+        download(r.data,'expertbasicexport.xlsx')
         }).catch(() => {});
     },
     getuserbind() {

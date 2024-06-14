@@ -511,7 +511,7 @@ import {
 import plupload from "@/components/plupload";
 import "@wangeditor/editor/dist/css/style.css";
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
-
+import {download} from '@/utils'
 export default {
   name: "Login",
   components: {
@@ -953,7 +953,8 @@ export default {
         pageSize: this.pageSize,
       })
         .then((r) => {
-          window.location.href = r.data;
+          download(r.data,'expertbasicexport.xlsx')
+          // window.location.href = r.data;
         })
         .catch(() => {});
     },
@@ -1143,7 +1144,8 @@ export default {
         pageSize: this.pageSize,
       })
         .then((r) => {
-          window.location.href = r.data;
+          download(r.data,'exportFile.xlsx')
+          // window.location.href = r.data;
         })
         .catch(() => {});
     },

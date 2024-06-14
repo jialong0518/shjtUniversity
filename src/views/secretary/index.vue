@@ -220,6 +220,7 @@
 <script>
 import { getCollege, getSubject, getTitle, getTable, expertimport, expertbasicbind, expertbasicadd, expertbasicdel, expertbasicedit, expertbasicexport, getYearlist } from "@/api/secretary";
 import plupload from "@/components/plupload";
+import {download} from '@/utils'
 
 export default {
   name: 'Login',
@@ -361,7 +362,8 @@ export default {
       }).catch(() => {});    
     },
     downFile() {
-      window.location.href = 'https://mob.hexntc.com/expert/downloadfile?file=secretary.xlsx';
+      download('https://mob.hexntc.com/expert/downloadfile?file=secretary.xlsx','secretary.xlsx')
+      // window.location.href = 'https://mob.hexntc.com/expert/downloadfile?file=secretary.xlsx';
     },
     getFacultyData() {
         getCollege(
@@ -629,7 +631,8 @@ export default {
         "pageSize":this.pageSize
         })
       .then(r => {
-        window.location.href= r.data;
+        download(r.data,'expertbasicexport.xlsx')
+        // window.location.href= r.data;
         }).catch(() => {});
     },
     getuserbind() {

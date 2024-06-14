@@ -115,3 +115,31 @@ export function param2Obj(url) {
   })
   return obj
 }
+
+/**
+* url 下载url
+* filename 下载文件名称
+*/
+export function download(url, filename) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url, true); 
+  xhr.responseType = "blob"; // 设置返回类型为 blob
+  
+  // 设置请求头参数
+  xhr.setRequestHeader('uid', sessionStorage.getItem("jd_uid"));
+  // 定义请求完成的处理函数，请求前也可以增加加载框/禁用下载按钮的相关逻辑
+  xhr.onload = function() {
+    if (this.status === 200) {
+      var blob = this.response;
+      var a = document.createElement('a');
+      var url = window.URL.createObjectURL(blob);
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    }
+  };
+  xhr.send(); // 发送ajax请求
+}

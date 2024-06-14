@@ -161,6 +161,7 @@ import { validUsername } from '@/utils/validate'
 import { userlist, userAdd, passwordreset, userdel, useredit, userbind, getCollege, userstartstop, getroleslist  } from "@/api/account";
 import { roleslist } from "@/api/role";
 import plupload from "@/components/plupload";
+import {download} from '@/utils'
 
 
 export default {
@@ -253,7 +254,8 @@ export default {
         });
     },
     downFile() {
-      window.location.href = 'https://mob.hexntc.com/expert/downloadfile?file=secretary.xlsx';
+      download('https://mob.hexntc.com/expert/downloadfile?file=secretary.xlsx','secretary.xlsx')
+      // window.location.href = 'https://mob.hexntc.com/expert/downloadfile?file=secretary.xlsx';
     },
     enableButt(data) {
       console.log(data.status)

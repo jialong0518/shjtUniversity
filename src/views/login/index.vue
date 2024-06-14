@@ -118,6 +118,14 @@ export default {
           this.$message.error(r.msg);
           return
         }
+        if (!r.data.hasOwnProperty("uid")) {
+          this.$message.error('请先确认账号密码！');
+          return
+        }
+        if (!r.data.hasOwnProperty("type")) {
+          this.$message.error('请先确认账号密码！');
+          return
+        }
         resetRouter()
         sessionStorage.setItem("jd_uid",r.data.uid)
         sessionStorage.setItem("jd_date",r.data.date)
@@ -165,6 +173,14 @@ export default {
       .then(r => {
         if(r.code === 1){
           this.$message.error(r.msg);
+          return
+        }
+        if (!r.data.hasOwnProperty("uid")) {
+          this.$message.error('请先确认账号密码！');
+          return
+        }
+        if (!r.data.hasOwnProperty("type")) {
+          this.$message.error('请先确认账号密码！');
           return
         }
         resetRouter()

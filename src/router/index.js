@@ -107,6 +107,24 @@ let constantRoutes = [
     ]
   },
   {
+    path: '/expertBasexpertBlackListics',
+    component: Layout,
+    redirect: '/expertBlackList',
+    name: 'expertBlackList',
+    meta: { title: '黑名单', icon: 'zj1' },
+    power: '1',
+    children: [
+      {
+        path: 'expertBlackList',
+        name: 'expertBlackList',
+        component: () => import('@/views/expertBlackList/index'),
+        meta: { title: '黑名单' }
+      },
+      
+    ]
+  },
+  
+  {
     path: '/uploadRecord',
     component: Layout,
     redirect: '/uploadRecord',
@@ -144,7 +162,7 @@ let constantRoutes = [
     redirect: '/expertSeniority',
     name: 'expertSeniority',
     meta: { title: '专家资格库', icon: 'zj2' },
-    power: '12346',
+    power: '123467',
     children: [
       {
         path: 'expertSeniority',

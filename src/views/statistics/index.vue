@@ -192,7 +192,7 @@
 
 <script>
 import { getTable, getCollege, getYearlist, expertauditionlist } from "@/api/statistics";
-
+import {download} from '@/utils'
 import * as echarts from 'echarts';
 
 export default {
@@ -580,7 +580,8 @@ export default {
         "status": this.searchState,
         })
       .then(r => {
-        window.location.href= r.data;
+        download(r.data,'expertreadyexport.xlsx')
+        // window.location.href= r.data;
         }).catch(() => {});
     },
     getuserbind() {

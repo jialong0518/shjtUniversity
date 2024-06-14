@@ -1,5 +1,13 @@
 import request from '@/utils/request'
 
+export function expertBlackList(data) {
+  return request({
+    url: '/expert/expertBlackList',
+    method: 'post',
+    data
+  })
+}
+
 
 export function getYearlist(data) {
   return request({
@@ -109,12 +117,3 @@ export function expertBlackListIn(data) {
       data
     })
   }
-
-  
-
-  
-
-
-  
-
-

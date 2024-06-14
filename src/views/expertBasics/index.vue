@@ -124,7 +124,7 @@
       <template slot-scope="scope">{{ scope.row.inPosition === 1 ? '是' : '否' }}</template>
     </el-table-column>
     <el-table-column
-    width="250"
+    width="350"
       label="操作">
       <template slot-scope="scope">
         <el-button  @click="seeAccountButt(scope.row)" type="primary" size="mini">查看</el-button>
@@ -134,6 +134,12 @@
             @onConfirm="accountDel(scope.row)" 
         >
         <el-button style="margin: 0 10px;" slot="reference"  type="danger" size="mini">删除</el-button>
+        </el-popconfirm>
+        <el-popconfirm
+            title="是否确加入黑名单？"
+            @onConfirm="hmdBut(scope.row)" 
+        >
+        <el-button style="margin: 0 10px;" v-show="powerType === '1'" slot="reference"  type="danger" size="mini">加入黑名单</el-button>
         </el-popconfirm>
       </template>
     </el-table-column>
@@ -230,7 +236,8 @@
 </template>
 
 <script>
-import { getCollege, getSubject, getTitle, getTable, expertimport, expertbasicbind, expertbasicadd, expertbasicdel, expertbasicedit, expertbasicexport, getYearlist } from "@/api/expertBasics";
+import { getCollege, getSubject, getTitle, getTable, expertBlackListIn, expertbasicbind, expertbasicadd, expertbasicdel, expertbasicedit, expertbasicexport, getYearlist } from "@/api/expertBasics";
+import {download} from '@/utils'
 import plupload from "@/components/plupload";
 
 export default {
@@ -265,6 +272,7 @@ export default {
         callback();
       };
     return {
+      powerType: sessionStorage.getItem('jd_powerType'),
         searchFaculty:'',
         searchSubject: '',
         searchTitle: '',
@@ -377,7 +385,8 @@ export default {
       }).catch(() => {});    
     },
     downFile() {
-      window.location.href = 'https://expert.sjtu.edu.cn/expert/downloadfile?file=expertbasic.xlsx';
+      download('https://expert.sjtu.edu.cn/expert/downloadfile?file=expertbasic.xlsx','expertbasic.xlsx')
+      // window.location.href = 'https://expert.sjtu.edu.cn/expert/downloadfile?file=expertbasic.xlsx';
     },
     getFacultyData() {
         getCollege(
@@ -584,6 +593,27 @@ export default {
               this.loadingAccount = false
             });
     },
+    hmdBut(data) {
+      expertBlackListIn({
+            "expertNo": data.expertNo,
+            })
+            .then(r => {
+              if(r.code === 1){
+                this.$message({
+                message:  r.msg,
+                type: 'warning'
+                });
+                return
+              }
+              this.getTableData()
+              this.$message({
+                message: '已加入黑名单！',
+                type: 'success'
+                });
+            })
+            .catch(() => {
+            });
+    },
     accountDel(data) {
       expertbasicdel({
             "id": data.id,
@@ -640,7 +670,8 @@ export default {
         "pageSize":this.pageSize
         })
       .then(r => {
-        window.location.href= r.data;
+        // window.location.href= r.data;
+        download(r.data,'expertbasicexport.xlsx')
         }).catch(() => {});
     },
     getuserbind() {

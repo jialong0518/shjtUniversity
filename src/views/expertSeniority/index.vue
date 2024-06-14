@@ -154,10 +154,10 @@
         @click="batchRefuse('拒绝')"
         >批量拒绝</el-button
       >
-      <el-button type="primary" style="margin-left: 15px" @click="downSMSFile"
+      <el-button type="primary" v-show="powerType !== '4'&&powerType !== '3'" style="margin-left: 15px" @click="downSMSFile"
         >批量短信模板下载</el-button
       >
-      <plupload1 @updata="batchImportSMS">批量发送短信</plupload1>
+      <plupload1  v-show="powerType !== '4'&&powerType !== '3'" @updata="batchImportSMS">批量发送短信</plupload1>
     </div>
     <div style="padding: 0 20px">
       <el-table
@@ -546,6 +546,7 @@ import {
 } from "@/api/expertSeniority";
 import plupload from "@/components/plupload";
 import plupload1 from "@/components/plupload";
+import {download} from '@/utils'
 export default {
   name: "Login",
   components: {
@@ -696,23 +697,26 @@ export default {
         url.indexOf("mob.hexntc.com") !== -1 ||
         url.indexOf("localhost") !== -1
       ) {
-        window.location.href =
-          "https://mob.hexntc.com/expert/downloadfile?file=sms.xlsx";
+        download('https://mob.hexntc.com/expert/downloadfile?file=sms.xlsx','sms.xlsx')
+        // window.location.href =
+        //   "https://mob.hexntc.com/expert/downloadfile?file=sms.xlsx";
       }
       if (
         url.indexOf("expert.sjtu.edu.cn") !== -1 ||
         url.indexOf("localhost") !== -1
       ) {
-        window.location.href =
-          "https://expert.sjtu.edu.cn/expert/downloadfile?file=sms.xlsx";
+        download('https://expert.sjtu.edu.cn/expert/downloadfile?file=sms.xlsx','sms.xlsx')
+        // window.location.href =
+        //   "https://expert.sjtu.edu.cn/expert/downloadfile?file=sms.xlsx";
       }
     },
     butbck() {
       return <div>123</div>;
     },
     downFile() {
-      window.location.href =
-        "https://expert.sjtu.edu.cn/expert/downloadfile?file=expertready.xlsx";
+      download('https://expert.sjtu.edu.cn/expert/downloadfile?file=expertready.xlsx','expertready.xlsx')
+      // window.location.href =
+      //   "https://expert.sjtu.edu.cn/expert/downloadfile?file=expertready.xlsx";
     },
     recallFun(data) {
       getApplyBack({ id: data.id })
@@ -1099,9 +1103,11 @@ export default {
         pageSize: this.pageSize,
         year: this.searchYear === "" ? 0 : Number(this.searchYear),
         status: this.searchState,
+        exconfirm: this.exconfirm,
       })
         .then((r) => {
-          window.location.href = r.data;
+          download(r.data,'expertreadyexport.xlsx')
+          // window.location.href = r.data;
         })
         .catch(() => {});
     },
@@ -1117,7 +1123,8 @@ export default {
         status: this.searchState,
       })
         .then((r) => {
-          window.location.href = r.data;
+          download(r.data,'expertReadyExportLastYear.xlsx')
+          // window.location.href = r.data;
         })
         .catch(() => {});
     },

@@ -96,7 +96,7 @@
 <script>
 import { getTable, expertbasicbind, expertbasicadd, expertbasicdel, expertbasicedit, expertbasicexport, getYearlist } from "@/api/interviewManage";
 import plupload from "@/components/plupload";
-
+import {download} from '@/utils'
 export default {
   name: 'Login',
   components: {
@@ -351,7 +351,8 @@ export default {
         "pageSize":this.pageSize
         })
       .then(r => {
-        window.location.href= r.data;
+        download(r.data,'expertbasicexport.xlsx')
+        // window.location.href= r.data;
         }).catch(() => {});
     },
     getuserbind() {
