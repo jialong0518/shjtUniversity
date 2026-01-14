@@ -43,6 +43,13 @@ export function getCollege(data) {
   })
 }
 
+export function getCollegelistExternal(data) {
+  return request({
+    url: '/expert/CollegelistExternal',
+    method: 'post',
+    data
+  })
+}
 export function getSubject(data) {
   return request({
     url: '/expert/subjectlist',

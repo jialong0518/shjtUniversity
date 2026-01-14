@@ -173,6 +173,23 @@ let constantRoutes = [
     ]
   },
   {
+    path: '/externalExpertSeniority',
+    component: Layout,
+    redirect: '/externalExpertSeniority',
+    name: 'externalExpertSeniority',
+    meta: { title: '校外-专家资格库', icon: 'zj2' },
+    power: '123467',
+    children: [
+      {
+        path: 'externalExpertSeniority',
+        name: 'externalExpertSeniority',
+        component: () => import('@/views/externalExpertSeniority/index'),
+        meta: { title: '校外-专家资格库' }
+      }
+    ]
+  },
+  
+  {
     path: '/interviewManage',
     component: Layout,
     redirect: '/interviewManage',
