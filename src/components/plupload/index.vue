@@ -1,144 +1,166 @@
 <template>
   <div class="account">
-    <el-button type="primary" style="margin-left: 15px;" @click="fileClick"><slot></slot></el-button>
-    <input type="file" style="display: none;" ref="inputFile" @change="getFile($event)" multiple="multiplt" >
+    <el-button type="primary" style="margin-left: 15px" @click="fileClick"
+      ><slot></slot
+    ></el-button>
+    <input
+      type="file"
+      style="display: none"
+      ref="inputFile"
+      @change="getFile($event)"
+      multiple="multiplt"
+    />
   </div>
 </template>
 
 <script>
-
 export default {
-  name: 'plupload',
+  name: "plupload",
   data() {
     return {
-        fileUrl: 'https://mob.hexntc.com'
-    }
+      fileUrl: "https://mob.hexntc.com",
+    };
   },
-  watch: {
-    
-  },
+  watch: {},
   methods: {
-    fileClick(){
+    fileClick() {
       this.$refs.inputFile.click();
     },
     getFile() {
-       const file = event.target.files[0]
-            const sliceBuffer = []
-            let sliceSize = file.size
-            while(sliceSize > 1024 * 1024) {
-                const blobPart = file.slice(sliceBuffer.length * 1024 * 1024, (sliceBuffer.length + 1) * 1024 * 1024)
-                sliceBuffer.push(
-                    blobPart
-                )
-                sliceSize -= (1024 * 1024)
+      const file = event.target.files[0];
+      const sliceBuffer = [];
+      let sliceSize = file.size;
+      while (sliceSize > 1024 * 1024) {
+        const blobPart = file.slice(
+          sliceBuffer.length * 1024 * 1024,
+          (sliceBuffer.length + 1) * 1024 * 1024
+        );
+        sliceBuffer.push(blobPart);
+        sliceSize -= 1024 * 1024;
+      }
+
+      if (sliceSize > 0) {
+        sliceBuffer.push(
+          file.slice(sliceBuffer.length * 1024 * 1024, file.size)
+        );
+      }
+
+      const fileReader = new FileReader();
+      fileReader.onload = (res) => {
+        const result = fileReader.result;
+        const fileHash = SparkMD5.hashBinary(result);
+
+        this.checkFileChunkState(fileHash)
+          .then((res) => {
+            let { chunkList, state } = res;
+            if (state === 1) {
+              alert("已经上传完成");
+              return;
             }
 
-            if(sliceSize > 0) {
-                sliceBuffer.push(
-                    file.slice(sliceBuffer.length * 1024 * 1024, file.size)
-                )
-            }
-            
-            const fileReader = new FileReader()
-            fileReader.onload = (res)=>{
-                const result = fileReader.result
-                const fileHash = SparkMD5.hashBinary(result)
+            chunkList = chunkList.map((e) => parseInt(e));
 
-                this.checkFileChunkState(fileHash)
-                .then(res => {
-                    let { chunkList, state } = res
-                    if(state === 1) {
-                        alert("已经上传完成")
-                        return 
-                    }
-
-                    chunkList = chunkList.map(e => parseInt(e))
-
-                    const chunkRequests = []
-                    sliceBuffer.forEach((buffer, i) => {
-                        if(!chunkList.includes(i)) {
-                            const blob = new File([buffer], `${i}`)
-                            chunkRequests.push(
-                                this.uploadFileChunk(fileHash, blob)
-                            )
-                        }
-                    })
-                    return Promise.all(chunkRequests)
-                })
-                .then(res => {
-                    return new Promise(resolve => {
-                        res.forEach(e => {
-                            e.json().then(({chunkList}) => {
-                                if(chunkList.length === sliceBuffer.length) {
-                                    this.megerChunkFile(fileHash, file.name).then(res => {
-                                        resolve(res)
-                                    })
-                                }
-                            })
-                        })
-                    })
-                }).then(res => {
-                    res.fileHash = fileHash;
-                    res.name = file.name;
-                    console.log(res);
-                    this.$emit('updata', res);
-                })
-            }
-            fileReader.onerror = function(err) {
-                console.log("报错了", err.target.error)
-            }
-            fileReader.readAsBinaryString(event.target.files[0])
-            this.$refs.inputFile.value = "";
+            const chunkRequests = [];
+            sliceBuffer.forEach((buffer, i) => {
+              if (!chunkList.includes(i)) {
+                const blob = new File([buffer], `${i}`);
+                chunkRequests.push(this.uploadFileChunk(fileHash, blob));
+              }
+            });
+            return Promise.all(chunkRequests);
+          })
+          .then((res) => {
+            return new Promise((resolve) => {
+              res.forEach((e) => {
+                e.json().then(({ chunkList }) => {
+                  if (chunkList.length === sliceBuffer.length) {
+                    this.megerChunkFile(fileHash, file.name).then((res) => {
+                      resolve(res);
+                    });
+                  }
+                });
+              });
+            });
+          })
+          .then((res) => {
+            res.fileHash = fileHash;
+            res.name = file.name;
+            console.log(res);
+            this.$emit("updata", res);
+          });
+      };
+      fileReader.onerror = function (err) {
+        console.log("报错了", err.target.error);
+      };
+      fileReader.readAsBinaryString(event.target.files[0]);
+      this.$refs.inputFile.value = "";
     },
     uploadFileChunk(hash, file) {
-            let formData = new FormData
-            formData.append('file', file)
-            formData.append('hash', hash)
-            return fetch(`${this.fileUrl}/expert/uploadChunk`, {
-                method: "POST",
-                body: formData
-            })
+      let formData = new FormData();
+      formData.append("file", file);
+      formData.append("hash", hash);
+      return fetch(`${this.fileUrl}/expert/uploadChunk`, {
+        method: "POST",
+        headers: {
+          token: sessionStorage.getItem("jd_uid"),
         },
+        body: formData,
+      });
+    },
 
     checkFileChunkState(hash) {
-            return new Promise(resolve => {
-                fetch(`${this.fileUrl}/expert/checkChunk?hash=${hash}`)
-                .then(r => r.json())
-                .then(response => {
-                    resolve(response)
-                })
-            })
-        },
+      return new Promise((resolve) => {
+        fetch(`${this.fileUrl}/expert/checkChunk?hash=${hash}`, {
+          headers: {
+            token: sessionStorage.getItem("jd_uid"),
+          },
+        })
+          .then((r) => r.json())
+          .then((response) => {
+            resolve(response);
+          });
+      });
+    },
 
     megerChunkFile(hash, fileName) {
-            return new Promise(resolve => {
-                fetch(`${this.fileUrl}/expert/megerChunk?hash=${hash}&fileName=${fileName}`)
-                .then(r => r.json())
-                .then(r => {
-                    resolve(r)
-                })
-            })
-        }
+      return new Promise((resolve) => {
+        fetch(
+          `${this.fileUrl}/expert/megerChunk?hash=${hash}&fileName=${fileName}`,
+          {
+            headers: {
+              token: sessionStorage.getItem("jd_uid"),
+            },
+          }
+        )
+          .then((r) => r.json())
+          .then((r) => {
+            resolve(r);
+          });
+      });
+    },
   },
-  
-//   message_
-  mounted: function() {
-   let url = window.location.href;
-      if(url.indexOf('mob.hexntc.com') !== -1 || url.indexOf('localhost') !== -1 ) {
-        this.fileUrl = 'https://mob.hexntc.com';
-      } 
-      if(url.indexOf('expert.sjtu.edu.cn') !== -1) {
-        this.fileUrl = 'https://expert.sjtu.edu.cn';
-      }
-  }
-}
+
+  //   message_
+  mounted: function () {
+    let url = window.location.href;
+    if (
+      url.indexOf("mob.hexntc.com") !== -1 ||
+      url.indexOf("localhost") !== -1
+    ) {
+      this.fileUrl = "https://mob.hexntc.com";
+    }
+    if (url.indexOf("expert.sjtu.edu.cn") !== -1) {
+      this.fileUrl = "https://expert.sjtu.edu.cn";
+    }
+  },
+};
 </script>
 
 <style lang="scss">
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
-$bg:#283443;
-$light_gray:#fff;
+$bg: #283443;
+$light_gray: #fff;
 $cursor: #fff;
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
   .login-container .el-input input {
@@ -175,6 +197,4 @@ $cursor: #fff;
 }
 </style>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
