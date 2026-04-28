@@ -178,7 +178,7 @@ let constantRoutes = [
     redirect: '/externalExpertSeniority',
     name: 'externalExpertSeniority',
     meta: { title: '校外-专家资格库', icon: 'zj2' },
-    power: '123467',
+    power: '1267',
     children: [
       {
         path: 'externalExpertSeniority',
