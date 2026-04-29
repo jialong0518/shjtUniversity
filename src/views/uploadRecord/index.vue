@@ -182,7 +182,7 @@
     width="200"
       label="操作">
       <template slot-scope="scope">
-        <el-button  type="primary" :disabled="scope.row.result  !== '失败'" @click="editAccountButt(scope.row)" size="mini">修正提交</el-button>
+        <el-button  type="primary" :disabled="scope.row.result  !== '失败'" @click="editAccountButt(scope.row)" size="mini">修改</el-button>
         <el-popconfirm
             title="是否确定删除？"
             @onConfirm="delFun()" 
