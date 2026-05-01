@@ -103,6 +103,7 @@ export default {
         method: "POST",
         headers: {
           token: sessionStorage.getItem("jd_uid"),
+          Authorization: sessionStorage.getItem("jd_token")
         },
         body: formData,
       });
@@ -113,6 +114,7 @@ export default {
         fetch(`${this.fileUrl}/expert/checkChunk?hash=${hash}`, {
           headers: {
             token: sessionStorage.getItem("jd_uid"),
+            Authorization: sessionStorage.getItem("jd_token")
           },
         })
           .then((r) => r.json())
@@ -129,6 +131,7 @@ export default {
           {
             headers: {
               token: sessionStorage.getItem("jd_uid"),
+              Authorization: sessionStorage.getItem("jd_token")
             },
           }
         )

@@ -34,6 +34,7 @@ service.interceptors.request.use(
     }
     if(sessionStorage.getItem("jd_uid")) {
       config.headers['uid'] = sessionStorage.getItem("jd_uid")
+      config.headers['Authorization'] = sessionStorage.getItem("jd_token")
       config.data['uid'] = Number(sessionStorage.getItem("jd_uid"));
     }
     

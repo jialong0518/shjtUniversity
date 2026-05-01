@@ -129,6 +129,7 @@ export default {
         resetRouter()
         sessionStorage.setItem("jd_uid",r.data.uid)
         sessionStorage.setItem("jd_date",r.data.date)
+        sessionStorage.setItem("jd_token",r.data.token)
         sessionStorage.setItem("jd_phone",r.data.phone)
         sessionStorage.setItem("jd_name",r.data.name)
         sessionStorage.setItem("jd_powerType",r.data.type)
@@ -185,6 +186,7 @@ export default {
         }
         resetRouter()
         sessionStorage.setItem("jd_uid",r.data.uid)
+        sessionStorage.setItem("jd_token",r.data.token)
         sessionStorage.setItem("jd_date",r.data.date)
         sessionStorage.setItem("jd_phone",r.data.phone)
         sessionStorage.setItem("jd_name",r.data.name)
